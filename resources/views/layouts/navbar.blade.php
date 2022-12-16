@@ -100,7 +100,7 @@
                 </li>
                 <li class="icons dropdown d-none d-md-flex">
                     <a href="javascript:void(0)" class="log-user" data-toggle="dropdown">
-                        <span>Admin</span> <i class="fa fa-angle-down f-s-14" aria-hidden="true"></i>
+                        <span>Admin</span>
                     </a>
                 </li>
                 <li class="icons dropdown">
@@ -111,7 +111,7 @@
                     <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
                         <div class="dropdown-content-body">
                             <ul>
-                                <li>
+                                {{-- <li>
                                     <a href="app-profile.html"><i class="icon-user"></i>
                                         <span>Profile</span></a>
                                 </li>
@@ -124,7 +124,7 @@
                                 <li>
                                     <a href="page-lock.html"><i class="icon-lock"></i> <span>Lock
                                             Screen</span></a>
-                                </li>
+                                </li> --}}
                                 <li><a href=""><i class="icon-key"></i>
                                         <span>Logout</span></a>
                                 </li>

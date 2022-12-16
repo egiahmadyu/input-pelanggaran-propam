@@ -6,12 +6,12 @@
             <div class="col-lg-3 col-sm-6">
                 <div class="card gradient-1">
                     <div class="card-body">
-                        <h3 class="card-title text-white">Products Sold</h3>
+                        <h3 class="card-title text-white">Total Pelanggaran</h3>
                         <div class="d-inline-block">
-                            <h2 class="text-white">4565</h2>
-                            <p class="text-white mb-0">Jan - March 2019</p>
+                            <h2 class="text-white">{{ count($pelanggarans) }}</h2>
+                            <p class="text-white mb-0">{{ date('Y') }}</p>
                         </div>
-                        <span class="float-right display-5 opacity-5"><i class="fa fa-shopping-cart"></i></span>
+                        <span class="float-right display-5 opacity-5"><i class="fa fa-child"></i></span>
                     </div>
                 </div>
             </div>
@@ -60,38 +60,11 @@
                         <div class="card">
                             <div class="card-body pb-0 d-flex justify-content-between">
                                 <div>
-                                    <h4 class="mb-1">Product Sales</h4>
-                                    <p>Total Earnings of the Month</p>
-                                    <h3 class="m-0">$ 12,555</h3>
+                                    <h4 class="mb-1">Polda Terbanyak yang mengatasi Pelanggaran</h4>
                                 </div>
-                                <div>
-                                    <ul>
-                                        <li class="d-inline-block mr-3"><a class="text-dark" href="#">Day</a>
-                                        </li>
-                                        <li class="d-inline-block mr-3"><a class="text-dark" href="#">Week</a>
-                                        </li>
-                                        <li class="d-inline-block"><a class="text-dark" href="#">Month</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="chart-wrapper">
-                                <canvas id="chart_widget_2"></canvas>
                             </div>
                             <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div class="w-100 mr-2">
-                                        <h6>Pixel 2</h6>
-                                        <div class="progress" style="height: 6px">
-                                            <div class="progress-bar bg-danger" style="width: 40%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="ml-2 w-100">
-                                        <h6>iPhone X</h6>
-                                        <div class="progress" style="height: 6px">
-                                            <div class="progress-bar bg-primary" style="width: 80%"></div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div id="bar_chart"></div>
                             </div>
                         </div>
                     </div>
@@ -570,3 +543,77 @@
         </div>
     </div>
 @endsection
+
+@push('style')
+    <style>
+        #bar_chart {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+@endpush
+
+@push('script')
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+
+    <script>
+        am4core.ready(function() {
+
+            // Themes begin
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+            var dataChart = {!! json_encode($chartPolda, true) !!}
+            console.log(dataChart)
+            // Create chart instance
+            var chart = am4core.create("bar_chart", am4charts.XYChart);
+            chart.scrollbarX = new am4core.Scrollbar();
+
+            // Add data
+            chart.data = dataChart
+
+            // Create axes
+            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.dataFields.category = "name";
+            categoryAxis.renderer.grid.template.location = 0;
+            categoryAxis.renderer.minGridDistance = 30;
+            categoryAxis.renderer.labels.template.horizontalCenter = "right";
+            categoryAxis.renderer.labels.template.verticalCenter = "middle";
+            categoryAxis.renderer.labels.template.rotation = 270;
+            categoryAxis.tooltip.disabled = true;
+            categoryAxis.renderer.minHeight = 110;
+
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+            valueAxis.renderer.minWidth = 50;
+
+            // Create series
+            var series = chart.series.push(new am4charts.ColumnSeries());
+            series.sequencedInterpolation = true;
+            series.dataFields.valueY = "total";
+            series.dataFields.categoryX = "name";
+            series.tooltipText = "[{categoryX}: bold]{valueY}[/]";
+            series.columns.template.strokeWidth = 0;
+
+            series.tooltip.pointerOrientation = "vertical";
+
+            series.columns.template.column.cornerRadiusTopLeft = 10;
+            series.columns.template.column.cornerRadiusTopRight = 10;
+            series.columns.template.column.fillOpacity = 0.8;
+
+            // on hover, make corner radiuses bigger
+            var hoverState = series.columns.template.column.states.create("hover");
+            hoverState.properties.cornerRadiusTopLeft = 0;
+            hoverState.properties.cornerRadiusTopRight = 0;
+            hoverState.properties.fillOpacity = 1;
+
+            series.columns.template.adapter.add("fill", function(fill, target) {
+                return chart.colors.getIndex(target.dataItem.index);
+            });
+
+            // Cursor
+            chart.cursor = new am4charts.XYCursor();
+
+        }); // end am4core.ready()
+    </script>
+@endpush

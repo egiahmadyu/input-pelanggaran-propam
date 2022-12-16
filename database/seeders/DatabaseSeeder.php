@@ -18,7 +18,11 @@ class DatabaseSeeder extends Seeder
       // PermissionPageSeeder::class,
       // UserSeeder::class,
       // SideBarSeeder::class,
-      ViolationSeeder::class
+    //   ViolationSeeder::class,
+        // GenderSeeder::class,
+        // DiktukSeeder::class,
+        // WujudPerbuatanSeeder::class,
+        Narkoba::class,
     ]);
   }
 }

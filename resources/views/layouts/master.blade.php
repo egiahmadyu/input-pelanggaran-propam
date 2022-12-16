@@ -10,6 +10,9 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon.png">
 
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css">
 
     @stack('style')
 
@@ -117,7 +120,7 @@
     <script src="{{ asset('assets/plugins/circle-progress/circle-progress.min.js') }}"></script>
 
 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     {{-- <script src="{{ asset('assets/js/dashboard/dashboard-1.js') }}"></script> --}}
     @stack('script')
 

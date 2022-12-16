@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SatuanPolda;
+use App\Models\SatuanPolres;
+use App\Models\SatuanPolsek;
 use App\Models\SideMenu;
 use Illuminate\Http\Request;
 
@@ -12,7 +15,7 @@ class SideMenuController extends Controller
       $data['lists'] = SideMenu::all();
       return view('content.menu.index', $data);
     }
-  
+
     /**
      * Show the form for creating a new resource.
      *
@@ -24,7 +27,7 @@ class SideMenuController extends Controller
       $data['permissions'] = Permission::get();
       return view('content.menu.add', $data);
     }
-  
+
     /**
      * Store a newly created resource in storage.
      *
@@ -48,7 +51,7 @@ class SideMenuController extends Controller
       $post = SideMenu::create($request->all());
       return redirect()->back();
     }
-  
+
     /**
      * Display the specified resource.
      *
@@ -59,7 +62,7 @@ class SideMenuController extends Controller
     {
       //
     }
-  
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -70,7 +73,7 @@ class SideMenuController extends Controller
     {
       //
     }
-  
+
     /**
      * Update the specified resource in storage.
      *
@@ -82,7 +85,7 @@ class SideMenuController extends Controller
     {
       //
     }
-  
+
     /**
      * Remove the specified resource from storage.
      *
@@ -102,5 +105,53 @@ class SideMenuController extends Controller
       }
       $menu->delete();
       return redirect()->back()->with('success', 'Success Delete Menu');
+    }
+
+    public function inputSatuan()
+    {
+      $file_to_read = fopen(storage_path('app\aceh.csv'), 'r');
+      while(($data = fgetcsv($file_to_read, 100, ',')) !== FALSE){
+          for($i = 0; $i < count($data); $i++) {
+
+              $satuan = explode(';', $data[$i]);
+              if (isset($satuan[0]))
+              {
+                if (!$polda = SatuanPolda::where('name', $satuan[0])->first())
+                {
+                  $polda = SatuanPolda::create([
+                    'name' => $satuan[0]
+                  ]);
+                }
+                if (isset($satuan[1]))
+                {
+
+                  if (!$polres = SatuanPolres::where('name', $satuan[1])->first())
+                  {
+                    echo $satuan[1];
+                    $polres = SatuanPolres::create([
+                      'name' => $satuan[1],
+                      'polda_id' => $polda->id
+                    ]);
+                  }
+                }
+
+                if (isset($satuan[2]))
+                {
+                  if (!$polsek = SatuanPolsek::where('name', $satuan[2])->first() AND strlen($satuan[2]) > 0)
+                  {
+                    $polsek = SatuanPolsek::create([
+                      'name' => $satuan[2],
+                      'polres_id' => $polres->id
+                    ]);
+                  }
+                }
+              }
+
+
+          }
+      }
+
+      fclose($file_to_read);
+      dd(SatuanPolsek::all());
     }
 }

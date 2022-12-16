@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\Putusan;
 use App\Models\SideMenu;
 
 class Helper
@@ -16,5 +17,10 @@ class Helper
   {
     $data = SideMenu::where('parent_id', $id)->orderBy('sort', 'asc')->get();
     return $data;
+  }
+
+  public static function getPutusan($type)
+  {
+    return Putusan::where('type', $type)->get();
   }
 }

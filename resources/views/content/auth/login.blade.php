@@ -21,7 +21,8 @@
     <div id="preloader">
         <div class="loader">
             <svg class="circular" viewBox="25 25 50 50">
-                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10" />
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3"
+                    stroke-miterlimit="10" />
             </svg>
         </div>
     </div>
@@ -40,14 +41,13 @@
                     <div class="form-input-content">
                         <div class="card login-form mb-0">
                             <div class="card-body pt-5">
-                                <a class="text-center" href="index.html">
-                                    <h4>Rosella</h4>
-                                </a>
+                                <img src="/assets/images/logo-propam.png" alt="" width="300">
 
                                 <form class="mt-5 mb-5 login-input" action="{{ route('login.post') }}" method="post">
                                     @csrf
                                     <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="username" name="username">
+                                        <input type="text" class="form-control" placeholder="username"
+                                            name="username">
                                     </div>
                                     <div class="form-group">
                                         <input type="password" class="form-control" placeholder="Password"
