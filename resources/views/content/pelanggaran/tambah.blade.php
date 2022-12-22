@@ -142,7 +142,7 @@
                                             <label>Polsek</label>
                                             <select class="form-control" id="polsek" style="width: 100%"
                                                 name="polsek">
-                                                <option value="001">Polres Aceh Barat Daya</option>
+                                                {{-- <option value="001">Polres Aceh Barat Daya</option> --}}
                                                 {{-- @foreach ($diktuks as $diktuk)
                                                     <option value="{{ $diktuk->id }}">{{ $diktuk->name }}</option>
                                                 @endforeach --}}
@@ -190,17 +190,18 @@
                                         <div class="form-group">
                                             <label><b>Dilakukan Pidana</b></label>
                                             <select class="form-control" id="dilakukan_pidana" style="width: 100%"
-                                                name="pidana">
+                                                name="pidana" onchange="checkPidana()">
                                                 <option value="YA">
                                                     YA</option>
                                                 <option value="TIDAK">
                                                     TIDAK</option>
                                             </select>
                                         </div>
-                                        <div class="form-group">
-                                            <label>Wujud Perbuatan Pidasna</label>
+                                        <div class="form-group divCheckPidana">
+                                            <label>Wujud Perbuatan Pidana</label>
                                             <select class="form-control" id="wujud_perbuatan_pidana" style="width: 100%"
-                                                name="wujud_perbuatan_pidana">
+                                                name="wujud_perbuatan_pidana" onchange="checkWPP()">
+                                                <option value="">Pilih</option>
                                                 @foreach ($wujud_perbuatanPidanas as $wujud_perbuatanPidana)
                                                     <option value="{{ $wujud_perbuatanPidana->id }}">
                                                         {{ $wujud_perbuatanPidana->name }}</option>
@@ -208,39 +209,44 @@
                                             </select>
 
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group divCheckPidana">
                                             <label>No Lp Pidana</label>
                                             <input type="text" name="nolp_pidana" placeholder="LP/15/I/2022"
                                                 id="nolp_pidana" class="form-control"
                                                 value="LP/15/I/{{ date('Y') }}">
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group divCheckPidana">
                                             <label>Tanggal LP Pidana</label>
                                             <input type="date" name="tgllp_pidana" id="tgllp"
                                                 class="form-control">
                                         </div>
                                         <hr>
-                                        <h5>Pelanggaran Narkoba</h5>
-                                        <div class="form-group">
-                                            <label>Peran Narkoba</label>
-                                            <select class="form-control" id="peran_narkoba" style="width: 100%"
-                                                name="peran_narkoba">
-                                                @foreach ($peran_narkobas as $peran_narkoba)
-                                                    <option value="{{ $peran_narkoba->id }}">
-                                                        {{ $peran_narkoba->name }}</option>
-                                                @endforeach
-                                            </select>
+                                        <div id="narkobaDiv">
+                                            <h5>Pelanggaran Narkoba</h5>
+                                            <div class="form-group">
+                                                <label>Peran Narkoba</label>
+                                                <select class="form-control" id="peran_narkoba" style="width: 100%"
+                                                    name="peran_narkoba">
+                                                    <option value="">Pilih</option>
+                                                    @foreach ($peran_narkobas as $peran_narkoba)
+                                                        <option value="{{ $peran_narkoba->id }}">
+                                                            {{ $peran_narkoba->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Jenis Narkoba</label>
+                                                <select class="form-control" id="jenis_narkoba" style="width: 100%"
+                                                    name="jenis_narkoba">
+                                                    <option value="">Pilih</option>
+                                                    @foreach ($jenis_narkobas as $jenis_narkoba)
+                                                        <option value="{{ $jenis_narkoba->id }}">
+                                                            {{ $jenis_narkoba->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label>Jenis Narkoba</label>
-                                            <select class="form-control" id="jenis_narkoba" style="width: 100%"
-                                                name="jenis_narkoba">
-                                                @foreach ($jenis_narkobas as $jenis_narkoba)
-                                                    <option value="{{ $jenis_narkoba->id }}">
-                                                        {{ $jenis_narkoba->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+
                                         <div class="f1-buttons">
                                             <button type="button" class="btn btn-warning btn-previous"><i
                                                     class="fa fa-arrow-left"></i> Sebelumnya</button>
@@ -403,6 +409,7 @@
             });
             await getPolres()
             getWujudPerbuatan()
+            checkWPP()
 
         });
 
@@ -512,12 +519,11 @@
                 url: "/api/polda/" + polda,
                 success: function(data) {
                     var polres = data.data
-                    var option = ''
+                    var option = '<option value="">Pilih</option>'
                     for (let index = 0; index < polres.length; index++) {
                         option += `<option value="${polres[index].id}">${polres[index].name}</option>`
 
                     }
-                    console.log(option)
                     $('#polres').html(option)
                     getPolsek()
                 }
@@ -530,12 +536,11 @@
                 url: "/api/polres/" + polres,
                 success: function(data) {
                     var polsek = data.data
-                    var option = ''
+                    var option = '<option value="">Pilih</option>'
                     for (let index = 0; index < polsek.length; index++) {
                         option += `<option value="${polsek[index].id}">${polsek[index].name}</option>`
 
                     }
-                    console.log(option)
                     $('#polsek').html(option)
                 }
             });
@@ -552,10 +557,31 @@
                         option += `<option value="${wp[index].id}">${wp[index].name}</option>`
 
                     }
-                    console.log(option)
                     $('#wujud_perbuatan').html(option)
                 }
             });
+        }
+
+        function checkWPP() {
+            var wpp = $('#wujud_perbuatan_pidana').val()
+
+            if (wpp == 1) {
+                $('#narkobaDiv').css("display", "block");
+            } else {
+                $('#narkobaDiv').css("display", "none");
+            }
+        }
+
+        function checkPidana() {
+            var wpp = $('#dilakukan_pidana').val()
+
+            if (wpp == 'YA') {
+                $('#narkobaDiv').css("display", "block");
+                $('.divCheckPidana').css("display", "block");
+            } else {
+                $('#narkobaDiv').css("display", "none");
+                $('.divCheckPidana').css("display", "none");
+            }
         }
     </script>
 @endpush

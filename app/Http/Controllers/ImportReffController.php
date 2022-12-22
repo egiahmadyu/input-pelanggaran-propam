@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pangkat;
+use App\Models\PangkatPelanggaran;
 use App\Models\Putusan;
 use App\Models\WujudPerbuatan;
 use App\Models\WujudPerbuatanPidana;
@@ -18,9 +19,8 @@ class ImportReffController extends Controller
                 echo $data[$i].'<br>';
                 if (strlen($data[$i]))
                 {
-                    Putusan::create([
-                        'name' => $data[$i],
-                        'type' => 12
+                    PangkatPelanggaran::create([
+                        'name' => $data[$i]
                     ]);
                 }
 

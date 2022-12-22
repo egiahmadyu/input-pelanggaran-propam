@@ -7,6 +7,7 @@ use App\Models\SatuanPolres;
 use App\Models\SatuanPolsek;
 use App\Models\SideMenu;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 
 class SideMenuController extends Controller
 {
@@ -21,11 +22,11 @@ class SideMenuController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function form()
     {
       $data['dropdowns'] = SideMenu::where('type', 2)->get();
       $data['permissions'] = Permission::get();
-      return view('content.menu.add', $data);
+      return view('content.menu.form', $data);
     }
 
     /**

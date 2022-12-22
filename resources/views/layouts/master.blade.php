@@ -49,9 +49,10 @@
                 <a href="index.html">
                     <b class="logo-abbr"><img src="/assets/images/logo-propam.png" alt="" srcset=""
                             width="500"></b>
-                    <span class="logo-compact">E -BPHTB</span>
-                    <span class="brand-title">
-                        <img src="/assets/images/logo-propam.png" alt="" srcset="" width="50"> Propam
+                    <span class="logo-compact">PROPAM PRESISI</span>
+                    <span class="brand-title" style="color: white;font-size: 15px">
+                        <img src="/assets/images/logo-propam.png" alt="" srcset="" width="50"> PROPAM
+                        PRESISI
                     </span>
                 </a>
             </div>

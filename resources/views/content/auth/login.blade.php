@@ -41,7 +41,11 @@
                     <div class="form-input-content">
                         <div class="card login-form mb-0">
                             <div class="card-body pt-5">
-                                <img src="/assets/images/logo-propam.png" alt="" width="300">
+                                <div style="text-align: center">
+                                    <img src="/assets/images/logo-propam.png" alt="" width="100">
+                                    <h6>PROPAM PRESISI</h6>
+                                </div>
+
 
                                 <form class="mt-5 mb-5 login-input" action="{{ route('login.post') }}" method="post">
                                     @csrf
@@ -55,8 +59,6 @@
                                     </div>
                                     <button class="btn login-form__btn submit w-100">Sign In</button>
                                 </form>
-                                <p class="mt-5 login-form__footer">Dont have account? <a href="page-register.html"
-                                        class="text-primary">Sign Up</a> now</p>
                             </div>
                         </div>
                     </div>

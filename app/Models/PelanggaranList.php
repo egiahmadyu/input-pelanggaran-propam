@@ -20,4 +20,9 @@ class PelanggaranList extends Model
         return $this->hasOne(SatuanPolda::class, 'id', 'polda');
     }
 
+    public function getJenisPelanggar()
+    {
+        return $this->hasOne(JenisPelanggaran::class, 'id', 'jenis_pelanggaran');
+    }
+
 }

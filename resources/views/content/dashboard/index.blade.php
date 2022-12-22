@@ -3,51 +3,198 @@
 @section('content')
     <div class="container-fluid mt-3">
         <div class="row">
-            <div class="col-lg-3 col-sm-6">
+            <div class="col-lg-4 col-sm-6">
                 <div class="card gradient-1">
                     <div class="card-body">
                         <h3 class="card-title text-white">Total Pelanggaran</h3>
                         <div class="d-inline-block">
                             <h2 class="text-white">{{ count($pelanggarans) }}</h2>
-                            <p class="text-white mb-0">{{ date('Y') }}</p>
+                            {{-- <p class="text-white mb-0">{{ date('Y') }}</p> --}}
                         </div>
                         <span class="float-right display-5 opacity-5"><i class="fa fa-child"></i></span>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-sm-6">
+            {{-- <div class="col-lg-3 col-sm-6">
                 <div class="card gradient-2">
                     <div class="card-body">
-                        <h3 class="card-title text-white">Net Profit</h3>
+                        <h3 class="card-title text-white">Pelanggaran Narkoba</h3>
                         <div class="d-inline-block">
-                            <h2 class="text-white">$ 8541</h2>
-                            <p class="text-white mb-0">Jan - March 2019</p>
+                            <h2 class="text-white">{{ $totalPelanggarNarkoba }}</h2>
+                            <p class="text-white mb-0">
+                                {{ number_format(($totalPelanggarNarkoba / count($pelanggarans)) * 100, 2) }}%</p>
                         </div>
-                        <span class="float-right display-5 opacity-5"><i class="fa fa-money"></i></span>
+                        <span class="float-right display-5 opacity-5"><i class="fa fa-exclamation-circle"></i></span>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
+            </div> --}}
+            <div class="col-lg-4 col-sm-6">
                 <div class="card gradient-3">
                     <div class="card-body">
-                        <h3 class="card-title text-white">New Customers</h3>
+                        <h3 class="card-title text-white">Pelanggaran Disiplin</h3>
                         <div class="d-inline-block">
-                            <h2 class="text-white">4565</h2>
-                            <p class="text-white mb-0">Jan - March 2019</p>
+                            <h2 class="text-white">{{ $disiplin }}</h2>
+                            <p class="text-white mb-0">{{ number_format(($disiplin / count($pelanggarans)) * 100, 2) }}%</p>
                         </div>
                         <span class="float-right display-5 opacity-5"><i class="fa fa-users"></i></span>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-sm-6">
+            <div class="col-lg-4 col-sm-6">
                 <div class="card gradient-4">
                     <div class="card-body">
-                        <h3 class="card-title text-white">Customer Satisfaction</h3>
+                        <h3 class="card-title text-white">Pelanggaran Kode Etik</h3>
                         <div class="d-inline-block">
-                            <h2 class="text-white">99%</h2>
-                            <p class="text-white mb-0">Jan - March 2019</p>
+                            <h2 class="text-white">{{ $kodeEtik }}</h2>
+                            <p class="text-white mb-0">{{ number_format(($kodeEtik / count($pelanggarans)) * 100, 2) }}%</p>
                         </div>
-                        <span class="float-right display-5 opacity-5"><i class="fa fa-heart"></i></span>
+                        <span class="float-right display-5 opacity-5"><i class="fa fa-anchor"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body pb-0 d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-1">Jenis Kelamin</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="chartGender"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body pb-0 d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-1">Data Pelanggaran Pidana</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="chartWpp"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body pb-0 d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-1">Pangkat Pelanggar</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="chartPangkatPelanggaran"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-lg-4">
+                <div class="card" style="height: 300px">
+                    <div class="card-body pb-0 d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-1">Jenis Narkoba</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="chartJenisNarkoba"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card" style="height: 300px">
+                    <div class="card-body pb-0 d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-1">Jumlah Pelanggaran Anggota Polri terhadap penyalahgunaan Narkoba</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Peran</th>
+                                    <th scope="col">Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($penyalahGunaanNarkoba as $index => $value)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $value->name }}</td>
+                                        <td>{{ $value->total }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2">Total</td>
+                                    <td><b>{{ $penyalahGunaanNarkoba->sum('total') }}</b></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        {{-- <div id="chartWujudPerbuatan"></div> --}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card" style="height: 300px">
+                    <div class="card-body pb-0 d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-1">Data keterlibatan anggota Polri pada kasus pungli dan korupsi</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="chartPungli"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body pb-0 d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-1">Wujud Perbuatan Pelanggaran</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Jenis Pelanggaran</th>
+                                    <th scope="col">Wujud Perbuatan</th>
+                                    <th scope="col">Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($dataWujudPerbuatan as $index => $value)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $value->type }}</td>
+                                        <td>{{ $value->name }}</td>
+                                        <td>{{ $value->total }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2">Total</td>
+                                    <td><b>{{ $dataWujudPerbuatan->sum('total') }}</b></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        {{-- <div id="chartWujudPerbuatan"></div> --}}
                     </div>
                 </div>
             </div>
@@ -60,481 +207,11 @@
                         <div class="card">
                             <div class="card-body pb-0 d-flex justify-content-between">
                                 <div>
-                                    <h4 class="mb-1">Polda Terbanyak yang mengatasi Pelanggaran</h4>
+                                    <h4 class="mb-1">Data Pelanggar Berdasarkan WIlayah</h4>
                                 </div>
                             </div>
                             <div class="card-body">
                                 <div id="bar_chart"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-        <div class="row">
-            <div class="col-lg-6 col-md-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Order Summary</h4>
-                        <div id="morris-bar-chart"></div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="card card-widget">
-                    <div class="card-body">
-                        <h5 class="text-muted">Order Overview </h5>
-                        <h2 class="mt-4">5680</h2>
-                        <span>Total Revenue</span>
-                        <div class="mt-4">
-                            <h4>30</h4>
-                            <h6>Online Order <span class="pull-right">30%</span></h6>
-                            <div class="progress mb-3" style="height: 7px">
-                                <div class="progress-bar bg-primary" style="width: 30%;" role="progressbar">
-                                    <span class="sr-only">30% Order</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-4">
-                            <h4>50</h4>
-                            <h6 class="m-t-10 text-muted">Offline Order <span class="pull-right">50%</span></h6>
-                            <div class="progress mb-3" style="height: 7px">
-                                <div class="progress-bar bg-success" style="width: 50%;" role="progressbar">
-                                    <span class="sr-only">50% Order</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-4">
-                            <h4>20</h4>
-                            <h6 class="m-t-10 text-muted">Cash On Develery <span class="pull-right">20%</span>
-                            </h6>
-                            <div class="progress mb-3" style="height: 7px">
-                                <div class="progress-bar bg-warning" style="width: 20%;" role="progressbar">
-                                    <span class="sr-only">20% Order</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="card">
-                    <div class="card-body px-0">
-                        <h4 class="card-title px-4 mb-3">Todo</h4>
-                        <div class="todo-list">
-                            <div class="tdl-holder">
-                                <div class="tdl-content">
-                                    <ul id="todo_list">
-                                        <li><label><input type="checkbox"><i></i><span>Get up</span><a href='#'
-                                                    class="ti-trash"></a></label></li>
-                                        <li><label><input type="checkbox" checked><i></i><span>Stand up</span><a
-                                                    href='#' class="ti-trash"></a></label></li>
-                                        <li><label><input type="checkbox"><i></i><span>Don't give up the
-                                                    fight.</span><a href='#' class="ti-trash"></a></label></li>
-                                        <li><label><input type="checkbox" checked><i></i><span>Do something
-                                                    else</span><a href='#' class="ti-trash"></a></label></li>
-                                    </ul>
-                                </div>
-                                <div class="px-4">
-                                    <input type="text" class="tdl-new form-control"
-                                        placeholder="Write new item and hit 'Enter'...">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="text-center">
-                            <img src="./images/users/8.jpg" class="rounded-circle" alt="">
-                            <h5 class="mt-3 mb-1">Ana Liem</h5>
-                            <p class="m-0">Senior Manager</p>
-                            <!-- <a href="javascript:void()" class="btn btn-sm btn-warning">Send Message</a> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="text-center">
-                            <img src="./images/users/5.jpg" class="rounded-circle" alt="">
-                            <h5 class="mt-3 mb-1">John Abraham</h5>
-                            <p class="m-0">Store Manager</p>
-                            <!-- <a href="javascript:void()" class="btn btn-sm btn-warning">Send Message</a> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="text-center">
-                            <img src="./images/users/7.jpg" class="rounded-circle" alt="">
-                            <h5 class="mt-3 mb-1">John Doe</h5>
-                            <p class="m-0">Sales Man</p>
-                            <!-- <a href="javascript:void()" class="btn btn-sm btn-warning">Send Message</a> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="text-center">
-                            <img src="./images/users/1.jpg" class="rounded-circle" alt="">
-                            <h5 class="mt-3 mb-1">Mehedi Titas</h5>
-                            <p class="m-0">Online Marketer</p>
-                            <!-- <a href="javascript:void()" class="btn btn-sm btn-warning">Send Message</a> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="active-member">
-                            <div class="table-responsive">
-                                <table class="table table-xs mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th>Customers</th>
-                                            <th>Product</th>
-                                            <th>Country</th>
-                                            <th>Status</th>
-                                            <th>Payment Method</th>
-                                            <th>Activity</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><img src="./images/avatar/1.jpg" class=" rounded-circle mr-3"
-                                                    alt="">Sarah Smith</td>
-                                            <td>iPhone X</td>
-                                            <td>
-                                                <span>United States</span>
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <div class="progress" style="height: 6px">
-                                                        <div class="progress-bar bg-success" style="width: 50%">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><i class="fa fa-circle-o text-success  mr-2"></i> Paid</td>
-                                            <td>
-                                                <span>Last Login</span>
-                                                <span class="m-0 pl-3">10 sec ago</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><img src="./images/avatar/2.jpg" class=" rounded-circle mr-3"
-                                                    alt="">Walter R.</td>
-                                            <td>Pixel 2</td>
-                                            <td><span>Canada</span></td>
-                                            <td>
-                                                <div>
-                                                    <div class="progress" style="height: 6px">
-                                                        <div class="progress-bar bg-success" style="width: 50%">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><i class="fa fa-circle-o text-success  mr-2"></i> Paid</td>
-                                            <td>
-                                                <span>Last Login</span>
-                                                <span class="m-0 pl-3">50 sec ago</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><img src="./images/avatar/3.jpg" class=" rounded-circle mr-3"
-                                                    alt="">Andrew D.</td>
-                                            <td>OnePlus</td>
-                                            <td><span>Germany</span></td>
-                                            <td>
-                                                <div>
-                                                    <div class="progress" style="height: 6px">
-                                                        <div class="progress-bar bg-warning" style="width: 50%">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><i class="fa fa-circle-o text-warning  mr-2"></i> Pending</td>
-                                            <td>
-                                                <span>Last Login</span>
-                                                <span class="m-0 pl-3">10 sec ago</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><img src="./images/avatar/6.jpg" class=" rounded-circle mr-3"
-                                                    alt=""> Megan S.</td>
-                                            <td>Galaxy</td>
-                                            <td><span>Japan</span></td>
-                                            <td>
-                                                <div>
-                                                    <div class="progress" style="height: 6px">
-                                                        <div class="progress-bar bg-success" style="width: 50%">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><i class="fa fa-circle-o text-success  mr-2"></i> Paid</td>
-                                            <td>
-                                                <span>Last Login</span>
-                                                <span class="m-0 pl-3">10 sec ago</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><img src="./images/avatar/4.jpg" class=" rounded-circle mr-3"
-                                                    alt=""> Doris R.</td>
-                                            <td>Moto Z2</td>
-                                            <td><span>England</span></td>
-                                            <td>
-                                                <div>
-                                                    <div class="progress" style="height: 6px">
-                                                        <div class="progress-bar bg-success" style="width: 50%">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><i class="fa fa-circle-o text-success  mr-2"></i> Paid</td>
-                                            <td>
-                                                <span>Last Login</span>
-                                                <span class="m-0 pl-3">10 sec ago</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><img src="./images/avatar/5.jpg" class=" rounded-circle mr-3"
-                                                    alt="">Elizabeth W.</td>
-                                            <td>Notebook Asus</td>
-                                            <td><span>China</span></td>
-                                            <td>
-                                                <div>
-                                                    <div class="progress" style="height: 6px">
-                                                        <div class="progress-bar bg-warning" style="width: 50%">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><i class="fa fa-circle-o text-warning  mr-2"></i> Pending</td>
-                                            <td>
-                                                <span>Last Login</span>
-                                                <span class="m-0 pl-3">10 sec ago</span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-xl-3 col-lg-6 col-sm-6 col-xxl-6">
-
-                <div class="card">
-                    <div class="chart-wrapper mb-4">
-                        <div class="px-4 pt-4 d-flex justify-content-between">
-                            <div>
-                                <h4>Sales Activities</h4>
-                                <p>Last 6 Month</p>
-                            </div>
-                            <div>
-                                <span><i class="fa fa-caret-up text-success"></i></span>
-                                <h4 class="d-inline-block text-success">720</h4>
-                                <p class=" text-danger">+120.5(5.0%)</p>
-                            </div>
-                        </div>
-                        <div>
-                            <canvas id="chart_widget_3"></canvas>
-                        </div>
-                    </div>
-                    <div class="card-body border-top pt-4">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <ul>
-                                    <li>5% Negative Feedback</li>
-                                    <li>95% Positive Feedback</li>
-                                </ul>
-                                <div>
-                                    <h5>Customer Feedback</h5>
-                                    <h3>385749</h3>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div id="chart_widget_3_1"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 col-sm-6 col-xxl-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Activity</h4>
-                        <div id="activity">
-                            <div class="media border-bottom-1 pt-3 pb-3">
-                                <img width="35" src="./images/avatar/1.jpg" class="mr-3 rounded-circle">
-                                <div class="media-body">
-                                    <h5>Received New Order</h5>
-                                    <p class="mb-0">I shared this on my fb wall a few months back,</p>
-                                </div><span class="text-muted ">April 24, 2018</span>
-                            </div>
-                            <div class="media border-bottom-1 pt-3 pb-3">
-                                <img width="35" src="./images/avatar/2.jpg" class="mr-3 rounded-circle">
-                                <div class="media-body">
-                                    <h5>iPhone develered</h5>
-                                    <p class="mb-0">I shared this on my fb wall a few months back,</p>
-                                </div><span class="text-muted ">April 24, 2018</span>
-                            </div>
-                            <div class="media border-bottom-1 pt-3 pb-3">
-                                <img width="35" src="./images/avatar/2.jpg" class="mr-3 rounded-circle">
-                                <div class="media-body">
-                                    <h5>3 Order Pending</h5>
-                                    <p class="mb-0">I shared this on my fb wall a few months back,</p>
-                                </div><span class="text-muted ">April 24, 2018</span>
-                            </div>
-                            <div class="media border-bottom-1 pt-3 pb-3">
-                                <img width="35" src="./images/avatar/2.jpg" class="mr-3 rounded-circle">
-                                <div class="media-body">
-                                    <h5>Join new Manager</h5>
-                                    <p class="mb-0">I shared this on my fb wall a few months back,</p>
-                                </div><span class="text-muted ">April 24, 2018</span>
-                            </div>
-                            <div class="media border-bottom-1 pt-3 pb-3">
-                                <img width="35" src="./images/avatar/2.jpg" class="mr-3 rounded-circle">
-                                <div class="media-body">
-                                    <h5>Branch open 5 min Late</h5>
-                                    <p class="mb-0">I shared this on my fb wall a few months back,</p>
-                                </div><span class="text-muted ">April 24, 2018</span>
-                            </div>
-                            <div class="media border-bottom-1 pt-3 pb-3">
-                                <img width="35" src="./images/avatar/2.jpg" class="mr-3 rounded-circle">
-                                <div class="media-body">
-                                    <h5>New support ticket received</h5>
-                                    <p class="mb-0">I shared this on my fb wall a few months back,</p>
-                                </div><span class="text-muted ">April 24, 2018</span>
-                            </div>
-                            <div class="media pt-3 pb-3">
-                                <img width="35" src="./images/avatar/3.jpg" class="mr-3 rounded-circle">
-                                <div class="media-body">
-                                    <h5>Facebook Post 30 Comments</h5>
-                                    <p class="mb-0">I shared this on my fb wall a few months back,</p>
-                                </div><span class="text-muted ">April 24, 2018</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-6 col-lg-12 col-sm-12 col-xxl-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title mb-0">Store Location</h4>
-                        <div id="world-map" style="height: 470px;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-        <div class="row">
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="social-graph-wrapper widget-facebook">
-                        <span class="s-icon"><i class="fa fa-facebook"></i></span>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 border-right">
-                            <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                <h4 class="m-1">89k</h4>
-                                <p class="m-0">Friends</p>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                <h4 class="m-1">119k</h4>
-                                <p class="m-0">Followers</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="social-graph-wrapper widget-linkedin">
-                        <span class="s-icon"><i class="fa fa-linkedin"></i></span>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 border-right">
-                            <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                <h4 class="m-1">89k</h4>
-                                <p class="m-0">Friends</p>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                <h4 class="m-1">119k</h4>
-                                <p class="m-0">Followers</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="social-graph-wrapper widget-googleplus">
-                        <span class="s-icon"><i class="fa fa-google-plus"></i></span>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 border-right">
-                            <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                <h4 class="m-1">89k</h4>
-                                <p class="m-0">Friends</p>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                <h4 class="m-1">119k</h4>
-                                <p class="m-0">Followers</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="social-graph-wrapper widget-twitter">
-                        <span class="s-icon"><i class="fa fa-twitter"></i></span>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 border-right">
-                            <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                <h4 class="m-1">89k</h4>
-                                <p class="m-0">Friends</p>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                <h4 class="m-1">119k</h4>
-                                <p class="m-0">Followers</p>
                             </div>
                         </div>
                     </div>
@@ -547,6 +224,11 @@
 @push('style')
     <style>
         #bar_chart {
+            width: 100%;
+            height: 500px;
+        }
+
+        #chartWujudPerbuatan {
             width: 100%;
             height: 500px;
         }
@@ -565,7 +247,6 @@
             am4core.useTheme(am4themes_animated);
             // Themes end
             var dataChart = {!! json_encode($chartPolda, true) !!}
-            console.log(dataChart)
             // Create chart instance
             var chart = am4core.create("bar_chart", am4charts.XYChart);
             chart.scrollbarX = new am4core.Scrollbar();
@@ -615,5 +296,288 @@
             chart.cursor = new am4charts.XYCursor();
 
         }); // end am4core.ready()
+
+        am4core.ready(function() {
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+
+            // Create chart instance
+            var chart = am4core.create("chartGender", am4charts.PieChart);
+            var dataChart = {!! json_encode($dataByGender, true) !!}
+
+            // Add data
+            chart.data = dataChart
+
+            // Add and configure Series
+            var pieSeries = chart.series.push(new am4charts.PieSeries());
+            pieSeries.dataFields.value = "total";
+            pieSeries.dataFields.category = "gender";
+            pieSeries.slices.template.stroke = am4core.color("#fff");
+            pieSeries.slices.template.strokeOpacity = 1;
+
+            // This creates initial animation
+            pieSeries.hiddenState.properties.opacity = 1;
+            pieSeries.hiddenState.properties.endAngle = -90;
+            pieSeries.hiddenState.properties.startAngle = -90;
+
+            chart.hiddenState.properties.radius = am4core.percent(0);
+
+        })
+
+        am4core.ready(function() {
+
+            // Themes begin
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+
+            // Create chart
+            var dataChart = {!! json_encode($dataByWpp, true) !!}
+            var chart = am4core.create("chartWpp", am4charts.PieChart);
+            chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+
+            chart.data = dataChart
+
+            var series = chart.series.push(new am4charts.PieSeries());
+            series.dataFields.value = "total";
+            series.dataFields.radiusValue = "total";
+            series.dataFields.category = "name";
+            series.slices.template.cornerRadius = 6;
+            series.colors.step = 3;
+
+            series.hiddenState.properties.endAngle = -90;
+
+            // chart.legend = new am4charts.Legend();
+
+        });
+
+
+        am4core.ready(function() {
+
+
+            var dataChart = {!! json_encode($dataWujudPerbuatan, true) !!}
+            // chart.data = dataChart
+
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+
+            // Create chart instance
+            var chart = am4core.create("chartWujudPerbuatan", am4charts.XYChart3D);
+            chart.paddingBottom = 30;
+            chart.angle = 35;
+
+            // Add data
+            chart.data = dataChart
+
+            // Create axes
+            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.dataFields.category = "name";
+            categoryAxis.renderer.grid.template.location = 0;
+            categoryAxis.renderer.minGridDistance = 20;
+            categoryAxis.renderer.inside = true;
+            categoryAxis.renderer.grid.template.disabled = true;
+
+            let labelTemplate = categoryAxis.renderer.labels.template;
+            labelTemplate.rotation = -90;
+            labelTemplate.horizontalCenter = "left";
+            labelTemplate.verticalCenter = "middle";
+            labelTemplate.dy = 10; // moves it a bit down;
+            labelTemplate.inside =
+                false; // this is done to avoid settings which are not suitable when label is rotated
+
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+            valueAxis.renderer.grid.template.disabled = true;
+
+            // Create series
+            var series = chart.series.push(new am4charts.ConeSeries());
+            series.dataFields.valueY = "total";
+            series.dataFields.categoryX = "name";
+
+            var columnTemplate = series.columns.template;
+            columnTemplate.adapter.add("fill", function(fill, target) {
+                return chart.colors.getIndex(target.dataItem.index);
+            })
+
+            columnTemplate.adapter.add("stroke", function(stroke, target) {
+                return chart.colors.getIndex(target.dataItem.index);
+            })
+        })
+
+        am4core.ready(function() {
+
+            // Themes begin
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+
+            // Create chart instance
+            var chart = am4core.create("chartPangkatPelanggaran", am4charts.PieChart);
+
+            // Set data
+            var dataChart = {!! json_encode($dataPangkatPelanggar, true) !!}
+            var selected;
+            var types = dataChart
+            // var types = [{
+            //     type: "Fossil Energy",
+            //     percent: 70,
+            //     color: chart.colors.getIndex(0),
+            //     subs: [{
+            //         type: "Oil",
+            //         percent: 15
+            //     }, {
+            //         type: "Coal",
+            //         percent: 35
+            //     }, {
+            //         type: "Nuclear",
+            //         percent: 20
+            //     }]
+            // }, {
+            //     type: "Green Energy",
+            //     percent: 30,
+            //     color: chart.colors.getIndex(1),
+            //     subs: [{
+            //         type: "Hydro",
+            //         percent: 15
+            //     }, {
+            //         type: "Wind",
+            //         percent: 10
+            //     }, {
+            //         type: "Other",
+            //         percent: 5
+            //     }]
+            // }];
+
+            // Add data
+            chart.data = generateChartData();
+
+            // Add and configure Series
+            var pieSeries = chart.series.push(new am4charts.PieSeries());
+            pieSeries.dataFields.value = "percent";
+            pieSeries.dataFields.category = "type";
+            pieSeries.slices.template.propertyFields.fill = "color";
+            pieSeries.slices.template.propertyFields.isActive = "pulled";
+            pieSeries.slices.template.strokeWidth = 0;
+
+            function generateChartData() {
+                var chartData = [];
+                for (var i = 0; i < types.length; i++) {
+                    if (i == selected) {
+                        for (var x = 0; x < types[i].subs.length; x++) {
+                            chartData.push({
+                                type: types[i].subs[x].type,
+                                percent: types[i].subs[x].percent,
+                                color: chart.colors.getIndex(i + 1),
+                                pulled: true
+                            });
+                        }
+                    } else {
+                        chartData.push({
+                            type: types[i].type,
+                            percent: types[i].percent,
+                            color: chart.colors.getIndex(i + 1),
+                            id: i
+                        });
+                    }
+                }
+                return chartData;
+            }
+
+            pieSeries.slices.template.events.on("hit", function(event) {
+                if (event.target.dataItem.dataContext.id != undefined) {
+                    selected = event.target.dataItem.dataContext.id;
+                } else {
+                    selected = undefined;
+                }
+                chart.data = generateChartData();
+            });
+
+        });
+
+        am4core.ready(function() {
+
+            // Themes begin
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+
+            var chart = am4core.create("chartPungli", am4charts.PieChart);
+            chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+
+            chart.data = [{
+                    country: "Lithuania",
+                    value: 401
+                },
+                {
+                    country: "Czech Republic",
+                    value: 300
+                },
+                {
+                    country: "Ireland",
+                    value: 200
+                },
+                {
+                    country: "Germany",
+                    value: 165
+                },
+                {
+                    country: "Australia",
+                    value: 139
+                },
+                {
+                    country: "Austria",
+                    value: 128
+                }
+            ];
+            chart.radius = am4core.percent(70);
+            chart.innerRadius = am4core.percent(40);
+            chart.startAngle = 180;
+            chart.endAngle = 360;
+
+            var series = chart.series.push(new am4charts.PieSeries());
+            series.dataFields.value = "value";
+            series.dataFields.category = "country";
+
+            series.slices.template.cornerRadius = 10;
+            series.slices.template.innerCornerRadius = 2;
+            series.slices.template.draggable = true;
+            series.slices.template.inert = true;
+            series.alignLabels = false;
+
+            series.hiddenState.properties.startAngle = 90;
+            series.hiddenState.properties.endAngle = 90;
+
+            // chart.legend = new am4charts.Legend();
+
+        });
+
+        am4core.ready(function() {
+
+            // Themes begin
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+
+            // Create chart instance
+            var chart = am4core.create("chartJenisNarkoba", am4charts.PieChart);
+
+            // Add data
+            var dataChart = {!! json_encode($jenisNarkoba, true) !!}
+            chart.data = dataChart
+
+            // Add and configure Series
+            var pieSeries = chart.series.push(new am4charts.PieSeries());
+            pieSeries.dataFields.value = "total";
+            pieSeries.dataFields.category = "name";
+            pieSeries.innerRadius = am4core.percent(50);
+            pieSeries.ticks.template.disabled = true;
+            pieSeries.labels.template.disabled = true;
+
+            var rgm = new am4core.RadialGradientModifier();
+            rgm.brightnesses.push(-0.8, -0.8, -0.5, 0, -0.5);
+            pieSeries.slices.template.fillModifier = rgm;
+            pieSeries.slices.template.strokeModifier = rgm;
+            pieSeries.slices.template.strokeOpacity = 0.4;
+            pieSeries.slices.template.strokeWidth = 0;
+
+            // chart.legend = new am4charts.Legend();
+            // chart.legend.position = "right";
+
+        });
     </script>
 @endpush
