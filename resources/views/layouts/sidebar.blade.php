@@ -2,9 +2,13 @@
 $menus = Helper::getMenu();
 ?>
 <div class="nk-sidebar">
+
     <div class="nk-nav-scroll">
         <ul class="metismenu" id="menu">
-            <li class="nav-label">Dashboard</li>
+
+            {{-- <li class="nav-label">Dashboard</li> --}}
+            <li class="nav-label"> <img src="/assets/images/logo-propam.png" alt="" srcset="" width="200">
+            </li>
             @foreach ($menus as $menu)
                 @can($menu->permission)
                     @if ($menu->type == 2)

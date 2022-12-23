@@ -18,6 +18,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         try {
+            // dd($request->all());
         $role = Role::find($request->role);
         // dd($role);
         $user = User::create([

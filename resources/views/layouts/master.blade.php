@@ -46,12 +46,11 @@
         ***********************************-->
         <div class="nav-header">
             <div class="brand-logo">
-                <a href="index.html">
+                <a href="/">
                     <b class="logo-abbr"><img src="/assets/images/logo-propam.png" alt="" srcset=""
                             width="500"></b>
                     <span class="logo-compact">PROPAM PRESISI</span>
-                    <span class="brand-title" style="color: white;font-size: 15px">
-                        <img src="/assets/images/logo-propam.png" alt="" srcset="" width="50"> PROPAM
+                    <span class="brand-title" style="color: white">PROPAM
                         PRESISI
                     </span>
                 </a>

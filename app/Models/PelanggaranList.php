@@ -20,6 +20,16 @@ class PelanggaranList extends Model
         return $this->hasOne(SatuanPolda::class, 'id', 'polda');
     }
 
+    public function getPangkat()
+    {
+        return $this->hasOne(Pangkat::class, 'id', 'pangkat');
+    }
+
+    public function getDiktuk()
+    {
+        return $this->hasOne(Diktuk::class, 'id', 'diktuk');
+    }
+
     public function getJenisPelanggar()
     {
         return $this->hasOne(JenisPelanggaran::class, 'id', 'jenis_pelanggaran');

@@ -27,7 +27,8 @@ class PelanggaranController extends Controller
             'jenis_kelamins' => Gender::all(),
             'pangkats' => Pangkat::all(),
             'wujud_perbuatans' => WujudPerbuatan::all(),
-            'poldas' => SatuanPolda::all()
+            'poldas' => SatuanPolda::all(),
+            'jabatans' => PelanggaranList::groupBy('jabatan')->select('jabatan')->get()
         ];
 
         return view('content.pelanggaran.index', $data);
@@ -43,10 +44,25 @@ class PelanggaranController extends Controller
 
     public function show(Request $request)
     {
-        $data = PelanggaranList::with('getJenisPelanggar');
+        $data = PelanggaranList::with('getJenisPelanggar')->with('getPolda')->with('getPangkat');
+
+        if ($request->polda) $data = $data->where('polda', $request->polda);
+
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+
+        if ($request->jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $request->jenis_pelanggaran);
+
+        if ($request->wujud_perbuatan) $data = $data->where('wujud_perbuatan', $request->wujud_perbuatan);
+
+
+
+
         return Datatables::of($data)->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $btn = '<a href="/pelanggaran-data/edit/'.$row->id.'" class="btn btn-secondary btn-sm">Update Putusan</a> | <a href="javascript:void(0)" class="btn btn-primary btn-sm">View</a>';
+                    $res = base64_encode(json_encode($row));
+                    $btn = '<a href="/pelanggaran-data/edit/'.$row->id.'" class="btn btn-secondary btn-sm">Update Putusan</a> | <a href="javascript:void(0)" onclick="openDetail('.$row->id.')" class="btn btn-primary btn-sm">View</a>';
                     return $btn;
                 })
                 ->rawColumns(['action'])
@@ -85,5 +101,16 @@ class PelanggaranController extends Controller
 
         return redirect()->back();
 
+    }
+
+    public function getDetail($id)
+    {
+        $data = PelanggaranList::with('getJenisPelanggar')->with('getPolda')->with('getPangkat')
+        ->with('getDiktuk')
+        ->where('id', $id)->first();
+
+        return response()->json([
+            'data' => $data
+        ]);
     }
 }

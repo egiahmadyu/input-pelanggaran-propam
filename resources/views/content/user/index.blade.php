@@ -93,7 +93,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Username</label>
-                            <input type="text" class="form-control" name="email" required>
+                            <input type="text" class="form-control" name="username" required>
                         </div>
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Password</label>
@@ -101,7 +101,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Role</label>
-                            <select class="form-control" id="role_user">
+                            <select class="form-control" id="role_user" name="role">
                                 <option value="">Semua</option>
                                 @foreach ($roles as $value)
                                     <option value="{{ $value->id }}">{{ $value->name }}</option>
@@ -142,7 +142,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Role</label>
-                            <select class="form-control" id="role_user">
+                            <select class="form-control" id="role_user" name="role">
                                 <option value="">Semua</option>
                                 @foreach ($roles as $value)
                                     <option value="{{ $value->id }}">{{ $value->name }}</option>

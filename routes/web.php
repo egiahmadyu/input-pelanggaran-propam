@@ -34,10 +34,13 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
     // Route::get('/', $controller_path . '\dashboard\Analytics@index')->name('dashboard-analytics');
     Route::get('/', [DashboardController::class, 'index']);
+    Route::get('/disiplin', [DashboardController::class, 'disiplin']);
+    Route::get('/kode-etik', [DashboardController::class, 'kodeEtik']);
 
     // Pelanggaran
     Route::get('/tambah-data', [PelanggaranController::class, 'form'])->name('pelanggaran.add');
     Route::get('/pelanggaran-data', [PelanggaranController::class, 'index'])->name('pelanggaran.index');
+    Route::get('/pelanggaran-data/detail/{id}', [PelanggaranController::class, 'getDetail'])->name('pelanggaran.detail');
     Route::get('/pelanggaran-data/edit/{id}', [PelanggaranController::class, 'formEdit'])->name('pelanggaran.form.edit');
     Route::post('/pelanggaran-data/edit/{id}/save', [PelanggaranController::class, 'saveEdit'])->name('pelanggaran.edit.save');
     Route::post('/pelanggaran-data/show', [PelanggaranController::class, 'show'])->name('pelanggaran.show');
@@ -74,6 +77,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('logout', function () {
         auth()->logout();
+        return redirect('/');
     });
 });
 

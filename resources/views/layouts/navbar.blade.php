@@ -26,7 +26,7 @@
             <ul class="clearfix">
                 <li class="icons dropdown d-none d-md-flex">
                     <a href="javascript:void(0)" class="log-user" data-toggle="dropdown">
-                        <span>Admin</span>
+                        <span>{{ auth()->user()->name }}</span>
                     </a>
                 </li>
                 <li class="icons dropdown">
@@ -51,7 +51,7 @@
                                     <a href="page-lock.html"><i class="icon-lock"></i> <span>Lock
                                             Screen</span></a>
                                 </li> --}}
-                                <li><a href=""><i class="icon-key"></i>
+                                <li><a href="/logout"><i class="icon-key"></i>
                                         <span>Logout</span></a>
                                 </li>
                             </ul>
