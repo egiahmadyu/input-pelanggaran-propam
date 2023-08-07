@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PutusanController;
 use App\Http\Controllers\SatuanController;
 use App\Http\Controllers\WujudPerbuatanController;
 use Illuminate\Http\Request;
@@ -24,3 +25,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('polda/{id}', [SatuanController::class, 'getPolresByPolda']);
 Route::get('polres/{id}', [SatuanController::class, 'getPolseByPolres']);
 Route::get('wujud_perbuatan/type/{type}', [WujudPerbuatanController::class, 'getWPbyType']);
+Route::get('putusan/type/{type}', [PutusanController::class, 'getPutusanByType']);

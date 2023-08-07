@@ -37,8 +37,9 @@ class PelanggaranController extends Controller
     public function formEdit($id)
     {
         $data['list_petusan'] = PelanggaranList::find($id)->toArray();
+        $data['putusans'] = Putusan::where('jenis_pelanggaran_id', $data['list_petusan']['jenis_pelanggaran'])->get();
         $data['id'] = $id;
-        // dd($data['putusans']['putusan_1']);
+        // dd($data['list_petusan']);
         return view('content.pelanggaran.edit_putusan', $data);
     }
 
@@ -60,13 +61,13 @@ class PelanggaranController extends Controller
 
 
         return Datatables::of($data)->addIndexColumn()
-                ->addColumn('action', function($row){
-                    $res = base64_encode(json_encode($row));
-                    $btn = '<a href="/pelanggaran-data/edit/'.$row->id.'" class="btn btn-secondary btn-sm">Update Putusan</a> | <a href="javascript:void(0)" onclick="openDetail('.$row->id.')" class="btn btn-primary btn-sm">View</a>';
-                    return $btn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+            ->addColumn('action', function ($row) {
+                $res = base64_encode(json_encode($row));
+                $btn = '<a href="/pelanggaran-data/edit/' . $row->id . '" class="btn btn-secondary btn-sm">Update Putusan</a> | <a href="javascript:void(0)" onclick="openDetail(' . $row->id . ')" class="btn btn-primary btn-sm">View</a>';
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
     public function form()
@@ -89,6 +90,20 @@ class PelanggaranController extends Controller
     public function save(Request $request)
     {
         $data = PelanggaranList::create($request->all());
+        if ($request->pidana == 'TIDAK') {
+            $data->wujud_perbuatan_pidana = null;
+            $data->nolp_pidana = null;
+            $data->tgllp_pidana = null;
+            $data->peran_narkoba = null;
+            $data->jenis_narkoba = null;
+        } else {
+            $wpp = WujudPerbuatanPidana::find($request->wujud_perbuatan_pidana)->first();
+            if ($wpp->name != 'Narkoba') {
+                $data->peran_narkoba = null;
+                $data->jenis_narkoba = null;
+            }
+        }
+        $data->save();
         return redirect('/');
     }
 
@@ -100,14 +115,13 @@ class PelanggaranController extends Controller
         PelanggaranList::where('id', $id)->update($request->all());
 
         return redirect()->back();
-
     }
 
     public function getDetail($id)
     {
         $data = PelanggaranList::with('getJenisPelanggar')->with('getPolda')->with('getPangkat')
-        ->with('getDiktuk')
-        ->where('id', $id)->first();
+            ->with('getDiktuk')
+            ->where('id', $id)->first();
 
         return response()->json([
             'data' => $data

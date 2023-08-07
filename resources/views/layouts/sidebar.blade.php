@@ -5,7 +5,6 @@ $menus = Helper::getMenu();
 
     <div class="nk-nav-scroll">
         <ul class="metismenu" id="menu">
-
             {{-- <li class="nav-label">Dashboard</li> --}}
             <li class="nav-label"> <img src="/assets/images/logo-propam.png" alt="" srcset="" width="200">
             </li>
@@ -20,7 +19,7 @@ $menus = Helper::getMenu();
                             <ul aria-expanded="false">
                                 @foreach ($childs as $valueJ)
                                     @can($valueJ->permission)
-                                        <li><a href="/{{ $valueJ->url }}">{{ $valueJ->name }}</a></li>
+                                        <li><a href="/{{ $menu->url }}/{{ $valueJ->url }}">{{ $valueJ->name }}</a></li>
                                     @endcan
                                 @endforeach
                             </ul>

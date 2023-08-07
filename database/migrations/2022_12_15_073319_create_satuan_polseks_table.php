@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('satuan_polseks', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('polres_id');
             $table->string('name');
             $table->timestamps();
         });

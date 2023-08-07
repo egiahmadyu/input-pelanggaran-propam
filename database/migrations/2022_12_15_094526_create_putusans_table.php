@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('putusans', function (Blueprint $table) {
             $table->id();
-            $table->integer('type');
+            $table->integer('jenis_pelanggaran_id');
             $table->string('name');
             $table->timestamps();
         });

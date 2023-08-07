@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Putusan extends Model
 {
     use HasFactory;
-    protected $fillable = [ 'name', 'type' ];
+    protected $fillable = ['name', 'jenis_pelanggaran_id'];
 }

@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class WujudPerbuatanPidana extends Model
 {
     use HasFactory;
-    protected $fillable = [ 'name' ];
+    protected $fillable = ['name', 'jenis_pelanggaran_id'];
 }

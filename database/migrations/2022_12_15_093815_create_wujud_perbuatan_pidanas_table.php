@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('wujud_perbuatan_pidanas', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('jenis_pelanggaran_id')->nullable();
             $table->string('name');
             $table->timestamps();
         });

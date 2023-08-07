@@ -22,9 +22,25 @@ class WujudPerbuatanSeeder extends Seeder
             'Bekerjasama dengan orang lain untuk keuntungan pribadi atau golongan'
         );
 
-        for ($i=0; $i < count($data); $i++) {
+        for ($i = 0; $i < count($data); $i++) {
             WujudPerbuatan::create([
-                'name' => $data[$i]
+                'name' => $data[$i],
+                'jenis_pelanggaran_id' => 1
+            ]);
+        }
+
+
+        $data = array(
+            'Terlibat Dalam Kegiatan Yang Bertujuan Untuk Mengubah, Mengganti Atau Menentang Pancasila Dan Undang- Undang Dasar Negara Republik Indonesia Tahun 1945 Secara Tidak Sah',
+            'Melibatkan Diri Pada Kegiatan Politik Praktis',
+            'Menggunakan Hak Memilih Dan Dipilih',
+            'Mendukung, Mengikuti, Atau Menjadi Simpatisan Paham/Aliran Terorisme, Atau Ekstrimisme Berbasis Kekerasan Yang Dapat Mengarah Pada Terorisme'
+        );
+
+        for ($i = 0; $i < count($data); $i++) {
+            WujudPerbuatan::create([
+                'name' => $data[$i],
+                'jenis_pelanggaran_id' => 2
             ]);
         }
     }

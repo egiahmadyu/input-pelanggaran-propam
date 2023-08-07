@@ -38,7 +38,6 @@
                                 <form action="/pelanggaran-data/edit/{{ $id }}/save" method="post">
                                     @csrf
                                     @for ($i = 1; $i < 13; $i++)
-                                        <?php $putusans = Helper::getPutusan($i); ?>
                                         <div class="form-group">
                                             <label>Putusan {{ $i }}</label>
                                             <select class="form-control" id="putusan_{{ $i }}"

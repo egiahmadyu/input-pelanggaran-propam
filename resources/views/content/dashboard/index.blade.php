@@ -34,7 +34,8 @@
                         <h3 class="card-title text-white">Pelanggaran Disiplin</h3>
                         <div class="d-inline-block">
                             <h2 class="text-white">{{ $disiplin }}</h2>
-                            <p class="text-white mb-0">{{ number_format(($disiplin / count($pelanggarans)) * 100, 2) }}%</p>
+                            <p class="text-white mb-0">
+                                {{ $disiplin == 0 ? 0 : number_format(($disiplin / count($pelanggarans)) * 100, 2) }}%</p>
                         </div>
                         <span class="float-right display-5 opacity-5"><i class="fa fa-users"></i></span>
                     </div>
@@ -46,7 +47,8 @@
                         <h3 class="card-title text-white">Pelanggaran Kode Etik</h3>
                         <div class="d-inline-block">
                             <h2 class="text-white">{{ $kodeEtik }}</h2>
-                            <p class="text-white mb-0">{{ number_format(($kodeEtik / count($pelanggarans)) * 100, 2) }}%</p>
+                            <p class="text-white mb-0">
+                                {{ $kodeEtik == 0 ? 0 : number_format(($kodeEtik / count($pelanggarans)) * 100, 2) }}%</p>
                         </div>
                         <span class="float-right display-5 opacity-5"><i class="fa fa-anchor"></i></span>
                     </div>
@@ -109,7 +111,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-8">
                 <div class="card" style="height: 300px">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
@@ -145,7 +147,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            {{-- <div class="col-lg-4">
                 <div class="card" style="height: 300px">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
@@ -156,7 +158,7 @@
                         <div id="chartPungli"></div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
         <div class="row">
@@ -207,7 +209,7 @@
                         <div class="card">
                             <div class="card-body pb-0 d-flex justify-content-between">
                                 <div>
-                                    <h4 class="mb-1">Data Pelanggar Berdasarkan WIlayah</h4>
+                                    <h4 class="mb-1">Data Pelanggar Berdasarkan Wilayah</h4>
                                 </div>
                             </div>
                             <div class="card-body">

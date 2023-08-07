@@ -272,13 +272,13 @@
                                             <?php $putusans = Helper::getPutusan($i); ?>
                                             <div class="form-group">
                                                 <label>Putusan {{ $i }}</label>
-                                                <select class="form-control" id="putusan_{{ $i }}"
+                                                <select class="form-control putusan" id="putusan_{{ $i }}"
                                                     style="width: 100%" name="putusan_{{ $i }}">
                                                     <option value="">Pilih</option>
-                                                    @foreach ($putusans as $putusan)
+                                                    {{-- @foreach ($putusans as $putusan)
                                                         <option value="{{ $putusan->id }}">
                                                             {{ $putusan->name }}</option>
-                                                    @endforeach
+                                                    @endforeach --}}
                                                 </select>
                                             </div>
                                         @endfor
@@ -558,6 +558,23 @@
 
                     }
                     $('#wujud_perbuatan').html(option)
+                    getPutusan()
+                }
+            });
+        }
+
+        function getPutusan() {
+            var jenis_pelanggaran = $('#jenis_pelanggaran').val()
+            $.ajax({
+                url: "/api/putusan/type/" + jenis_pelanggaran,
+                success: function(data) {
+                    var wp = data.data
+                    var option = '<option value="">Pilih</option>'
+                    for (let index = 0; index < wp.length; index++) {
+                        option += `<option value="${wp[index].id}">${wp[index].name}</option>`
+
+                    }
+                    $('.putusan').html(option)
                 }
             });
         }

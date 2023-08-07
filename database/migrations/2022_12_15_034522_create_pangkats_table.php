@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('pangkats', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('pangkat_pelanggar_id')->nullable();
             $table->string('name');
             $table->timestamps();
         });
