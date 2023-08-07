@@ -115,7 +115,7 @@ class DashboardController extends Controller
 
     private function getDataByGender($jenis_pelanggaran = null)
     {
-        $data = PelanggaranList::groupBy('jenis_kelamin')->join('genders', 'genders.id', 'pelanggaran_lists.jenis_kelamin')
+        $data = PelanggaranList::groupBy('jenis_kelamin', 'gender')->join('genders', 'genders.id', 'pelanggaran_lists.jenis_kelamin')
             ->select(DB::raw('count(*) as total'), 'gender');
 
         if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->get();
@@ -125,7 +125,7 @@ class DashboardController extends Controller
 
     private function getDataByWpp($jenis_pelanggaran = null)
     {
-        $data = PelanggaranList::groupBy('wujud_perbuatan_pidana')->join('wujud_perbuatan_pidanas', 'wujud_perbuatan_pidanas.id', 'pelanggaran_lists.wujud_perbuatan_pidana')
+        $data = PelanggaranList::groupBy('wujud_perbuatan_pidana', 'name')->join('wujud_perbuatan_pidanas', 'wujud_perbuatan_pidanas.id', 'pelanggaran_lists.wujud_perbuatan_pidana')
             ->select(DB::raw('count(*) as total'), 'name');
 
         if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->get();
@@ -135,14 +135,14 @@ class DashboardController extends Controller
 
     private function getDataByPangkatPelanggar($jenis_pelanggaran = null)
     {
-        $data = PelanggaranList::groupBy('pangkat_pelanggarans.id')->join('pangkats', 'pangkats.id', 'pelanggaran_lists.pangkat')
+        $data = PelanggaranList::groupBy('pangkat_pelanggarans.id', 'pangkat_pelanggarans.name', 'pangkat_pelanggarans.id')->join('pangkats', 'pangkats.id', 'pelanggaran_lists.pangkat')
             ->join('pangkat_pelanggarans', 'pangkat_pelanggarans.id', 'pangkats.pangkat_pelanggar_id')
             ->select(DB::raw('count(*) as percent'), 'pangkat_pelanggarans.name as type', 'pangkat_pelanggarans.id');
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran)->get();
         else $data = $data->get();
 
         foreach ($data as $value) {
-            $value->subs = PelanggaranList::groupBy('pangkat')->join('pangkats', 'pangkats.id', 'pelanggaran_lists.pangkat')
+            $value->subs = PelanggaranList::groupBy('pangkat', 'pangkats.name')->join('pangkats', 'pangkats.id', 'pelanggaran_lists.pangkat')
                 ->select(DB::raw('count(*) as percent'), 'pangkats.name as type')
                 ->where('pangkats.pangkat_pelanggar_id', $value->id)
                 ->get();
