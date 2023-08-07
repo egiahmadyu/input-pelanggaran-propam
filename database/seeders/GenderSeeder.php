@@ -37,11 +37,13 @@ class GenderSeeder extends Seeder
         ]);
 
         SatuanPolres::create([
-            'name' => 'Polres Cianjur'
+            'name' => 'Polres Cianjur',
+            'polda_id' => 1
         ]);
 
         SatuanPolsek::create([
-            'name' => 'Polsek Cilaku'
+            'name' => 'Polsek Cilaku',
+            'polres_id' => 1
         ]);
     }
 }
