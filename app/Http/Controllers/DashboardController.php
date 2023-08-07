@@ -105,8 +105,8 @@ class DashboardController extends Controller
 
     private function getChartPolda($jenis_pelanggaran = null)
     {
-        $data = PelanggaranList::groupBy('polda')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
-            ->select(DB::raw('count(*) as total'), 'name', 'polda');
+        $data = PelanggaranList::groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
+            ->select(DB::raw('count(*) as total'), 'satuan_poldas.name', 'polda');
 
         if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->get();
 
