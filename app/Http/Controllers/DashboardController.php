@@ -74,7 +74,7 @@ class DashboardController extends Controller
 
     private function getDataJenisNarkoba($jenis_pelanggaran = null)
     {
-        $data = PelanggaranList::groupBy('jenis_narkoba')->join('jenis_narkobas', 'jenis_narkobas.id', 'jenis_narkoba')
+        $data = PelanggaranList::groupBy('jenis_narkoba', 'jenis_narkobas.name')->join('jenis_narkobas', 'jenis_narkobas.id', 'jenis_narkoba')
             ->select('jenis_narkobas.name', (DB::raw('count(*) as total')));
 
         if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->get();
@@ -84,7 +84,7 @@ class DashboardController extends Controller
 
     private function getDataPenggunaanNarkoba($jenis_pelanggaran = null)
     {
-        $data = PelanggaranList::groupBy('peran_narkoba')->join('peran_narkobas', 'peran_narkobas.id', 'peran_narkoba')
+        $data = PelanggaranList::groupBy('peran_narkoba', 'peran_narkobas.name')->join('peran_narkobas', 'peran_narkobas.id', 'peran_narkoba')
             ->select('peran_narkobas.name', (DB::raw('count(*) as total')));
 
         if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->get();
@@ -94,7 +94,7 @@ class DashboardController extends Controller
 
     private function getWujudPerbuatan($jenis_pelanggaran = null)
     {
-        $data = PelanggaranList::groupBy('wujud_perbuatan')->join('wujud_perbuatans', 'wujud_perbuatans.id', 'pelanggaran_lists.wujud_perbuatan')
+        $data = PelanggaranList::groupBy('wujud_perbuatan', 'wujud_perbuatans.name', 'jenis_pelanggarans.name')->join('wujud_perbuatans', 'wujud_perbuatans.id', 'pelanggaran_lists.wujud_perbuatan')
             ->join('jenis_pelanggarans', 'jenis_pelanggarans.id', 'wujud_perbuatans.jenis_pelanggaran_id')
             ->select(DB::raw('count(*) as total'), 'wujud_perbuatans.name', 'jenis_pelanggarans.name as type');
 
