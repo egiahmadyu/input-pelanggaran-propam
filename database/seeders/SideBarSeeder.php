@@ -26,14 +26,16 @@ class SideBarSeeder extends Seeder
             'name' => 'Data Pelanggaran',
             'icon' => 'fa fa-database',
             'type' => 1,
-            'sort' => 2
+            'sort' => 2,
+            'url' => 'pelanggaran-data'
         ]);
 
         SideMenu::create([
             'name' => 'Tambah Data Pelanggaran',
             'icon' => 'fa fa-plus',
             'type' => 1,
-            'sort' => 3
+            'sort' => 3,
+            'url' => 'tambah-data'
         ]);
 
         $manage = SideMenu::create([
