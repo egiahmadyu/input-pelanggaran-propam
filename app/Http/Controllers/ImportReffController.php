@@ -30,6 +30,26 @@ class ImportReffController extends Controller
         fclose($file_to_read);
     }
 
+    public function importPangkat()
+    {
+        $file_to_read = fopen(storage_path('app\pangkat_lengkap.csv'), 'r');
+        while (($data = fgetcsv($file_to_read, 20000, ',')) !== FALSE) {
+            echo $data[1].'<br>';
+            if(!$pangkat = PangkatPelanggaran::where('name', $data[0])->first()) {
+                $pangkat = PangkatPelanggaran::create([
+                    'name' => $data[0]
+                ]);
+            }
+            if(!$pangkatt = Pangkat::where('name', $data[1])->where('pangkat_pelanggar_id', $pangkat->id)->first()) {
+                Pangkat::create([
+                    'name' => $data[1],
+                    'pangkat_pelanggar_id' => $pangkat->id
+                ]);
+            }
+        }
+        fclose($file_to_read);
+    }
+
     public function importSatuan()
     {
         $file_to_read = fopen(storage_path('app\aceh.csv'), 'r');

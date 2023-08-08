@@ -31,7 +31,8 @@ return new class extends Migration
             $table->text('kronologi_singkat')->nullable();
             $table->text('pasal_pelanggaran')->nullable();
             $table->string('pidana')->nullable();
-            $table->integer('wujud_perbuatan_pidana');
+            $table->integer('wujud_perbuatan_pidana')->nullable();
+            $table->text('pasal_pidana')->nullable();
             $table->string('nolp_pidana')->nullable();
             $table->date('tgllp_pidana')->nullable();
             $table->integer('peran_narkoba')->nullable();

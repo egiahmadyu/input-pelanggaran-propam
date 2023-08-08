@@ -82,8 +82,8 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-  Route::get('test', [SideMenuController::class, 'inputSatuan']);
-  Route::get('import/pangkat', [ImportReffController::class, 'importReff']);
+  Route::get('test', [SideMenuController::class, 'importPangkat']);
+  Route::get('import/pangkat', [ImportReffController::class, 'importPangkat']);
   Route::get('import/satuan', [ImportReffController::class, 'importSatuan']);
   Route::get('import/wpkepp', [ImportReffController::class, 'importWpKepp']);
   Route::get('import/wpdisiplin', [ImportReffController::class, 'importWpDisiplin']);

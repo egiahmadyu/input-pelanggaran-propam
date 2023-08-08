@@ -160,12 +160,12 @@
                                         <h4>Pelanggaran</h4>
                                         <div class="form-group">
                                             <label>No Lp</label>
-                                            <input type="text" name="nolp" placeholder="LP/15/I/2022"
-                                                id="nolp" class="form-control" value="LP/15/I/{{ date('Y') }}">
+                                            <input type="text" name="nolp"
+                                                id="nolp" class="form-control" >
                                         </div>
                                         <div class="form-group">
                                             <label>Tanggal Lp</label>
-                                            <input type="date" name="tgllp" id="tgllp" class="form-control">
+                                            <input type="date" name="tgllp" id="tgllp" class="form-control datePicker">
                                         </div>
                                         <div class="form-group">
                                             <label>Wujud Perbuatan</label>
@@ -198,6 +198,17 @@
                                             </select>
                                         </div>
                                         <div class="form-group divCheckPidana">
+                                            <label>No Lp Pidana</label>
+                                            <input type="text" name="nolp_pidana"
+                                                id="nolp_pidana" class="form-control"
+                                                >
+                                        </div>
+                                        <div class="form-group divCheckPidana">
+                                            <label>Tanggal LP Pidana</label>
+                                            <input type="date" name="tgllp_pidana" id="tgllp_pidana"
+                                                class="form-control datePicker">
+                                        </div>
+                                        <div class="form-group divCheckPidana">
                                             <label>Wujud Perbuatan Pidana</label>
                                             <select class="form-control" id="wujud_perbuatan_pidana" style="width: 100%"
                                                 name="wujud_perbuatan_pidana" onchange="checkWPP()">
@@ -207,17 +218,10 @@
                                                         {{ $wujud_perbuatanPidana->name }}</option>
                                                 @endforeach
                                             </select>
-
                                         </div>
-                                        <div class="form-group divCheckPidana">
-                                            <label>No Lp Pidana</label>
-                                            <input type="text" name="nolp_pidana" placeholder="LP/15/I/2022"
-                                                id="nolp_pidana" class="form-control"
-                                                value="LP/15/I/{{ date('Y') }}">
-                                        </div>
-                                        <div class="form-group divCheckPidana">
-                                            <label>Tanggal LP Pidana</label>
-                                            <input type="date" name="tgllp_pidana" id="tgllp"
+                                        <div class="form-group">
+                                            <label>Pasal Pidana</label>
+                                            <input type="text" name="pasal_pidana" id="pasal_pidana"
                                                 class="form-control">
                                         </div>
                                         <hr>
@@ -261,12 +265,12 @@
                                         <h5>Sidang</h5>
                                         <div class="form-group">
                                             <label>No Kep</label>
-                                            <input type="text" name="no_kep" value="KEP/13/VI/2022" id="no_kep"
+                                            <input type="text" name="no_kep" id="no_kep"
                                                 class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label>Tgl Kep</label>
-                                            <input type="date" name="tgl_kep" id="tgl_kep" class="form-control">
+                                            <input type="date" name="tgl_kep" id="tgl_kep" class="form-control datePicker">
                                         </div>
                                         @for ($i = 1; $i < 13; $i++)
                                             <?php $putusans = Helper::getPutusan($i); ?>
@@ -286,13 +290,13 @@
                                         <h5>Dihentikan</h5>
                                         <div class="form-group">
                                             <label>No. Kep SP3 / SP4</label>
-                                            <input type="text" name="nokepsp3" placeholder="0" id="nokepsp3"
+                                            <input type="text" name="nokepsp3" id="nokepsp3"
                                                 class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label>Tgl. Kep SP3 / SP4</label>
                                             <input type="date" name="tglkepsp3" placeholder="0" id="tglkepsp3"
-                                                class="form-control">
+                                                class="form-control datePicker">
                                         </div>
                                         <div class="f1-buttons">
                                             <button type="button" class="btn btn-warning btn-previous"><i
@@ -435,6 +439,37 @@
         }
 
         $(document).ready(function() {
+            const dayText = {
+                en: "Su,Mo,Tu,We,Th,Fr,Sa".split(","),
+                id: "Mi,Se,Sl,Ra,Ka,Ju,Sa".split(","),
+                };
+
+                const monthText = {
+                en: "January,February,March,April,May,June,July,Augustus,September,October,November,December".split(
+                    ","
+                ),
+                id: "Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,September,Oktober,November,Desember".split(
+                    ","
+                ),
+                };
+
+                const todayText = {
+                en: "Today",
+                id: "Hari ini",
+            };
+
+            $("#tgl_kep").pDatePicker({
+                lang: "id"
+            });
+            $("#tglkepsp3").pDatePicker({
+                lang: "id"
+            });
+            $("#tgllp").pDatePicker({
+                lang: "id"
+            });
+            $("#tgllp_pidana").pDatePicker({
+                lang: "id"
+            });
             // Form
             $('.f1 fieldset:first').fadeIn('slow');
 

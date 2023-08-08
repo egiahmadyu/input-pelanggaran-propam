@@ -13,6 +13,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css">
+        <link rel="stylesheet" href="{{asset('assets/css/date-picker.css')}}">
 
     @stack('style')
 
@@ -121,7 +122,7 @@
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-    {{-- <script src="{{ asset('assets/js/dashboard/dashboard-1.js') }}"></script> --}}
+    <script src="{{ asset('assets/js/date-picker.js') }}"></script>
     @stack('script')
 
 </body>
