@@ -34,13 +34,13 @@ class ImportReffController extends Controller
     {
         $file_to_read = fopen(storage_path('app\pangkat_lengkap.csv'), 'r');
         while (($data = fgetcsv($file_to_read, 20000, ',')) !== FALSE) {
-            echo $data[1].'<br>';
-            if(!$pangkat = PangkatPelanggaran::where('name', $data[0])->first()) {
+            echo $data[1] . '<br>';
+            if (!$pangkat = PangkatPelanggaran::where('name', $data[0])->first()) {
                 $pangkat = PangkatPelanggaran::create([
                     'name' => $data[0]
                 ]);
             }
-            if(!$pangkatt = Pangkat::where('name', $data[1])->where('pangkat_pelanggar_id', $pangkat->id)->first()) {
+            if (!$pangkatt = Pangkat::where('name', $data[1])->where('pangkat_pelanggar_id', $pangkat->id)->first()) {
                 Pangkat::create([
                     'name' => $data[1],
                     'pangkat_pelanggar_id' => $pangkat->id
@@ -52,28 +52,28 @@ class ImportReffController extends Controller
 
     public function importSatuan()
     {
-        $file_to_read = fopen(storage_path('app\aceh.csv'), 'r');
+        $file_to_read = fopen(storage_path('app\polda_indonesia.csv'), 'r');
         while (($data = fgetcsv($file_to_read, 300000, ',')) !== FALSE) {
             print_r($data);
             for ($i = 0; $i < count($data); $i++) {
-                if($i == 0) {
-                    if(!$polda = SatuanPolda::where('name', $data[$i])->first()) {
+                if ($i == 0) {
+                    if (!$polda = SatuanPolda::where('name', $data[$i])->first()) {
                         $polda = SatuanPolda::create([
                             'name' => $data[$i]
                         ]);
                     }
                 } elseif ($i == 1) {
-                    $polda = SatuanPolda::where('name', $data[$i-1])->first();
+                    $polda = SatuanPolda::where('name', $data[$i - 1])->first();
                     if (!$polres = SatuanPolres::where('name', $data[$i])->where('polda_id', $polda->id)->first()) {
                         $polres = SatuanPolres::create([
                             'name' => $data[$i],
                             'polda_id' => $polda->id
                         ]);
                     }
-                } elseif($i == 2) {
-                    $polda = SatuanPolda::where('name', $data[$i-2])->first();
-                    $polres = SatuanPolres::where('name', $data[$i-1])->where('polda_id', $polda->id)->first();
-                    if(!$polsek = SatuanPolsek::where('polres_id', $polres->id)->where('name', $data[$i])->first()) {
+                } elseif ($i == 2) {
+                    $polda = SatuanPolda::where('name', $data[$i - 2])->first();
+                    $polres = SatuanPolres::where('name', $data[$i - 1])->where('polda_id', $polda->id)->first();
+                    if (!$polsek = SatuanPolsek::where('polres_id', $polres->id)->where('name', $data[$i])->first()) {
                         $polsek = SatuanPolsek::create([
                             'polres_id' => $polres->id,
                             'name' => $data[$i]
@@ -93,7 +93,7 @@ class ImportReffController extends Controller
         while (($data = fgetcsv($file_to_read, 20000, ',')) !== FALSE) {
             for ($i = 0; $i < count($data); $i++) {
                 echo $data[$i] . '<br>';
-                if(!$wpkepp = WujudPerbuatan::where('name', $data[$i])->where('jenis_pelanggaran_id', 2)->first()) {
+                if (!$wpkepp = WujudPerbuatan::where('name', $data[$i])->where('jenis_pelanggaran_id', 2)->first()) {
                     WujudPerbuatan::create([
                         'name' => $data[$i],
                         'jenis_pelanggaran_id' => 2
@@ -111,7 +111,7 @@ class ImportReffController extends Controller
         while (($data = fgetcsv($file_to_read, 20000, ',')) !== FALSE) {
             for ($i = 0; $i < count($data); $i++) {
                 echo $data[$i] . '<br>';
-                if(!$wpkepp = WujudPerbuatan::where('name', $data[$i])->where('jenis_pelanggaran_id', 1)->first()) {
+                if (!$wpkepp = WujudPerbuatan::where('name', $data[$i])->where('jenis_pelanggaran_id', 1)->first()) {
                     WujudPerbuatan::create([
                         'name' => $data[$i],
                         'jenis_pelanggaran_id' => 1
