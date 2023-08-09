@@ -20,6 +20,16 @@ class PelanggaranList extends Model
         return $this->hasOne(SatuanPolda::class, 'id', 'polda');
     }
 
+    public function getPolres()
+    {
+        return $this->hasOne(SatuanPolres::class, 'id', 'polres');
+    }
+
+    public function getPolsek()
+    {
+        return $this->hasOne(SatuanPolsek::class, 'id', 'polsek');
+    }
+
     public function getPangkat()
     {
         return $this->hasOne(Pangkat::class, 'id', 'pangkat');
@@ -33,6 +43,86 @@ class PelanggaranList extends Model
     public function getJenisPelanggar()
     {
         return $this->hasOne(JenisPelanggaran::class, 'id', 'jenis_pelanggaran');
+    }
+
+    public function getjenisKelamin()
+    {
+        return $this->hasOne(Gender::class, 'id', 'jenis_kelamin');
+    }
+
+    public function getWujudPerbuatan()
+    {
+        return $this->hasOne(WujudPerbuatan::class, 'id', 'wujud_perbuatan');
+    }
+
+    public function getWujudPerbuatanPidana()
+    {
+        return $this->hasOne(WujudPerbuatanPidana::class, 'id', 'wujud_perbuatan_pidana');
+    }
+
+    public function getPeranNarkoba()
+    {
+        return $this->hasOne(PeranNarkoba::class, 'id', 'peran_narkoba');
+    }
+
+    public function getJenisNarkoba()
+    {
+        return $this->hasOne(JenisNarkoba::class, 'id', 'jenis_narkoba');
+    }
+
+    public function getPutusan1()
+    {
+        return $this->hasOne(Putusan::class, 'id', 'putusan_1');
+    }
+
+    public function getPutusan2()
+    {
+        return $this->hasOne(Putusan::class, 'id', 'putusan_2');
+    }
+
+    public function getPutusan3()
+    {
+        return $this->hasOne(Putusan::class, 'id', 'putusan_3');
+    }
+
+    public function getPutusan4()
+    {
+        return $this->hasOne(Putusan::class, 'id', 'putusan_4');
+    }
+
+    public function getPutusan5()
+    {
+        return $this->hasOne(Putusan::class, 'id', 'putusan_5');
+    }
+
+    public function getPutusan6()
+    {
+        return $this->hasOne(Putusan::class, 'id', 'putusan_6');
+    }
+
+    public function getPutusan7()
+    {
+        return $this->hasOne(Putusan::class, 'id', 'putusan_8');
+    }
+
+    public function getPutusan9()
+    {
+        return $this->hasOne(Putusan::class, 'id', 'putusan_9');
+    }
+
+    public function getPutusan10()
+    {
+        return $this->hasOne(Putusan::class, 'id', 'putusan_10');
+    }
+
+    public function getPutusan11()
+    {
+        return $this->hasOne(Putusan::class, 'id', 'putusan_11');
+    }
+
+    public function getPutusan12()
+    {
+        return $this->hasOne(Putusan::class, 'id', 'putusan_12');
     }
 
 }

@@ -3,6 +3,48 @@
 @section('content')
     <div class="container-fluid mt-3">
         <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="/" method="get">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput1">Kesatuan / Polda</label>
+                                    <select class="form-control" id="polda" name="polda">
+                                        <option value="">Semua</option>
+                                        @foreach ($poldas as $value)
+                                            <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput1">Pangkat</label>
+                                    <select class="form-control" id="pangkat" name="pangkat">
+                                        <option value="">Semua</option>
+                                        @foreach ($pangkats as $value)
+                                            <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-1">
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput1">.</label>
+                                    <button class="btn btn-primary form-control">Filter</button>
+                                </div>
+
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
             <div class="col-lg-4 col-sm-6">
                 <div class="card gradient-1">
                     <div class="card-body">
@@ -111,7 +153,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-8">
+            <div class="col-lg-4">
                 <div class="card" style="height: 300px">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
@@ -147,7 +189,7 @@
                     </div>
                 </div>
             </div>
-            {{-- <div class="col-lg-4">
+            <div class="col-lg-4">
                 <div class="card" style="height: 300px">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
@@ -158,7 +200,7 @@
                         <div id="chartPungli"></div>
                     </div>
                 </div>
-            </div> --}}
+            </div>
         </div>
 
         <div class="row">
@@ -501,40 +543,17 @@
 
             var chart = am4core.create("chartPungli", am4charts.PieChart);
             chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+            var dataChart = {!! json_encode($dataPungli, true) !!}
+            chart.data = dataChart
 
-            chart.data = [{
-                    country: "Lithuania",
-                    value: 401
-                },
-                {
-                    country: "Czech Republic",
-                    value: 300
-                },
-                {
-                    country: "Ireland",
-                    value: 200
-                },
-                {
-                    country: "Germany",
-                    value: 165
-                },
-                {
-                    country: "Australia",
-                    value: 139
-                },
-                {
-                    country: "Austria",
-                    value: 128
-                }
-            ];
             chart.radius = am4core.percent(70);
             chart.innerRadius = am4core.percent(40);
             chart.startAngle = 180;
             chart.endAngle = 360;
 
             var series = chart.series.push(new am4charts.PieSeries());
-            series.dataFields.value = "value";
-            series.dataFields.category = "country";
+            series.dataFields.value = "total";
+            series.dataFields.category = "name";
 
             series.slices.template.cornerRadius = 10;
             series.slices.template.innerCornerRadius = 2;

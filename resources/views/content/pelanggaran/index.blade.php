@@ -34,85 +34,109 @@
                                     @endif
                                 </div>
                                 <h6>Filter</h6>
-                                <div class="row">
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label for="exampleFormControlInput1">Jenis Pelanggaran</label>
-                                            <select class="form-control" id="jenis_pelanggaran">
-                                                <option value="">Semua</option>
-                                                @foreach ($jenis_pelanggarans as $value)
-                                                    <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                                @endforeach
-                                            </select>
+                                <form action="/pelanggaran-data/export" method="post">
+                                    @csrf
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlInput1">Nama Pelanggar</label>
+                                                <input type="text" class="form-control" id="nama_pelanggar">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlInput1">NRP</label>
+                                                <input type="text" class="form-control" id="nrp">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlInput1">Jenis Pelanggaran</label>
+                                                <select class="form-control" id="jenis_pelanggaran">
+                                                    <option value="">Semua</option>
+                                                    @foreach ($jenis_pelanggarans as $value)
+                                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlInput1">Kesatuan / Polda</label>
+                                                <select class="form-control" id="polda">
+                                                    <option value="">Semua</option>
+                                                    @foreach ($poldas as $value)
+                                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlInput1">Wujud Perbuatan</label>
+                                                <select class="form-control" id="wujud_perbuatan">
+                                                    <option value="">Semua</option>
+                                                    @foreach ($wujud_perbuatans as $value)
+                                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlInput1">Jenis Kelamin</label>
+                                                <select class="form-control" id="jenis_kelamin">
+                                                    <option value="">Semua</option>
+                                                    @foreach ($jenis_kelamins as $value)
+                                                        <option value="{{ $value->id }}">{{ $value->gender }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlInput1">Pangkat</label>
+                                                <select class="form-control" id="pangkat">
+                                                    <option value="">Semua</option>
+                                                    @foreach ($pangkats as $value)
+                                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlInput1">Jabatan / Satker</label>
+                                                <input type="text" class="form-control" id="jabatan" name="jabatan">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlInput1">Tanggal Mulai</label>
+                                                <input type="date" class="form-control" id="tanggal_mulai">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlInput1">Tanggal Akhir</label>
+                                                <input type="date" class="form-control" id="tanggal_akhir">
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label for="exampleFormControlInput1">Kesatuan / Polda</label>
-                                            <select class="form-control" id="polda">
-                                                <option value="">Semua</option>
-                                                @foreach ($poldas as $value)
-                                                    <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                                @endforeach
-                                            </select>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <button class="btn btn-secondary" id="kt_reset" type="button">Reset</button> |
+                                            <button class="btn btn-primary" id="kt_search" type="button">Filter</button> |
+                                            <button class="btn btn-success" type="submit">Export</button>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label for="exampleFormControlInput1">Wujud Perbuatan</label>
-                                            <select class="form-control" id="wujud_perbuatan">
-                                                <option value="">Semua</option>
-                                                @foreach ($wujud_perbuatans as $value)
-                                                    <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label for="exampleFormControlInput1">Jenis Kelamin</label>
-                                            <select class="form-control" id="jenis_kelamin">
-                                                <option value="">Semua</option>
-                                                @foreach ($jenis_kelamins as $value)
-                                                    <option value="{{ $value->id }}">{{ $value->gender }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label for="exampleFormControlInput1">Pangkat</label>
-                                            <select class="form-control" id="pangkat">
-                                                <option value="">Semua</option>
-                                                @foreach ($pangkats as $value)
-                                                    <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label for="exampleFormControlInput1">Jabatan</label>
-                                            <select class="form-control" id="jenis_pelanggaran">
-                                                <option value="">Semua</option>jabatans
-                                                @foreach ($jabatans as $value)
-                                                    <option value="{{ $value->jabatan }}">{{ $value->jabatan }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <button class="btn btn-secondary">Reset</button> |
-                                        <button class="btn btn-primary" id="kt_search">Filter</button>
-                                    </div>
 
-                                </div>
+                                    </div>
+                                </form>
                                 <table class="table table-striped table-bordered" id="list-pelanggaran">
                                     <thead>
                                         <tr>
                                             <th>#</th>
+                                            <th>NRP / NIP</th>
                                             <th>Nama Pelanggar</th>
                                             <th>Jenis Pelanggaran</th>
                                             <th>Polda</th>
@@ -137,7 +161,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Detail Lepanggaran</h5>
+                    <h5 class="modal-title">Detail Pelanggaran</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -204,12 +228,38 @@
 @push('script')
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
             $('select').select2({
                 theme: "bootstrap4"
             });
             getData()
+            const dayText = {
+                en: "Su,Mo,Tu,We,Th,Fr,Sa".split(","),
+                id: "Mi,Se,Sl,Ra,Ka,Ju,Sa".split(","),
+                };
+
+                const monthText = {
+                en: "January,February,March,April,May,June,July,Augustus,September,October,November,December".split(
+                    ","
+                ),
+                id: "Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,September,Oktober,November,Desember".split(
+                    ","
+                ),
+                };
+
+                const todayText = {
+                en: "Today",
+                id: "Hari ini",
+            };
+
+            $("#tanggal_akhir").pDatePicker({
+                lang: "id"
+            });
+            $("#tanggal_mulai").pDatePicker({
+                lang: "id"
+            });
         });
 
         function getData() {
@@ -227,7 +277,12 @@
                             data.jenis_kelamin = $('#jenis_kelamin').val(),
                             data.jenis_pelanggaran = $('#jenis_pelanggaran').val(),
                             data.pangkat = $('#pangkat').val(),
-                            data.wujud_perbuatan = $('#wujud_perbuatan').val()
+                            data.wujud_perbuatan = $('#wujud_perbuatan').val(),
+                            data.nama_pelanggar = $('#nama_pelanggar').val(),
+                            data.nrp = $('#nrp').val(),
+                            data.tanggal_mulai = $('#tanggal_mulai').val(),
+                            data.tanggal_akhir = $('#tanggal_akhir').val(),
+                            data.jabatan = $('#jabatan').val()
                     }
                 },
                 columns: [{
@@ -235,6 +290,10 @@
                         name: 'DT_RowIndex',
                         orderable: false,
                         searchable: false
+                    },
+                    {
+                        data: 'nrp_nip',
+                        name: 'nrp_nip'
                     },
                     {
                         data: 'nama',
@@ -274,6 +333,12 @@
                 e.preventDefault();
                 table.table().draw();
             });
+
+            $('#kt_reset').on('click', function(e) {
+                $('.form-control').val('')
+                table.table().draw();
+
+            });
         }
 
         function openDetail(id) {
@@ -293,6 +358,34 @@
                 console.log(data.nama)
             });
             $('#modal_detail').modal('show')
+        }
+
+        function deletePelanggaran(id) {
+            Swal.fire({
+                title: 'Apa kamu yakin?',
+                text: "Data tidak bisa dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Hapus Data!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "/pelanggaran-data/delete/" + id,
+                        method: "get"
+                    }).done(function(data) {
+                        console.log(data)
+                        Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                        $("#kt_search").click();
+                    });
+
+                }
+            })
         }
     </script>
 @endpush
