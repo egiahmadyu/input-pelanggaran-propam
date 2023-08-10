@@ -78,7 +78,7 @@ class DashboardController extends Controller
 
     private function getDataPungli($request, $jenis_pelanggaran = null)
     {
-        $data = PelanggaranList::groupBy('wujud_perbuatan, wujud_perbuatans.name')
+        $data = PelanggaranList::groupBy('wujud_perbuatan', 'wujud_perbuatans.name')
             // ->join('wujud_perbuatan_pidanas', 'wujud_perbuatan_pidanas.id', 'pelanggaran_lists.wujud_perbuatan_pidana')
             ->join('wujud_perbuatans', 'wujud_perbuatans.id', 'pelanggaran_lists.wujud_perbuatan')
             ->whereIn('wujud_perbuatans.name', ['Pungli', 'Gratifikasi', 'Penyimpangan Anggaran', 'Korupsi'])
