@@ -79,12 +79,12 @@ class DashboardController extends Controller
     private function getDataPungli($request, $jenis_pelanggaran = null)
     {
         $data = PelanggaranList::groupBy('wujud_perbuatan')
-                // ->join('wujud_perbuatan_pidanas', 'wujud_perbuatan_pidanas.id', 'pelanggaran_lists.wujud_perbuatan_pidana')
-                ->join('wujud_perbuatans', 'wujud_perbuatans.id', 'pelanggaran_lists.wujud_perbuatan')
-                ->whereIn('wujud_perbuatans.name', ['Pungli', 'Gratifikasi', 'Penyimpangan Anggaran', 'Korupsi'])
-                // ->orWhereIn('wujud_perbuatan_pidanas.name', ['Pungli', 'Gratifikasi', 'Penyimpangan Anggaran', 'Korupsi'])
-                ->select('wujud_perbuatans.name', (DB::raw('count(*) as total')));;
-                // dd($data->get());
+            // ->join('wujud_perbuatan_pidanas', 'wujud_perbuatan_pidanas.id', 'pelanggaran_lists.wujud_perbuatan_pidana')
+            ->join('wujud_perbuatans', 'wujud_perbuatans.id', 'pelanggaran_lists.wujud_perbuatan')
+            ->whereIn('wujud_perbuatans.name', ['Pungli', 'Gratifikasi', 'Penyimpangan Anggaran', 'Korupsi'])
+            // ->orWhereIn('wujud_perbuatan_pidanas.name', ['Pungli', 'Gratifikasi', 'Penyimpangan Anggaran', 'Korupsi'])
+            ->select('wujud_perbuatans.name', (DB::raw('count(*) as total')));;
+        // dd($data->get());
         if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->get();
         return $data->get();
     }
@@ -165,7 +165,7 @@ class DashboardController extends Controller
     private function getDataByPangkatPelanggar($request, $jenis_pelanggaran = null)
     {
         $data = PelanggaranList::groupBy('pangkat_pelanggarans.id', 'pangkat_pelanggarans.name', 'pangkat_pelanggarans.id')
-        ->join('pangkats', 'pangkats.id', 'pelanggaran_lists.pangkat')
+            ->join('pangkats', 'pangkats.id', 'pelanggaran_lists.pangkat')
             ->join('pangkat_pelanggarans', 'pangkat_pelanggarans.id', 'pangkats.pangkat_pelanggar_id')
             ->select(DB::raw('count(*) as percent'), 'pangkat_pelanggarans.name as type', 'pangkat_pelanggarans.id');
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
@@ -190,11 +190,11 @@ class DashboardController extends Controller
         return $data->count();
     }
 
-    private function getJenisPelanggaran($jenis_pelanggaran)
+    private function getJenisPelanggaran($request, $jenis_pelanggaran)
     {
         $data = PelanggaranList::where('jenis_pelanggaran', $jenis_pelanggaran);
 
-        if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->count();
+        // if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->count();
 
         return $data->count();
     }
