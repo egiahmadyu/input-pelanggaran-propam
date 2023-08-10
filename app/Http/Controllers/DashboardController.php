@@ -83,7 +83,7 @@ class DashboardController extends Controller
             ->join('wujud_perbuatans', 'wujud_perbuatans.id', 'pelanggaran_lists.wujud_perbuatan')
             ->whereIn('wujud_perbuatans.name', ['Pungli', 'Gratifikasi', 'Penyimpangan Anggaran', 'Korupsi'])
             // ->orWhereIn('wujud_perbuatan_pidanas.name', ['Pungli', 'Gratifikasi', 'Penyimpangan Anggaran', 'Korupsi'])
-            ->select('wujud_perbuatans.name', (DB::raw('count(*) as total')));;
+            ->select('wujud_perbuatans.name', 'wujud_perbuatan', (DB::raw('count(*) as total')));;
         // dd($data->get());
         if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->get();
         return $data->get();
