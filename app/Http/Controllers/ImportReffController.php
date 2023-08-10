@@ -16,7 +16,7 @@ class ImportReffController extends Controller
 {
     public function importReff()
     {
-        $file_to_read = fopen(storage_path('app\pangkat.csv'), 'r');
+        $file_to_read = fopen(storage_path('app/pangkat.csv'), 'r');
         while (($data = fgetcsv($file_to_read, 20000, ',')) !== FALSE) {
             for ($i = 0; $i < count($data); $i++) {
                 echo $data[$i] . '<br>';
@@ -32,7 +32,7 @@ class ImportReffController extends Controller
 
     public function importPangkat()
     {
-        $file_to_read = fopen(storage_path('app\pangkat_lengkap.csv'), 'r');
+        $file_to_read = fopen(storage_path('app/pangkat_lengkap.csv'), 'r');
         while (($data = fgetcsv($file_to_read, 20000, ',')) !== FALSE) {
             echo $data[1] . '<br>';
             if (!$pangkat = PangkatPelanggaran::where('name', $data[0])->first()) {
@@ -52,7 +52,7 @@ class ImportReffController extends Controller
 
     public function importSatuan()
     {
-        $file_to_read = fopen(storage_path('app\polda_indonesia.csv'), 'r');
+        $file_to_read = fopen(storage_path('app/polda_indonesia.csv'), 'r');
         while (($data = fgetcsv($file_to_read, 300000, ',')) !== FALSE) {
             print_r($data);
             for ($i = 0; $i < count($data); $i++) {
@@ -89,7 +89,7 @@ class ImportReffController extends Controller
     public function importWpKepp()
     {
 
-        $file_to_read = fopen(storage_path('app\fix.csv'), 'r');
+        $file_to_read = fopen(storage_path('app/fix.csv'), 'r');
         while (($data = fgetcsv($file_to_read, 20000, ',')) !== FALSE) {
             for ($i = 0; $i < count($data); $i++) {
                 echo $data[$i] . '<br>';
@@ -107,7 +107,7 @@ class ImportReffController extends Controller
     public function importWpDisiplin()
     {
 
-        $file_to_read = fopen(storage_path('app\wpdisiplin.csv'), 'r');
+        $file_to_read = fopen(storage_path('app/wpdisiplin.csv'), 'r');
         while (($data = fgetcsv($file_to_read, 20000, ',')) !== FALSE) {
             for ($i = 0; $i < count($data); $i++) {
                 echo $data[$i] . '<br>';
@@ -124,7 +124,7 @@ class ImportReffController extends Controller
 
     public function importPutusan()
     {
-        $file_to_read = fopen(storage_path('app\putusan_sidang_disiplin.csv'), 'r');
+        $file_to_read = fopen(storage_path('app/putusan_sidang_disiplin.csv'), 'r');
         while (($data = fgetcsv($file_to_read, 20000, ',')) !== FALSE) {
             for ($i = 0; $i < count($data); $i++) {
                 echo $data[$i] . '<br>';
@@ -140,7 +140,7 @@ class ImportReffController extends Controller
         }
         fclose($file_to_read);
 
-        $file_to_read = fopen(storage_path('app\putusan_sidang_kepp.csv'), 'r');
+        $file_to_read = fopen(storage_path('app/putusan_sidang_kepp.csv'), 'r');
         while (($data = fgetcsv($file_to_read, 20000, ',')) !== FALSE) {
             for ($i = 0; $i < count($data); $i++) {
                 echo $data[$i] . '<br>';
