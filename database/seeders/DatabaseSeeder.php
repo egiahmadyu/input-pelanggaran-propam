@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
             ViolationSeeder::class,
             GenderSeeder::class,
             DiktukSeeder::class,
-            WujudPerbuatanSeeder::class,
+            // WujudPerbuatanSeeder::class,
             Narkoba::class,
         ]);
 
@@ -36,43 +36,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'KEPP (Kode Etik Profesi Polri)'
         ]);
 
-        $disiplin = array(
-            'Patsus',
-            'Teguran Tertulis',
-            'Tunda DIK',
-            'Tunda UKP',
-            'Tunda Gaji Berkala',
-            'Mutasi Demosi',
-            'Pembebasan dari jabatan',
-            'Ganti Rugi',
-            'Tidak terbukti'
-        );
 
-        for ($i = 0; $i < count($disiplin); $i++) {
-            Putusan::create([
-                'name' => $disiplin[$i],
-                'jenis_pelanggaran_id' => 1
-            ]);
-        }
-
-        $kodeetik = array(
-            'Perilaku dinyatakan sebagai sebagai perbuatan tercela',
-            'Kewajiban pelanggar untuk meminta maaf',
-            'Pembinaan mental kepribadian, kejiwaan, keagamaan dan pengetahuan profesi.',
-            'Tunda Kenaikan Pangkat (Perpol 7 2022)',
-            'Tunda Pendidikan (Perpol 7 2022)',
-            'Patsus (Perpol 7 2022)',
-            'Dipindahtugaskan ke jabatan berbeda yang bersifat demosi',
-            'PTDH',
-            'Tidak terbukti'
-        );
-
-        for ($i = 0; $i < count($kodeetik); $i++) {
-            Putusan::create([
-                'name' => $kodeetik[$i],
-                'jenis_pelanggaran_id' => 2
-            ]);
-        }
 
         $pidanaKepp = array(
             'Narkoba',

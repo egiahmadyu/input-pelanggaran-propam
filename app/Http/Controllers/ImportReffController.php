@@ -121,4 +121,39 @@ class ImportReffController extends Controller
         }
         fclose($file_to_read);
     }
+
+    public function importPutusan()
+    {
+        $file_to_read = fopen(storage_path('app\putusan_sidang_disiplin.csv'), 'r');
+        while (($data = fgetcsv($file_to_read, 20000, ',')) !== FALSE) {
+            for ($i = 0; $i < count($data); $i++) {
+                echo $data[$i] . '<br>';
+                if (strlen($data[$i])) {
+                    if (!Putusan::where('name', $data[$i])->where('jenis_pelanggaran_id', 1)->first()) {
+                        Putusan::create([
+                            'name' => $data[$i],
+                            'jenis_pelanggaran_id' => 1
+                        ]);
+                    }
+                }
+            }
+        }
+        fclose($file_to_read);
+
+        $file_to_read = fopen(storage_path('app\putusan_sidang_kepp.csv'), 'r');
+        while (($data = fgetcsv($file_to_read, 20000, ',')) !== FALSE) {
+            for ($i = 0; $i < count($data); $i++) {
+                echo $data[$i] . '<br>';
+                if (strlen($data[$i])) {
+                    if (!Putusan::where('name', $data[$i])->where('jenis_pelanggaran_id', 2)->first()) {
+                        Putusan::create([
+                            'name' => $data[$i],
+                            'jenis_pelanggaran_id' => 2
+                        ]);
+                    }
+                }
+            }
+        }
+        fclose($file_to_read);
+    }
 }

@@ -28,10 +28,6 @@ class GenderSeeder extends Seeder
             'gender' => 'Perempuan'
         ]);
 
-        Pangkat::create([
-            'name' => 'Kapolda'
-        ]);
-
         SatuanPolda::create([
             'name' => 'Polda Jabar'
         ]);

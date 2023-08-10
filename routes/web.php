@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('/login', function () {
     return view('content.auth.login');
 })->name('login');
@@ -85,8 +86,9 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-  Route::get('test', [SideMenuController::class, 'importPangkat']);
-  Route::get('import/pangkat', [ImportReffController::class, 'importPangkat']);
-  Route::get('import/satuan', [ImportReffController::class, 'importSatuan']);
-  Route::get('import/wpkepp', [ImportReffController::class, 'importWpKepp']);
-  Route::get('import/wpdisiplin', [ImportReffController::class, 'importWpDisiplin']);
+Route::get('test', [SideMenuController::class, 'importPangkat']);
+Route::get('import/pangkat', [ImportReffController::class, 'importPangkat']);
+Route::get('import/satuan', [ImportReffController::class, 'importSatuan']);
+Route::get('import/wpkepp', [ImportReffController::class, 'importWpKepp']);
+Route::get('import/wpdisiplin', [ImportReffController::class, 'importWpDisiplin']);
+Route::get('import/putusan', [ImportReffController::class, 'importPutusan']);
