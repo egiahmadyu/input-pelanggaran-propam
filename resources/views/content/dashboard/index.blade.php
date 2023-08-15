@@ -7,37 +7,58 @@
                 <div class="card">
                     <div class="card-body">
                         <form action="/" method="get">
-                        <div class="row">
-                            <div class="col-lg-2">
-                                <div class="form-group">
-                                    <label for="exampleFormControlInput1">Kesatuan / Polda</label>
-                                    <select class="form-control" id="polda" name="polda">
-                                        <option value="">Semua</option>
-                                        @foreach ($poldas as $value)
-                                            <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                        @endforeach
-                                    </select>
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlInput1">Kesatuan / Polda</label>
+                                        <select class="form-control" id="polda" name="polda">
+                                            <option value="">Semua</option>
+                                            @foreach ($poldas as $value)
+                                                <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlInput1">Pangkat</label>
+                                        <select class="form-control" id="pangkat" name="pangkat">
+                                            <option value="">Semua</option>
+                                            @foreach ($pangkats as $value)
+                                                <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlInput1">Jenis Kelamin</label>
+                                        <select class="form-control" id="pangkat" name="jenis_kelamin">
+                                            <option value="">Semua</option>
+                                            <option value="1">Laki - Laki</option>
+                                            <option value="2">Perempuan</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlInput1">Tangal Mulai</label>
+                                        <input type="date" name="tangal_mulai" id="tanggal_mulai" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlInput1">Tanggal Akhir</label>
+                                        <input type="date" name="tangal_akhir" id="tanggal_akhir" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlInput1">.</label>
+                                        <button class="btn btn-primary form-control">Filter</button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-lg-2">
-                                <div class="form-group">
-                                    <label for="exampleFormControlInput1">Pangkat</label>
-                                    <select class="form-control" id="pangkat" name="pangkat">
-                                        <option value="">Semua</option>
-                                        @foreach ($pangkats as $value)
-                                            <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-1">
-                                <div class="form-group">
-                                    <label for="exampleFormControlInput1">.</label>
-                                    <button class="btn btn-primary form-control">Filter</button>
-                                </div>
-
-                            </div>
-                        </div>
                         </form>
                     </div>
                 </div>
@@ -285,6 +306,35 @@
     <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 
     <script>
+        $(document).ready(function() {
+            const dayText = {
+                en: "Su,Mo,Tu,We,Th,Fr,Sa".split(","),
+                id: "Mi,Se,Sl,Ra,Ka,Ju,Sa".split(","),
+            };
+
+            const monthText = {
+                en: "January,February,March,April,May,June,July,Augustus,September,October,November,December"
+                    .split(
+                        ","
+                    ),
+                id: "Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,September,Oktober,November,Desember"
+                    .split(
+                        ","
+                    ),
+            };
+
+            const todayText = {
+                en: "Today",
+                id: "Hari ini",
+            };
+
+            $("#tanggal_akhir").pDatePicker({
+                lang: "id"
+            });
+            $("#tanggal_mulai").pDatePicker({
+                lang: "id"
+            });
+        })
         am4core.ready(function() {
 
             // Themes begin

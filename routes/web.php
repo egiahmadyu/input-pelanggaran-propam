@@ -92,3 +92,4 @@ Route::get('import/satuan', [ImportReffController::class, 'importSatuan']);
 Route::get('import/wpkepp', [ImportReffController::class, 'importWpKepp']);
 Route::get('import/wpdisiplin', [ImportReffController::class, 'importWpDisiplin']);
 Route::get('import/putusan', [ImportReffController::class, 'importPutusan']);
+Route::get('import/berhenti', [ImportReffController::class, 'importAlasan']);

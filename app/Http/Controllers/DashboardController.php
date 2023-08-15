@@ -13,7 +13,7 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $data = [
-            'pelanggarans' => PelanggaranList::all(),
+            'pelanggarans' => $this->getAllPelanggaran($request),
             'chartPolda' => $this->getChartPolda($request),
             'dataByGender' => $this->getDataByGender($request),
             'dataByWpp' => $this->getDataByWpp($request),
@@ -76,6 +76,17 @@ class DashboardController extends Controller
         return view('content.dashboard.index', $data);
     }
 
+    private function getAllPelanggaran($request)
+    {
+        $data = PelanggaranList::orderBy('created_at', 'asc');
+        if ($request->polda) $data = $data->where('polda', $request->polda);
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+        return $data->get();
+    }
+
     private function getDataPungli($request, $jenis_pelanggaran = null)
     {
         $data = PelanggaranList::groupBy('wujud_perbuatan', 'wujud_perbuatans.name')
@@ -83,9 +94,11 @@ class DashboardController extends Controller
             ->join('wujud_perbuatans', 'wujud_perbuatans.id', 'pelanggaran_lists.wujud_perbuatan')
             ->whereIn('wujud_perbuatans.name', ['Pungli', 'Gratifikasi', 'Penyimpangan Anggaran', 'Korupsi'])
             // ->orWhereIn('wujud_perbuatan_pidanas.name', ['Pungli', 'Gratifikasi', 'Penyimpangan Anggaran', 'Korupsi'])
-            ->select('wujud_perbuatans.name', 'wujud_perbuatan', (DB::raw('count(*) as total')));;
-        // dd($data->get());
+            ->select('wujud_perbuatans.name', 'wujud_perbuatan', (DB::raw('count(*) as total')));
         if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->get();
+        if ($request->polda) $data = $data->where('polda', $request->polda);
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
         return $data->get();
     }
 
@@ -97,6 +110,8 @@ class DashboardController extends Controller
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
         if ($request->polda) $data = $data->where('polda', $request->polda);
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
 
         return $data->get();
     }
@@ -109,6 +124,9 @@ class DashboardController extends Controller
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
         if ($request->polda) $data = $data->where('polda', $request->polda);
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
 
         return $data->get();
     }
@@ -122,6 +140,9 @@ class DashboardController extends Controller
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
         if ($request->polda) $data = $data->where('polda', $request->polda);
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
 
         return $data->get();
     }
@@ -135,6 +156,9 @@ class DashboardController extends Controller
 
         if ($request->polda) $data = $data->where('polda', $request->polda);
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
 
         return $data->get();
     }
@@ -147,6 +171,10 @@ class DashboardController extends Controller
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
         if ($request->polda) $data = $data->where('polda', $request->polda);
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+
         return $data->get();
     }
 
@@ -158,6 +186,9 @@ class DashboardController extends Controller
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
         if ($request->polda) $data = $data->where('polda', $request->polda);
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
 
         return $data->get();
     }
@@ -171,6 +202,9 @@ class DashboardController extends Controller
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
         if ($request->polda) $data = $data->where('polda', $request->polda);
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
         $data = $data->get();
         foreach ($data as $value) {
             $value->subs = PelanggaranList::groupBy('pangkat', 'pangkats.name')->join('pangkats', 'pangkats.id', 'pelanggaran_lists.pangkat')
@@ -187,12 +221,23 @@ class DashboardController extends Controller
 
         if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->count();
 
+        if ($request->polda) $data = $data->where('polda', $request->polda);
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+
         return $data->count();
     }
 
     private function getJenisPelanggaran($request, $jenis_pelanggaran)
     {
         $data = PelanggaranList::where('jenis_pelanggaran', $jenis_pelanggaran);
+        if ($request->polda) $data = $data->where('polda', $request->polda);
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
 
         // if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->count();
 

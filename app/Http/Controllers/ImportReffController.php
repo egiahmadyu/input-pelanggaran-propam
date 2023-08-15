@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AlasanBerhenti;
 use App\Models\Pangkat;
 use App\Models\PangkatPelanggaran;
 use App\Models\Putusan;
@@ -149,6 +150,24 @@ class ImportReffController extends Controller
                         Putusan::create([
                             'name' => $data[$i],
                             'jenis_pelanggaran_id' => 2
+                        ]);
+                    }
+                }
+            }
+        }
+        fclose($file_to_read);
+    }
+
+    public function importAlasan()
+    {
+        $file_to_read = fopen(storage_path('app/alasan_dihentikan.csv'), 'r');
+        while (($data = fgetcsv($file_to_read, 20000, ',')) !== FALSE) {
+            for ($i = 0; $i < count($data); $i++) {
+                echo $data[$i] . '<br>';
+                if (strlen($data[$i])) {
+                    if (!AlasanBerhenti::where('name', $data[$i])->first()) {
+                        AlasanBerhenti::create([
+                            'name' => $data[$i]
                         ]);
                     }
                 }

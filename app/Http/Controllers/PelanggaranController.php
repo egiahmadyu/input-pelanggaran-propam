@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AlasanBerhenti;
 use App\Models\Diktuk;
 use App\Models\Gender;
 use App\Models\JenisNarkoba;
@@ -86,6 +87,7 @@ class PelanggaranController extends Controller
             'pangkats' => Pangkat::all(),
             'wujud_perbuatans' => WujudPerbuatan::all(),
             'poldas' => SatuanPolda::all(),
+            'alasan_berhentis' => AlasanBerhenti::all(),
             'jabatans' => PelanggaranList::groupBy('jabatan')->select('jabatan')->get()
         ];
 
@@ -107,18 +109,17 @@ class PelanggaranController extends Controller
 
 
         return Datatables::of($data)->addIndexColumn()
-                ->addColumn('action', function($row){
-                    $res = base64_encode(json_encode($row));
-                    $btn = '<a href="/pelanggaran-data/edit/'.$row->id.'" class="btn btn-secondary btn-sm">Update Putusan</a> | <a href="javascript:void(0)" onclick="openDetail('.$row->id.')" class="btn btn-primary btn-sm">View</a>';
-                    $user = User::find(auth()->user()->id);
-                    if ($user->can('manage-auth'))
-                    {
-                        $btn .= ' | <a href="/pelanggaran-data/edit-data/'.$row->id.'" class="btn btn-secondary btn-sm">Edit Data</a> | <button class="btn btn-danger btn-sm" onclick="deletePelanggaran('.$row->id.')">Delete</button>';
-                    }
-                    return $btn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+            ->addColumn('action', function ($row) {
+                $res = base64_encode(json_encode($row));
+                $btn = '<a href="/pelanggaran-data/edit/' . $row->id . '" class="btn btn-secondary btn-sm">Update Putusan</a> | <a href="javascript:void(0)" onclick="openDetail(' . $row->id . ')" class="btn btn-primary btn-sm">View</a>';
+                $user = User::find(auth()->user()->id);
+                if ($user->can('manage-auth')) {
+                    $btn .= ' | <a href="/pelanggaran-data/edit-data/' . $row->id . '" class="btn btn-secondary btn-sm">Edit Data</a> | <button class="btn btn-danger btn-sm" onclick="deletePelanggaran(' . $row->id . ')">Delete</button>';
+                }
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
 
@@ -138,27 +139,26 @@ class PelanggaranController extends Controller
 
         if ($request->wujud_perbuatan) $data = $data->where('wujud_perbuatan', $request->wujud_perbuatan);
 
-        if ($request->nama_pelanggar) $data = $data->where('nama', 'like', '%'.$request->nama_pelanggar.'%');
+        if ($request->nama_pelanggar) $data = $data->where('nama', 'like', '%' . $request->nama_pelanggar . '%');
 
-        if ($request->nrp) $data = $data->where('nrp_nip', 'like', '%'.$request->nrp.'%');
+        if ($request->nrp) $data = $data->where('nrp_nip', 'like', '%' . $request->nrp . '%');
 
         if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
 
         if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
 
 
-        if ($request->jabatan)
-        {
+        if ($request->jabatan) {
             $jabatan = $request->jabatan;
             $data = $data->join('satuan_poldas', 'satuan_poldas.id', 'polda')
-            ->join('satuan_polres', 'satuan_polres.id', 'polres')
-            ->join('satuan_polseks', 'satuan_polseks.id', 'polsek');
+                ->join('satuan_polres', 'satuan_polres.id', 'polres')
+                ->join('satuan_polseks', 'satuan_polseks.id', 'polsek');
 
             $data = $data->where(function ($query) use ($jabatan) {
-                $query->where('jabatan', 'like', '%'.$jabatan.'%')
-                ->orWhere('satuan_poldas.name', 'like', '%'.$jabatan.'%')
-                ->orWhere('satuan_polres.name', 'like', '%'.$jabatan.'%')
-                ->orWhere('satuan_polseks.name', 'like', '%'.$jabatan.'%');
+                $query->where('jabatan', 'like', '%' . $jabatan . '%')
+                    ->orWhere('satuan_poldas.name', 'like', '%' . $jabatan . '%')
+                    ->orWhere('satuan_polres.name', 'like', '%' . $jabatan . '%')
+                    ->orWhere('satuan_polseks.name', 'like', '%' . $jabatan . '%');
             });
             $data = $data->select('pelanggaran_lists.*');
         }
@@ -205,7 +205,7 @@ class PelanggaranController extends Controller
 
     public function editData($id)
     {
-        $pelanggaran= PelanggaranList::find($id);
+        $pelanggaran = PelanggaranList::find($id);
         $data['genders'] = Gender::all();
         $data = [
             'jenis_pelanggarans' => JenisPelanggaran::all(),
@@ -370,8 +370,8 @@ class PelanggaranController extends Controller
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->tgk_kep);
             $startCol++;
-            for ($i=1; $i < 13; $i++) {
-                $putusan = 'getPutusan'.$i;
+            for ($i = 1; $i < 13; $i++) {
+                $putusan = 'getPutusan' . $i;
                 $sheet->setCellValue("{$startCol}{$startRow}", $value->$putusan->name ?? '');
                 $startCol++;
             }
@@ -381,20 +381,19 @@ class PelanggaranController extends Controller
             $startCol++;
             $startRow++;
             $startCol = 'A';
-
         }
         $row = 'a';
         // $row++;
         // $row++;
         // dd($row);
-        for ($i=1; $i < 42; $i++) {
+        for ($i = 1; $i < 42; $i++) {
             $spreadsheet->getActiveSheet()->getColumnDimension($row)->setAutoSize(true);
             $row++;
         }
         $startRow--;
         $spreadsheet->getActiveSheet()
-        ->getStyle("A1:J{$startRow}")
-        ->applyFromArray($this->fontStyle);
+            ->getStyle("A1:J{$startRow}")
+            ->applyFromArray($this->fontStyle);
         $writer = new Xlsx($spreadsheet);
         $path = storage_path("/app/data_pelanggar.xlsx");
         $writer->save($path);

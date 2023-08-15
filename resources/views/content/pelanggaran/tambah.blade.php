@@ -160,12 +160,12 @@
                                         <h4>Pelanggaran</h4>
                                         <div class="form-group">
                                             <label>No Lp</label>
-                                            <input type="text" name="nolp"
-                                                id="nolp" class="form-control" >
+                                            <input type="text" name="nolp" id="nolp" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label>Tanggal Lp</label>
-                                            <input type="date" name="tgllp" id="tgllp" class="form-control datePicker">
+                                            <input type="date" name="tgllp" id="tgllp"
+                                                class="form-control datePicker">
                                         </div>
                                         <div class="form-group">
                                             <label>Wujud Perbuatan</label>
@@ -199,9 +199,8 @@
                                         </div>
                                         <div class="form-group divCheckPidana">
                                             <label>No Lp Pidana</label>
-                                            <input type="text" name="nolp_pidana"
-                                                id="nolp_pidana" class="form-control"
-                                                >
+                                            <input type="text" name="nolp_pidana" id="nolp_pidana"
+                                                class="form-control">
                                         </div>
                                         <div class="form-group divCheckPidana">
                                             <label>Tanggal LP Pidana</label>
@@ -265,12 +264,12 @@
                                         <h5>Sidang</h5>
                                         <div class="form-group">
                                             <label>No Kep</label>
-                                            <input type="text" name="no_kep" id="no_kep"
-                                                class="form-control">
+                                            <input type="text" name="no_kep" id="no_kep" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label>Tgl Kep</label>
-                                            <input type="date" name="tgl_kep" id="tgl_kep" class="form-control datePicker">
+                                            <input type="date" name="tgl_kep" id="tgl_kep"
+                                                class="form-control datePicker">
                                         </div>
                                         @for ($i = 1; $i < 13; $i++)
                                             <?php $putusans = Helper::getPutusan($i); ?>
@@ -289,9 +288,19 @@
                                         <hr>
                                         <h5>Dihentikan</h5>
                                         <div class="form-group">
+                                            <label>Alasan Dihentikan</label>
+                                            <select class="form-control" id="jenis_narkoba" style="width: 100%"
+                                                name="alasan_dihentikan">
+                                                <option value="">Pilih</option>
+                                                @foreach ($alasan_berhentis as $alasan_berhenti)
+                                                    <option value="{{ $alasan_berhenti->id }}">
+                                                        {{ $alasan_berhenti->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
                                             <label>No. Kep SP3 / SP4</label>
-                                            <input type="text" name="nokepsp3" id="nokepsp3"
-                                                class="form-control">
+                                            <input type="text" name="nokepsp3" id="nokepsp3" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label>Tgl. Kep SP3 / SP4</label>
@@ -442,18 +451,20 @@
             const dayText = {
                 en: "Su,Mo,Tu,We,Th,Fr,Sa".split(","),
                 id: "Mi,Se,Sl,Ra,Ka,Ju,Sa".split(","),
-                };
+            };
 
-                const monthText = {
-                en: "January,February,March,April,May,June,July,Augustus,September,October,November,December".split(
-                    ","
-                ),
-                id: "Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,September,Oktober,November,Desember".split(
-                    ","
-                ),
-                };
+            const monthText = {
+                en: "January,February,March,April,May,June,July,Augustus,September,October,November,December"
+                    .split(
+                        ","
+                    ),
+                id: "Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,September,Oktober,November,Desember"
+                    .split(
+                        ","
+                    ),
+            };
 
-                const todayText = {
+            const todayText = {
                 en: "Today",
                 id: "Hari ini",
             };
