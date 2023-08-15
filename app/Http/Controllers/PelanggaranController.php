@@ -179,6 +179,7 @@ class PelanggaranController extends Controller
             'poldas' => SatuanPolda::all(),
             'jenis_narkobas' => JenisNarkoba::all(),
             'peran_narkobas' => PeranNarkoba::all(),
+            'alasan_berhentis' => AlasanBerhenti::all(),
         ];
         return view('content.pelanggaran.tambah', $data);
     }
