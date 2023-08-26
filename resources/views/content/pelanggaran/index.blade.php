@@ -267,7 +267,10 @@
             var table = $('#list-pelanggaran').DataTable({
                 processing: true,
                 serverSide: true,
-                searching: false,
+                searching: true,
+                search: {
+        "regex": true
+      },
                 ajax: {
                     url: "{{ route('pelanggaran.show') }}",
                     method: "post",
@@ -300,16 +303,16 @@
                         name: 'nama'
                     },
                     {
-                        data: 'get_jenis_pelanggar.name',
-                        name: 'get_jenis_pelanggar.name'
+                        data: 'jenis_pelanggarans.name',
+                        name: 'jenis_pelanggarans.name'
                     },
                     {
-                        data: 'get_polda.name',
-                        name: 'get_polda.name'
+                        data: 'satuan_poldas.name',
+                        name: 'satuan_poldas.name'
                     },
                     {
-                        data: 'get_pangkat.name',
-                        name: 'get_pangkat.name'
+                        data: 'pangkats.name',
+                        name: 'pangkats.name'
                     },
                     {
                         data: 'nolp',

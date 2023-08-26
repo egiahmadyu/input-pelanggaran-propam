@@ -15,22 +15,22 @@ class PelanggaranList extends Model
         'putusan_9', 'putusan_10', 'putusan_11', 'putusan_12', 'nokepsp3', 'tglkepsp3'
     ];
 
-    public function getPolda()
+    public function satuan_poldas()
     {
         return $this->hasOne(SatuanPolda::class, 'id', 'polda');
     }
 
-    public function getPolres()
+    public function satuan_polres()
     {
         return $this->hasOne(SatuanPolres::class, 'id', 'polres');
     }
 
-    public function getPolsek()
+    public function satuan_polseks()
     {
         return $this->hasOne(SatuanPolsek::class, 'id', 'polsek');
     }
 
-    public function getPangkat()
+    public function pangkats()
     {
         return $this->hasOne(Pangkat::class, 'id', 'pangkat');
     }
@@ -40,7 +40,7 @@ class PelanggaranList extends Model
         return $this->hasOne(Diktuk::class, 'id', 'diktuk');
     }
 
-    public function getJenisPelanggar()
+    public function jenis_pelanggarans()
     {
         return $this->hasOne(JenisPelanggaran::class, 'id', 'jenis_pelanggaran');
     }

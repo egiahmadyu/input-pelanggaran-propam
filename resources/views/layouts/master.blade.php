@@ -16,6 +16,9 @@
         <link rel="stylesheet" href="{{asset('assets/css/date-picker.css')}}">
 
     @stack('style')
+    <style>
+
+    </style>
 
 </head>
 

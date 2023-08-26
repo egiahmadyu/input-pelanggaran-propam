@@ -108,7 +108,7 @@ class PelanggaranController extends Controller
         $data  = $this->getData($request);
 
 
-        return Datatables::of($data)->addIndexColumn()
+        return Datatables::eloquent($data)->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $res = base64_encode(json_encode($row));
                 $btn = '<a href="/pelanggaran-data/edit/' . $row->id . '" class="btn btn-secondary btn-sm">Update Putusan</a> | <a href="javascript:void(0)" onclick="openDetail(' . $row->id . ')" class="btn btn-primary btn-sm">View</a>';
@@ -127,7 +127,7 @@ class PelanggaranController extends Controller
     {
         // if ($request->button == 'export') return $this->exportData($request);
 
-        $data = PelanggaranList::with('getJenisPelanggar')->with('getPolda')->with('getPangkat');
+        $data = PelanggaranList::with('jenis_pelanggarans')->with('satuan_poldas')->with('pangkats');
 
         if ($request->polda) $data = $data->where('polda', $request->polda);
 
@@ -252,7 +252,7 @@ class PelanggaranController extends Controller
 
     public function getDetail($id)
     {
-        $data = PelanggaranList::with('getJenisPelanggar')->with('getPolda')->with('getPangkat')
+        $data = PelanggaranList::with('jenis_pelanggarans')->with('satuan_poldas')->with('pangkats')
             ->with('getDiktuk')
             ->where('id', $id)->first();
 
@@ -321,7 +321,7 @@ class PelanggaranController extends Controller
         $startCol = 'A';
 
         foreach ($data as $key => $value) {
-            $sheet->setCellValue("{$startCol}{$startRow}", $value->getJenisPelanggar->name);
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->jenis_pelanggarans->name);
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->nrp_nip);
             $startCol++;
@@ -329,13 +329,13 @@ class PelanggaranController extends Controller
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->getJenisKelamin->gender ?? '');
             $startCol++;
-            $sheet->setCellValue("{$startCol}{$startRow}", $value->getPangkat->name ?? '');
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->pangkats->name ?? '');
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->jabatan);
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->getDiktuk->name ?? '');
             $startCol++;
-            $sheet->setCellValue("{$startCol}{$startRow}", $value->getPolda->name ?? '');
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->satuan_poldas->name ?? '');
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->getPolres->name ?? '');
             $startCol++;

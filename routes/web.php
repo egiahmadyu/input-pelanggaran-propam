@@ -6,6 +6,7 @@ use App\Http\Controllers\importDataController;
 use App\Http\Controllers\ImportReffController;
 use App\Http\Controllers\PelanggaranController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RefDataController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SideMenuController;
 use App\Http\Controllers\UserController;
@@ -49,6 +50,31 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pelanggaran-data/show', [PelanggaranController::class, 'show'])->name('pelanggaran.show');
     Route::post('/tambah-data/save', [PelanggaranController::class, 'save'])->name('pelanggaran.save');
     Route::get('/pelanggaran-data/delete/{id}', [PelanggaranController::class, 'deleteData'])->name('pelanggaran.delete');
+
+
+    Route::get('data-master/wujud-perbuatan-pidana', [RefDataController::class, 'wujudPerbuatanPidana'])->name('refData.wujud_perbuatan_pidana');
+    Route::post('data-master/wujud-perbuatan-pidana', [RefDataController::class, 'wujudPerbuatanPidana'])->name('refData.wujud_perbuatan_pidana.view');
+    Route::post('data-master/wujud-perbuatan-pidana/save', [RefDataController::class, 'saveWPP'])->name('refData.wujud_perbuatan_pidana.save');
+    Route::get('data-master/wujud-perbuatan-pidana/delete/{id}', [RefDataController::class, 'deleteWPP'])->name('refData.wujud_perbuatan_pidana.delete');
+
+    Route::get('data-master/wujud-perbuatan', [RefDataController::class, 'wujudPerbuatan'])->name('refData.wujud_perbuatan');
+    Route::post('data-master/wujud-perbuatan', [RefDataController::class, 'wujudPerbuatan'])->name('refData.wujud_perbuatan.view');
+    Route::post('data-master/wujud-perbuatan/save', [RefDataController::class, 'saveWujudPerbuatan'])->name('refData.wujud_perbuatan.save');
+    Route::get('data-master/wujud-perbuatan/delete/{id}', [RefDataController::class, 'deleteWujudPerbuatan'])->name('refData.wujud_perbuatan.delete');
+
+    Route::get('data-master/satuan-polda', [RefDataController::class, 'satuanPolda'])->name('refData.satuan-polda');
+    Route::post('satuan-polda/save', [RefDataController::class, 'savePolda'])->name('refData.satuan-polda.save');
+    Route::get('data-master/satuan-polres', [RefDataController::class, 'satuanPolres'])->name('refData.satuan-polres');
+    Route::post('satuan-polres/save', [RefDataController::class, 'savePolres'])->name('refData.satuan-polres.save');
+    Route::get('data-master/satuan-polsek', [RefDataController::class, 'satuanPolsek'])->name('refData.satuan-polsek');
+    Route::post('satuan-polsek/save', [RefDataController::class, 'savePolsek'])->name('refData.satuan-polsek.save');
+    Route::post('data-master/satuan-data/polda', [RefDataController::class, 'getPolda'])->name('refData.get-polda');
+    Route::post('data-master/satuan-data/polres', [RefDataController::class, 'getPolres'])->name('refData.get-polres');
+    Route::post('data-master/satuan-data/polsek', [RefDataController::class, 'getPolsek'])->name('refData.get-polsek');
+
+    Route::get('satuan-data/polsek/delete/{id}', [RefDataController::class, 'deletePolsek']);
+    Route::get('satuan-data/polres/delete/{id}', [RefDataController::class, 'deletePolres']);
+    Route::get('satuan-data/polda/delete/{id}', [RefDataController::class, 'deletePolda']);
 
 
 

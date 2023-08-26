@@ -10640,7 +10640,7 @@ input[type="checkbox"]:checked:after {
   background-position: center bottom, center calc(100% - 1px);
   background-repeat: no-repeat;
   background-size: 0 2px, 100% 1px;
-  border: 0 none;
+  border: 1 solid;
   padding-bottom: 5px;
   transition: background 0s ease-out 0s; }
 
@@ -10659,7 +10659,7 @@ input[type="checkbox"]:checked:after {
   background-position: center bottom, center calc(100% - 1px);
   background-repeat: no-repeat;
   background-size: 0 2px, 100% 1px;
-  border: 0 none;
+  border: 1 solid;
   border-radius: 0;
   box-shadow: none;
   float: none;
