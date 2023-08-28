@@ -76,9 +76,17 @@
                                     <fieldset>
                                         <h4>Identitas Pelanggar</h4>
                                         <div class="form-group">
+                                            <label>Pelanggar</label>
+                                            <select class="form-control" id="pelanggar_orang" style="width: 100%"
+                                                name="pelanggar_orang" onchange="check_pelanggar_orang()">
+                                                <option value="polri">Polri</option>
+                                                <option value="asn">ASN</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
                                             <label>NRP / NIP</label>
-                                            <input type="text" name="nrp_nip" placeholder="" class="form-control"
-                                                required="true">
+                                            <input type="text" name="nrp_nip" placeholder="" class="form-control" id="nrp_nip"
+                                                required="true" maxlength="8" minlength="8">
                                         </div>
                                         <div class="form-group">
                                             <label>Nama</label>
@@ -105,9 +113,10 @@
                                             <label>Jabatan</label>
                                             <textarea name="jabatan" class="form-control"></textarea>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" id="div_diktuk">
                                             <label>Diktuk</label>
                                             <select class="form-control" id="diktuk" style="width: 100%" name="diktuk">
+                                                <option value="">--> select diktuk <--</option>
                                                 @foreach ($diktuks as $diktuk)
                                                     <option value="{{ $diktuk->id }}">{{ $diktuk->name }}</option>
                                                 @endforeach
@@ -240,14 +249,20 @@
                                             <div class="form-group">
                                                 <label>Jenis Narkoba</label>
                                                 <select class="form-control" id="jenis_narkoba" style="width: 100%"
-                                                    name="jenis_narkoba">
+                                                    name="jenis_narkoba" onchange="check_jenis_narkoba()">
                                                     <option value="">Pilih</option>
                                                     @foreach ($jenis_narkobas as $jenis_narkoba)
                                                         <option value="{{ $jenis_narkoba->id }}">
                                                             {{ $jenis_narkoba->name }}</option>
                                                     @endforeach
+                                                    <option value="0">Lain - Lain</option>
                                                 </select>
                                             </div>
+
+                                            <div class="form-group" id="jenis_narkoba_baru_div" style="display:none">
+                                                <label>Tambah Jenis Narkoba</label>
+                                                <input type="text" name="jenis_narkoba_baru" id="jenis_narkoba_baru"
+                                                class="form-control">
                                         </div>
 
                                         <div class="f1-buttons">
@@ -425,7 +440,30 @@
             checkWPP()
 
         });
-
+        function check_jenis_narkoba() {
+            var val = $('#jenis_narkoba').val()
+            if (val == '0') {
+                $('#jenis_narkoba_baru_div').css('display', 'block')
+            } else {
+                $('#jenis_narkoba_baru_div').css('display', 'none')
+            }
+        }
+        function check_pelanggar_orang() {
+            var val = $('#pelanggar_orang').val()
+            if (val == 'asn') {
+                $('#div_diktuk').css('display', 'none')
+                $('#nrp_nip').val('')
+                $('#diktuk').val('')
+                $('#diktuk').trigger('change');
+                $('#nrp_nip').attr('maxlength', 16)
+            } else {
+                $('#div_diktuk').css('display', 'block')
+                $('#nrp_nip').val('')
+                $('#diktuk').val('')
+                $('#diktuk').trigger('change');
+                $('#nrp_nip').attr('maxlength', 8)
+            }
+        }
         function scroll_to_class(element_class, removed_height) {
             var scroll_to = $(element_class).offset().top - removed_height;
             if ($(window).scrollTop() != scroll_to) {
@@ -470,16 +508,29 @@
             };
 
             $("#tgl_kep").pDatePicker({
-                lang: "id"
+                lang: "id",
+                range: {
+                endDate:new Date(),// Dec 31, 2024
+                }
+
             });
             $("#tglkepsp3").pDatePicker({
-                lang: "id"
+                lang: "id",
+                range: {
+                endDate:new Date(),// Dec 31, 2024
+                }
             });
             $("#tgllp").pDatePicker({
-                lang: "id"
+                lang: "id",
+                range: {
+                endDate:new Date(),// Dec 31, 2024
+                }
             });
             $("#tgllp_pidana").pDatePicker({
-                lang: "id"
+                lang: "id",
+                range: {
+                endDate:new Date(),// Dec 31, 2024
+                }
             });
             // Form
             $('.f1 fieldset:first').fadeIn('slow');

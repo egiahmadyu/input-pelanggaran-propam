@@ -53,10 +53,11 @@
                 <a href="/">
                     <b class="logo-abbr"><img src="/assets/images/logo-propam.png" alt="" srcset=""
                             width="500"></b>
-                    <span class="logo-compact">PROPAM PRESISI</span>
-                    <span class="brand-title" style="color: white">PROPAM
+                            <img src="/assets/images/logo_dashboard.png" alt="" class="brand-title img-fluid" width="150">
+                    {{-- <span class="logo-compact">PROPAM PRESISI</span> --}}
+                    {{-- <span class="brand-title" style="color: white">PROPAM
                         PRESISI
-                    </span>
+                    </span> --}}
                 </a>
             </div>
         </div>

@@ -42,8 +42,7 @@
                         <div class="card login-form mb-0">
                             <div class="card-body pt-5">
                                 <div style="text-align: center">
-                                    <img src="/assets/images/logo-propam.png" alt="" width="100">
-                                    <h6>PROPAM PRESISI</h6>
+                                    <img src="/assets/images/logo_login.png" class="img-fluid" alt="Responsive image" width="300">
                                 </div>
 
 

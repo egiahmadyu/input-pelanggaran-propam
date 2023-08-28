@@ -186,7 +186,17 @@ class PelanggaranController extends Controller
 
     public function save(Request $request)
     {
-        $data = PelanggaranList::create($request->all());
+        $request_data = $request->all();
+        if($request->jenis_narkoba == '0') {
+            if (!$narkoba = JenisNarkoba::where('name', 'like', '%'.$request->jenis_narkoba_baru.'%')->first()) {
+                $narkoba = JenisNarkoba::create([
+                    'name' => $request->jenis_narkoba_baru
+                ]);
+            }
+
+            $request_data['jenis_narkoba'] = $narkoba->id;
+        }
+        $data = PelanggaranList::create($request_data);
         if ($request->pidana == 'TIDAK') {
             $data->wujud_perbuatan_pidana = null;
             $data->nolp_pidana = null;
