@@ -179,12 +179,44 @@
                                         <div class="form-group">
                                             <label>Wujud Perbuatan</label>
                                             <select class="form-control" id="wujud_perbuatan" style="width: 100%"
-                                                name="wujud_perbuatan">
+                                                name="wujud_perbuatan" onchange="checkWujudPerbuatan()">
                                                 @foreach ($wujud_perbuatans as $wujud_perbuatan)
                                                     <option value="{{ $wujud_perbuatan->id }}">
                                                         {{ $wujud_perbuatan->name }}</option>
                                                 @endforeach
                                             </select>
+                                        </div>
+                                        <div id="narkobaDiv">
+                                            <h5>Pelanggaran Narkoba</h5>
+                                            <div class="form-group">
+                                                <label>Peran Narkoba</label>
+                                                <select class="form-control" id="peran_narkoba" style="width: 100%"
+                                                    name="peran_narkoba">
+                                                    <option value="">Pilih</option>
+                                                    @foreach ($peran_narkobas as $peran_narkoba)
+                                                        <option value="{{ $peran_narkoba->id }}">
+                                                            {{ $peran_narkoba->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Jenis Narkoba</label>
+                                                <select class="form-control" id="jenis_narkoba" style="width: 100%"
+                                                    name="jenis_narkoba" onchange="check_jenis_narkoba()">
+                                                    <option value="">Pilih</option>
+                                                    @foreach ($jenis_narkobas as $jenis_narkoba)
+                                                        <option value="{{ $jenis_narkoba->id }}">
+                                                            {{ $jenis_narkoba->name }}</option>
+                                                    @endforeach
+                                                    <option value="0">Lain - Lain</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group" id="jenis_narkoba_baru_div" style="display:none">
+                                                <label>Tambah Jenis Narkoba</label>
+                                                <input type="text" name="jenis_narkoba_baru" id="jenis_narkoba_baru"
+                                                class="form-control">
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <label>Kronologis Singkat</label>
@@ -233,37 +265,7 @@
                                                 class="form-control">
                                         </div>
                                         <hr>
-                                        <div id="narkobaDiv">
-                                            <h5>Pelanggaran Narkoba</h5>
-                                            <div class="form-group">
-                                                <label>Peran Narkoba</label>
-                                                <select class="form-control" id="peran_narkoba" style="width: 100%"
-                                                    name="peran_narkoba">
-                                                    <option value="">Pilih</option>
-                                                    @foreach ($peran_narkobas as $peran_narkoba)
-                                                        <option value="{{ $peran_narkoba->id }}">
-                                                            {{ $peran_narkoba->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Jenis Narkoba</label>
-                                                <select class="form-control" id="jenis_narkoba" style="width: 100%"
-                                                    name="jenis_narkoba" onchange="check_jenis_narkoba()">
-                                                    <option value="">Pilih</option>
-                                                    @foreach ($jenis_narkobas as $jenis_narkoba)
-                                                        <option value="{{ $jenis_narkoba->id }}">
-                                                            {{ $jenis_narkoba->name }}</option>
-                                                    @endforeach
-                                                    <option value="0">Lain - Lain</option>
-                                                </select>
-                                            </div>
 
-                                            <div class="form-group" id="jenis_narkoba_baru_div" style="display:none">
-                                                <label>Tambah Jenis Narkoba</label>
-                                                <input type="text" name="jenis_narkoba_baru" id="jenis_narkoba_baru"
-                                                class="form-control">
-                                        </div>
 
                                         <div class="f1-buttons">
                                             <button type="button" class="btn btn-warning btn-previous"><i
@@ -275,7 +277,15 @@
                                     <!-- step 4 -->
                                     <fieldset>
                                         <h4>Penyelesaian</h4>
+                                        <div class="form-group">
+                                            <select class="form-control" id="penyelesaian" style="width: 100%"
+                                                name="penyelesaian" onchange="check_penyelesaian()">
+                                                <option value="sidang">Sidang</option>
+                                                <option value="dihentikan">Dihentikan</option>
+                                            </select>
+                                        </div>
                                         <hr>
+                                       <div id="sidang_div">
                                         <h5>Sidang</h5>
                                         <div class="form-group">
                                             <label>No Kep</label>
@@ -300,11 +310,13 @@
                                                 </select>
                                             </div>
                                         @endfor
+                                       </div>
                                         <hr>
+                                       <div id="dihentikan_div">
                                         <h5>Dihentikan</h5>
                                         <div class="form-group">
                                             <label>Alasan Dihentikan</label>
-                                            <select class="form-control" id="jenis_narkoba" style="width: 100%"
+                                            <select class="form-control" id="alasan_dihentikan" style="width: 100%"
                                                 name="alasan_dihentikan">
                                                 <option value="">Pilih</option>
                                                 @foreach ($alasan_berhentis as $alasan_berhenti)
@@ -322,6 +334,7 @@
                                             <input type="date" name="tglkepsp3" placeholder="0" id="tglkepsp3"
                                                 class="form-control datePicker">
                                         </div>
+                                       </div>
                                         <div class="f1-buttons">
                                             <button type="button" class="btn btn-warning btn-previous"><i
                                                     class="fa fa-arrow-left"></i> Sebelumnya</button>
@@ -435,11 +448,40 @@
             $('select').select2({
                 theme: "bootstrap4"
             });
+            $('#narkobaDiv').css("display", "none");
             await getPolres()
             getWujudPerbuatan()
             checkWPP()
+            check_penyelesaian()
 
         });
+
+        function check_penyelesaian() {
+            var val = $('#penyelesaian').val();
+            if (val == 'sidang') {
+                $('#sidang_div').css('display', 'block')
+                $('#dihentikan_div').css('display', 'none')
+            } else {
+                $('.putusan').val('')
+                $('.putusan').trigger('change');
+                $('#sidang_div').css('display', 'none')
+                $('#dihentikan_div').css('display', 'block')
+            }
+        }
+
+        function checkWujudPerbuatan() {
+            var val = $('#wujud_perbuatan').val();
+            $.ajax({
+                url: "/api/wujud_perbuatan/checkNarkoba/" + val,
+                success: function(data) {
+                    if (data.data == true) {
+                        $('#narkobaDiv').css("display", "block");
+                    } else {
+                        $('#narkobaDiv').css("display", "none");
+                    }
+                }
+            });
+        }
         function check_jenis_narkoba() {
             var val = $('#jenis_narkoba').val()
             if (val == '0') {
@@ -450,6 +492,7 @@
         }
         function check_pelanggar_orang() {
             var val = $('#pelanggar_orang').val()
+            getPangkat(val)
             if (val == 'asn') {
                 $('#div_diktuk').css('display', 'none')
                 $('#nrp_nip').val('')
@@ -463,6 +506,20 @@
                 $('#diktuk').trigger('change');
                 $('#nrp_nip').attr('maxlength', 8)
             }
+        }
+        function getPangkat(type) {
+            $.ajax({
+                url: "/api/pangkat/type/" + type,
+                success: function(data) {
+                    var pangkat = data.data
+                    var option = '<option value="">Pilih</option>'
+                    for (let index = 0; index < pangkat.length; index++) {
+                        option += `<option value="${pangkat[index].id}">${pangkat[index].name}</option>`
+
+                    }
+                    $('#pangkat').html(option)
+                }
+            });
         }
         function scroll_to_class(element_class, removed_height) {
             var scroll_to = $(element_class).offset().top - removed_height;
@@ -679,21 +736,19 @@
         function checkWPP() {
             var wpp = $('#wujud_perbuatan_pidana').val()
 
-            if (wpp == 1) {
-                $('#narkobaDiv').css("display", "block");
-            } else {
-                $('#narkobaDiv').css("display", "none");
-            }
+            // if (wpp == 1) {
+            //     $('#narkobaDiv').css("display", "block");
+            // } else {
+            //     $('#narkobaDiv').css("display", "none");
+            // }
         }
 
         function checkPidana() {
             var wpp = $('#dilakukan_pidana').val()
 
             if (wpp == 'YA') {
-                $('#narkobaDiv').css("display", "block");
                 $('.divCheckPidana').css("display", "block");
             } else {
-                $('#narkobaDiv').css("display", "none");
                 $('.divCheckPidana').css("display", "none");
             }
         }

@@ -172,7 +172,7 @@ class PelanggaranController extends Controller
         $data = [
             'jenis_pelanggarans' => JenisPelanggaran::all(),
             'genders' => Gender::all(),
-            'pangkats' => Pangkat::all(),
+            'pangkats' => Pangkat::whereNotIn('pangkat_pelanggar_id', [6])->get(),
             'diktuks' => Diktuk::all(),
             'wujud_perbuatans' => WujudPerbuatan::all(),
             'wujud_perbuatanPidanas' => WujudPerbuatanPidana::all(),

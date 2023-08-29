@@ -15,4 +15,18 @@ class WujudPerbuatanController extends Controller
             'data' => $data
         ]);
     }
+
+    public function checkNarkoba($wp)
+    {
+        $data = WujudPerbuatan::where('id', $wp)
+        ->where(function ($query) {
+            $query->where('name', 'like','%Narkotika%');
+            $query->orwhere('name', 'like','%Narkoba%');
+        })
+        ->exists();
+        return response()->json([
+            'status' => 200,
+            'data' => $data
+        ]);
+    }
 }
