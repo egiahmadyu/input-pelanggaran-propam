@@ -9,7 +9,7 @@
                         <div class="card">
                             <div class="card-body pb-0 d-flex justify-content-between">
                                 <div>
-                                    <h4 class="mb-1">Data Pelanggar</h4>
+                                    <h4 class="mb-1">Data User</h4>
                                 </div>
 
                                 <div><button class="btn btn-primary align-self-center mx-3" data-toggle="modal"
@@ -38,6 +38,7 @@
                                                 <th>#</th>
                                                 <th>Name</th>
                                                 <th>Role</th>
+                                                <th>Polda</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
@@ -47,6 +48,8 @@
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $list->name }}</td>
                                                     <td>{{ $list->getRoleNames()[0] }}</td>
+                                                    <td>{{ is_null($list->poldas) ? '' : $list->poldas->name }}</td>
+
                                                     <td>
                                                         <div class="dropdown">
                                                             <button class="btn btn-primary dropdown-toggle" type="button"
@@ -101,11 +104,26 @@
                         </div>
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Role</label>
-                            <select class="form-control" id="role_user" name="role">
+                            <select class="form-control" id="role_user" name="role" onchange="checkRole()">
                                 <option value="">Semua</option>
                                 @foreach ($roles as $value)
                                     <option value="{{ $value->id }}">{{ $value->name }}</option>
                                 @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3 div_polda" style="display:none">
+                            <label for="exampleFormControlInput1" class="form-label">Polda</label>
+                            <select class="form-control" id="polda" name="polda" onchange="getPolres()">
+                                <option value="">Semua</option>
+                                @foreach ($poldas as $value)
+                                    <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3 div_polres" style="display:none">
+                            <label for="exampleFormControlInput1" class="form-label">Polda</label>
+                            <select class="form-control" id="polres" name="polres">
+                                <option value="">Semua</option>
                             </select>
                         </div>
                     </div>
@@ -192,6 +210,43 @@
                     $('#email_user').val(data.data.email)
                     $('#role_user').val(data.role.id)
                 });
+        }
+
+        function checkRole() {
+            var val = $('#role_user').val()
+            // Polda
+            if (val == '2') {
+                $('.div_polda').css('display', 'block')
+                $("#polda").prop('required', 'required')
+
+            } else if (val == '3') {
+                $('.div_polda').css('display', 'block')
+                $('.div_polres').css('display', 'block')
+                $("#polda").prop('required', 'required')
+                $("#polres").prop('required', 'required')
+            } else {
+                $('.div_polda').css('display', 'none')
+                $('.div_polres').css('display', 'none')
+                $("#polda").prop('required', false);
+                $("#polres").prop('required', false);
+            }
+        }
+
+        function getPolres() {
+            var polda = $('#polda').val()
+            $.ajax({
+                url: "/api/polda/" + polda,
+                success: function(data) {
+                    var polres = data.data
+                    var option = '<option value="">Pilih</option>'
+                    for (let index = 0; index < polres.length; index++) {
+                        option += `<option value="${polres[index].id}">${polres[index].name}</option>`
+
+                    }
+                    $('#polres').html(option)
+                    getPolsek()
+                }
+            });
         }
     </script>
 @endpush

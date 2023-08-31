@@ -11,11 +11,18 @@
                                 <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="exampleFormControlInput1">Kesatuan / Polda</label>
-                                        <select class="form-control" id="polda" name="polda">
+                                        <select class="form-control" id="polda" name="polda"
+                                            {{ auth()->user()->getRoleNames()[0] != 'admin'? 'disabled': '' }}>
+                                            @if (auth()->user()->getRoleNames()[0] != 'admin')
+                                                <option value="">{{ auth()->user()->poldas->name }}</option>
+                                            @else
+                                                <option value="">Polda</option>
+                                                @foreach ($poldas as $value)
+                                                    <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                                @endforeach
+                                            @endif
                                             <option value="">Semua</option>
-                                            @foreach ($poldas as $value)
-                                                <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                            @endforeach
+
                                         </select>
                                     </div>
                                 </div>
@@ -67,56 +74,108 @@
         </div>
         <div class="row">
             <div class="col-lg-4 col-sm-6">
-                <div class="card gradient-1">
-                    <div class="card-body">
-                        <h3 class="card-title text-white">Total Pelanggaran</h3>
-                        <div class="d-inline-block">
-                            <h2 class="text-white">{{ count($pelanggarans) }}</h2>
-                            {{-- <p class="text-white mb-0">{{ date('Y') }}</p> --}}
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card gradient-1">
+                            <div class="card-body">
+                                <h3 class="card-title text-white">Total Pelanggaran</h3>
+                                <div class="d-inline-block">
+                                    <h2 class="text-white">{{ count($pelanggarans) }}</h2>
+                                    {{-- <p class="text-white mb-0">{{ date('Y') }}</p> --}}
+                                </div>
+                                <span class="float-right display-5 opacity-5"><i class="fa fa-exclamation-circle"
+                                        aria-hidden="true"></i>
+                                </span>
+                            </div>
                         </div>
-                        <span class="float-right display-5 opacity-5"><i class="fa fa-child"></i></span>
                     </div>
-                </div>
-            </div>
-            {{-- <div class="col-lg-3 col-sm-6">
-                <div class="card gradient-2">
-                    <div class="card-body">
-                        <h3 class="card-title text-white">Pelanggaran Narkoba</h3>
-                        <div class="d-inline-block">
-                            <h2 class="text-white">{{ $totalPelanggarNarkoba }}</h2>
-                            <p class="text-white mb-0">
-                                {{ number_format(($totalPelanggarNarkoba / count($pelanggarans)) * 100, 2) }}%</p>
+                    <div class="col-12">
+                        <div class="card gradient-1">
+                            <div class="card-body">
+                                <h3 class="card-title text-white">Penyelesaian Pelanggaran
+                                    {{ count($disiplin_selesai) + count($kepp_selesai) }}</h3>
+                                <div class="d-inline-block">
+                                    <h2 class="text-white">
+                                        {{ count($disiplin_selesai) + count($kepp_selesai) == 0 ? 0 : number_format(((count($disiplin_selesai) + count($kepp_selesai)) / count($pelanggarans)) * 100, 1) }}%
+                                    </h2>
+                                    {{-- <p class="text-white mb-0">{{ date('Y') }}</p> --}}
+                                </div>
+                                <span class="float-right display-5 opacity-5"><i class="fa fa-exclamation-circle"
+                                        aria-hidden="true"></i>
+                                </span>
+                            </div>
                         </div>
-                        <span class="float-right display-5 opacity-5"><i class="fa fa-exclamation-circle"></i></span>
-                    </div>
-                </div>
-            </div> --}}
-            <div class="col-lg-4 col-sm-6">
-                <div class="card gradient-3">
-                    <div class="card-body">
-                        <h3 class="card-title text-white">Pelanggaran Disiplin</h3>
-                        <div class="d-inline-block">
-                            <h2 class="text-white">{{ $disiplin }}</h2>
-                            <p class="text-white mb-0">
-                                {{ $disiplin == 0 ? 0 : number_format(($disiplin / count($pelanggarans)) * 100, 2) }}%</p>
-                        </div>
-                        <span class="float-right display-5 opacity-5"><i class="fa fa-users"></i></span>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4 col-sm-6">
-                <div class="card gradient-4">
-                    <div class="card-body">
-                        <h3 class="card-title text-white">Pelanggaran Kode Etik</h3>
-                        <div class="d-inline-block">
-                            <h2 class="text-white">{{ $kodeEtik }}</h2>
-                            <p class="text-white mb-0">
-                                {{ $kodeEtik == 0 ? 0 : number_format(($kodeEtik / count($pelanggarans)) * 100, 2) }}%</p>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card gradient-3">
+                            <div class="card-body">
+                                <h3 class="card-title text-white">Pelanggaran Disiplin {{ $disiplin }}</h3>
+                                <div class="d-inline-block">
+                                    <h2 class="text-white">
+                                        {{ $disiplin == 0 ? 0 : number_format(($disiplin / count($pelanggarans)) * 100) }}%
+                                    </h2>
+                                    {{-- <p class="text-white mb-0">
+
+                                    </p> --}}
+                                </div>
+                                <span class="float-right display-5 opacity-5"><i class="fa fa-users"></i></span>
+                            </div>
                         </div>
-                        <span class="float-right display-5 opacity-5"><i class="fa fa-anchor"></i></span>
+                    </div>
+                    <div class="col-12">
+                        <div class="card gradient-3">
+                            <div class="card-body">
+                                <h3 class="card-title text-white">Penyelesaian Disiplin {{ count($disiplin_selesai) }}</h3>
+                                <div class="d-inline-block">
+                                    <h2 class="text-white">
+                                        {{ $disiplin == 0 ? 0 : number_format(count($disiplin_selesai) / $disiplin, 2) * 100 }}%
+                                    </h2>
+                                </div>
+                                <span class="float-right display-5 opacity-5"><i class="fa fa-users"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card gradient-4">
+                            <div class="card-body">
+                                <h3 class="card-title text-white">Pelanggaran Kode Etik {{ $kodeEtik }}</h3>
+                                <div class="d-inline-block">
+                                    <h2 class="text-white">
+                                        {{ $kodeEtik == 0 ? 0 : number_format(($kodeEtik / count($pelanggarans)) * 100, 2) }}%
+                                    </h2>
+                                    {{-- <p class="text-white mb-0">
+
+                                    </p> --}}
+                                </div>
+                                <span class="float-right display-5 opacity-5"><i class="fa fa-anchor"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card gradient-4">
+                            <div class="card-body">
+                                <h3 class="card-title text-white">Penyelesaian Kode Etik {{ count($kepp_selesai) }}</h3>
+                                <div class="d-inline-block">
+                                    <h2 class="text-white">
+                                        {{ count($kepp_selesai) == 0 ? 0 : number_format((count($kepp_selesai) / $kodeEtik) * 100, 2) }}%
+                                    </h2>
+                                </div>
+                                <span class="float-right display-5 opacity-5"><i class="fa fa-anchor"></i></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
         <div class="row">
@@ -264,8 +323,86 @@
                 </div>
             </div>
         </div>
-
         <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body pb-0 d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-1">5 Wujud Perbuatan Pelanggaran Disiplin</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Jenis Pelanggaran</th>
+                                    <th scope="col">Wujud Perbuatan</th>
+                                    <th scope="col">Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($dataWujudPerbuatanDisiplin as $index => $value)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $value->type }}</td>
+                                        <td>{{ $value->name }}</td>
+                                        <td>{{ $value->total }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2">Total</td>
+                                    <td><b>{{ $dataWujudPerbuatanDisiplin->sum('total') }}</b></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        {{-- <div id="chartWujudPerbuatan"></div> --}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body pb-0 d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-1">5 Wujud Perbuatan Pelanggaran KEPP</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Jenis Pelanggaran</th>
+                                    <th scope="col">Wujud Perbuatan</th>
+                                    <th scope="col">Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($dataWujudPerbuatanKepp as $index => $value)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $value->type }}</td>
+                                        <td>{{ $value->name }}</td>
+                                        <td>{{ $value->total }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2">Total</td>
+                                    <td><b>{{ $dataWujudPerbuatanKepp->sum('total') }}</b></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        {{-- <div id="chartWujudPerbuatan"></div> --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- <div class="row">
             <div class="col-lg-12">
                 <div class="row">
                     <div class="col-12">
@@ -282,6 +419,24 @@
                     </div>
                 </div>
             </div>
+        </div> --}}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body pb-0 d-flex justify-content-between">
+                                <div>
+                                    <h4 class="mb-1">Data Pelanggar Berdasarkan Wilayah</h4>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="chart_new"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
@@ -289,6 +444,11 @@
 @push('style')
     <style>
         #bar_chart {
+            width: 100%;
+            height: 500px;
+        }
+
+        #chart_new {
             width: 100%;
             height: 500px;
         }
@@ -335,61 +495,6 @@
                 lang: "id"
             });
         })
-        am4core.ready(function() {
-
-            // Themes begin
-            am4core.useTheme(am4themes_animated);
-            // Themes end
-            var dataChart = {!! json_encode($chartPolda, true) !!}
-            // Create chart instance
-            var chart = am4core.create("bar_chart", am4charts.XYChart);
-            chart.scrollbarX = new am4core.Scrollbar();
-
-            // Add data
-            chart.data = dataChart
-
-            // Create axes
-            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-            categoryAxis.dataFields.category = "name";
-            categoryAxis.renderer.grid.template.location = 0;
-            categoryAxis.renderer.minGridDistance = 30;
-            categoryAxis.renderer.labels.template.horizontalCenter = "right";
-            categoryAxis.renderer.labels.template.verticalCenter = "middle";
-            categoryAxis.renderer.labels.template.rotation = 270;
-            categoryAxis.tooltip.disabled = true;
-            categoryAxis.renderer.minHeight = 110;
-
-            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-            valueAxis.renderer.minWidth = 50;
-
-            // Create series
-            var series = chart.series.push(new am4charts.ColumnSeries());
-            series.sequencedInterpolation = true;
-            series.dataFields.valueY = "total";
-            series.dataFields.categoryX = "name";
-            series.tooltipText = "[{categoryX}: bold]{valueY}[/]";
-            series.columns.template.strokeWidth = 0;
-
-            series.tooltip.pointerOrientation = "vertical";
-
-            series.columns.template.column.cornerRadiusTopLeft = 10;
-            series.columns.template.column.cornerRadiusTopRight = 10;
-            series.columns.template.column.fillOpacity = 0.8;
-
-            // on hover, make corner radiuses bigger
-            var hoverState = series.columns.template.column.states.create("hover");
-            hoverState.properties.cornerRadiusTopLeft = 0;
-            hoverState.properties.cornerRadiusTopRight = 0;
-            hoverState.properties.fillOpacity = 1;
-
-            series.columns.template.adapter.add("fill", function(fill, target) {
-                return chart.colors.getIndex(target.dataItem.index);
-            });
-
-            // Cursor
-            chart.cursor = new am4charts.XYCursor();
-
-        }); // end am4core.ready()
 
         am4core.ready(function() {
             am4core.useTheme(am4themes_animated);
@@ -649,6 +754,61 @@
             // chart.legend = new am4charts.Legend();
             // chart.legend.position = "right";
 
+        });
+
+        /**
+         * ---------------------------------------
+         * This demo was created using amCharts 4.
+         *
+         * For more information visit:
+         * https://www.amcharts.com/
+         *
+         * Documentation is available at:
+         * https://www.amcharts.com/docs/v4/
+         * ---------------------------------------
+         */
+        am4core.ready(function() {
+            // Themes begin
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+
+            // Create chart instance
+            var chart = am4core.create("chart_new", am4charts.XYChart);
+
+            // Add percent sign to all numbers
+            // chart.numberFormatter.numberFormat = "#";
+
+            var dataChart = {!! json_encode($chartPoldaNew, true) !!}
+            // Add data
+            chart.data = dataChart
+
+            // Create axes
+            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.dataFields.category = "name";
+            categoryAxis.renderer.grid.template.location = 0;
+            categoryAxis.renderer.minGridDistance = 30;
+
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+            valueAxis.title.text = "Polda";
+            valueAxis.title.fontWeight = 800;
+
+            // Create series
+            var series = chart.series.push(new am4charts.ColumnSeries());
+            series.dataFields.valueY = "selesai";
+            series.dataFields.categoryX = "name";
+            series.clustered = false;
+            series.tooltipText = "Total Penyelesaian {categoryX} : [bold]{valueY}[/]";
+
+            var series2 = chart.series.push(new am4charts.ColumnSeries());
+            series2.dataFields.valueY = "total";
+            series2.dataFields.categoryX = "name";
+            series2.clustered = false;
+            series2.columns.template.width = am4core.percent(50);
+            series2.tooltipText = "Total Pelanggaran {categoryX} : [bold]{valueY}[/]";
+
+            chart.cursor = new am4charts.XYCursor();
+            chart.cursor.lineX.disabled = true;
+            chart.cursor.lineY.disabled = true;
         });
     </script>
 @endpush

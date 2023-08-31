@@ -37,6 +37,16 @@
                                 </div>
                                 <form action="/pelanggaran-data/edit/{{ $id }}/save" method="post">
                                     @csrf
+                                    <h5>Sidang</h5>
+                                    <div class="form-group">
+                                        <label>No Kep</label>
+                                        <input type="text" name="no_kep" id="no_kep" class="form-control"
+                                            value="{{ $list_petusan['no_kep'] }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Tgl Kep</label>
+                                        <input type="date" name="tgl_kep" id="tgl_kep" class="form-control datePicker">
+                                    </div>
                                     @for ($i = 1; $i < 13; $i++)
                                         <div class="form-group">
                                             <label>Putusan {{ $i }}</label>
@@ -73,6 +83,18 @@
     <script>
         $(document).ready(function() {
             // getData()
+            <?php if($list_petusan['tgl_kep']) {?>
+            $("#tgl_kep").pDatePicker({
+                lang: "id",
+                selected: new Date(<?= date('Y', strtotime($list_petusan['tgl_kep'])) ?>,
+                    <?= date('m', strtotime($list_petusan['tgl_kep'])) ?> - 1,
+                    <?= date('d', strtotime($list_petusan['tgl_kep'])) ?>)
+            });
+            <?php } else { ?>
+            $("#tgl_kep").pDatePicker({
+                lang: "id",
+            });
+            <?php } ?>
         });
 
         function getData() {

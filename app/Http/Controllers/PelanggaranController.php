@@ -99,7 +99,6 @@ class PelanggaranController extends Controller
         $data['list_petusan'] = PelanggaranList::find($id)->toArray();
         $data['putusans'] = Putusan::where('jenis_pelanggaran_id', $data['list_petusan']['jenis_pelanggaran'])->get();
         $data['id'] = $id;
-        // dd($data['list_petusan']);
         return view('content.pelanggaran.edit_putusan', $data);
     }
 
@@ -187,8 +186,8 @@ class PelanggaranController extends Controller
     public function save(Request $request)
     {
         $request_data = $request->all();
-        if($request->jenis_narkoba == '0') {
-            if (!$narkoba = JenisNarkoba::where('name', 'like', '%'.$request->jenis_narkoba_baru.'%')->first()) {
+        if ($request->jenis_narkoba == '0') {
+            if (!$narkoba = JenisNarkoba::where('name', 'like', '%' . $request->jenis_narkoba_baru . '%')->first()) {
                 $narkoba = JenisNarkoba::create([
                     'name' => $request->jenis_narkoba_baru
                 ]);
@@ -201,14 +200,12 @@ class PelanggaranController extends Controller
             $data->wujud_perbuatan_pidana = null;
             $data->nolp_pidana = null;
             $data->tgllp_pidana = null;
-            $data->peran_narkoba = null;
-            $data->jenis_narkoba = null;
         } else {
-            $wpp = WujudPerbuatanPidana::find($request->wujud_perbuatan_pidana)->first();
-            if ($wpp->name != 'Narkoba') {
-                $data->peran_narkoba = null;
-                $data->jenis_narkoba = null;
-            }
+            // $wpp = WujudPerbuatanPidana::find($request->wujud_perbuatan_pidana)->first();
+            // if ($wpp->name != 'Narkoba') {
+            //     $data->peran_narkoba = null;
+            //     $data->jenis_narkoba = null;
+            // }
         }
         $data->save();
         return redirect('/');

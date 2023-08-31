@@ -13,9 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('pelanggaran_lists', function (Blueprint $table) {
-            $table->enum('pelanggar', ['asn', 'polri'])->nullable();
-            $table->string('penyelesaian')->nullable();
+        Schema::table('wujud_perbuatans', function (Blueprint $table) {
+            $table->text('name')->change();
         });
     }
 
@@ -26,7 +25,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('pelanggaran_lists', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
         });
     }

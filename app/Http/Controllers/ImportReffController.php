@@ -90,12 +90,11 @@ class ImportReffController extends Controller
     public function importWpKepp()
     {
         $delete = WujudPerbuatan::where('jenis_pelanggaran_id', 2)->delete();
-        WujudPerbuatan::truncate();
         $file_to_read = fopen(storage_path('app/wpkepp.csv'), 'r');
         while (($data = fgetcsv($file_to_read, 2000000, '.')) !== FALSE) {
             for ($i = 0; $i < count($data); $i++) {
                 echo $data[$i] . '<br>';
-                if (!$wpkepp = WujudPerbuatan::where('name', $data[$i])->where('jenis_pelanggaran_id', 2)->first() AND strlen($data[$i]) !== 0) {
+                if (!$wpkepp = WujudPerbuatan::where('name', $data[$i])->where('jenis_pelanggaran_id', 2)->first() and strlen($data[$i]) !== 0) {
                     WujudPerbuatan::create([
                         'name' => $data[$i],
                         'jenis_pelanggaran_id' => 2
@@ -109,11 +108,12 @@ class ImportReffController extends Controller
     public function importWpDisiplin()
     {
         WujudPerbuatan::where('jenis_pelanggaran_id', 1)->delete();
+        WujudPerbuatan::truncate();
         $file_to_read = fopen(storage_path('app/wpdisiplin.csv'), 'r');
         while (($data = fgetcsv($file_to_read, 2000000, '.')) !== FALSE) {
             for ($i = 0; $i < count($data); $i++) {
-                echo $data[$i] . strlen($data[$i]).'<br>';
-                if (!$wpkepp = WujudPerbuatan::where('name', $data[$i])->where('jenis_pelanggaran_id', 1)->first() AND strlen($data[$i]) !== 0) {
+                echo $data[$i] . strlen($data[$i]) . '<br>';
+                if (!$wpkepp = WujudPerbuatan::where('name', $data[$i])->where('jenis_pelanggaran_id', 1)->first() and strlen($data[$i]) !== 0) {
                     WujudPerbuatan::create([
                         'name' => $data[$i],
                         'jenis_pelanggaran_id' => 1

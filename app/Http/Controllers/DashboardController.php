@@ -14,10 +14,14 @@ class DashboardController extends Controller
     {
         $data = [
             'pelanggarans' => $this->getAllPelanggaran($request),
-            'chartPolda' => $this->getChartPolda($request),
+            // 'chartPolda' => $this->getChartPolda($request),
+            'chartPoldaNew' => $this->getChartPoldaNew($request),
             'dataByGender' => $this->getDataByGender($request),
             'dataByWpp' => $this->getDataByWpp($request),
             'dataWujudPerbuatan' => $this->getWujudPerbuatan($request),
+            'dataWujudPerbuatanDisiplin' => $this->getWujudPerbuatan($request, 1),
+            'dataWujudPerbuatanKepp' => $this->getWujudPerbuatan($request, 2),
+            'dataWujudPerbuatanPidana' => $this->getWujudPerbuatanPidana($request, 1),
             'dataPangkatPelanggar' => $this->getDataByPangkatPelanggar($request),
             'totalPelanggarNarkoba' => $this->getDataByPelanggarNarkoba($request),
             'disiplin' => $this->getJenisPelanggaran($request, 1),
@@ -26,10 +30,50 @@ class DashboardController extends Controller
             'jenisNarkoba' => $this->getDataJenisNarkoba($request),
             'dataPungli' => $this->getDataPungli($request),
             'poldas' => SatuanPolda::all(),
-            'pangkats' => Pangkat::all()
+            'pangkats' => Pangkat::all(),
+            'disiplin_selesai' => $this->disiplin_selesai($request),
+            'kepp_selesai' => $this->kepp_selesai($request)
         ];
 
         return view('content.dashboard.index', $data);
+    }
+
+    public function disiplin_selesai(Request $request)
+    {
+        $data = PelanggaranList::whereNotNull('penyelesaian')
+            ->where('jenis_pelanggaran', 1);
+
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+        return $data->get();
+    }
+
+    public function kepp_selesai(Request $request)
+    {
+        $data = PelanggaranList::whereNotNull('penyelesaian')
+            ->where('jenis_pelanggaran', 2);
+
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+        return $data->get();
     }
 
     public function disiplin(Request $request)
@@ -40,6 +84,7 @@ class DashboardController extends Controller
             'dataByGender' => $this->getDataByGender($request, 1),
             'dataByWpp' => $this->getDataByWpp($request, 1),
             'dataWujudPerbuatan' => $this->getWujudPerbuatan($request, 1),
+            'dataWujudPerbuatanPidana' => $this->getWujudPerbuatanPidana($request, 1),
             'dataPangkatPelanggar' => $this->getDataByPangkatPelanggar($request, 1),
             'totalPelanggarNarkoba' => $this->getDataByPelanggarNarkoba($request, 1),
             'disiplin' => $this->getJenisPelanggaran($request, 1),
@@ -58,6 +103,7 @@ class DashboardController extends Controller
     {
         $data = [
             'pelanggarans' => PelanggaranList::all(),
+            'chartPolda' => $this->getChartPolda($request, 2),
             'chartPolda' => $this->getChartPolda($request, 2),
             'dataByGender' => $this->getDataByGender($request, 2),
             'dataByWpp' => $this->getDataByWpp($request, 2),
@@ -79,11 +125,19 @@ class DashboardController extends Controller
     private function getAllPelanggaran($request)
     {
         $data = PelanggaranList::orderBy('created_at', 'asc');
-        if ($request->polda) $data = $data->where('polda', $request->polda);
+
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
         if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
         if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
         return $data->get();
     }
 
@@ -96,9 +150,17 @@ class DashboardController extends Controller
             // ->orWhereIn('wujud_perbuatan_pidanas.name', ['Pungli', 'Gratifikasi', 'Penyimpangan Anggaran', 'Korupsi'])
             ->select('wujud_perbuatans.name', 'wujud_perbuatan', (DB::raw('count(*) as total')));
         if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->get();
-        if ($request->polda) $data = $data->where('polda', $request->polda);
+
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
         return $data->get();
     }
 
@@ -108,10 +170,18 @@ class DashboardController extends Controller
             ->select('jenis_narkobas.name', (DB::raw('count(*) as total')));
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
-        if ($request->polda) $data = $data->where('polda', $request->polda);
+
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
         if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
 
         return $data->get();
     }
@@ -122,11 +192,19 @@ class DashboardController extends Controller
             ->select('peran_narkobas.name', (DB::raw('count(*) as total')));
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
-        if ($request->polda) $data = $data->where('polda', $request->polda);
+
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
         if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
         if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
 
         return $data->get();
     }
@@ -135,15 +213,51 @@ class DashboardController extends Controller
     {
         $data = PelanggaranList::groupBy('wujud_perbuatan', 'wujud_perbuatans.name', 'jenis_pelanggarans.name')->join('wujud_perbuatans', 'wujud_perbuatans.id', 'pelanggaran_lists.wujud_perbuatan')
             ->join('jenis_pelanggarans', 'jenis_pelanggarans.id', 'wujud_perbuatans.jenis_pelanggaran_id')
-            ->select(DB::raw('count(*) as total'), 'wujud_perbuatans.name', 'jenis_pelanggarans.name as type');
+            ->select(DB::raw('count(*) as total'), 'wujud_perbuatans.name', 'jenis_pelanggarans.name as type')
+            ->orderBy(DB::raw('count(*)'), 'desc')
+            ->limit(5);
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
-        if ($request->polda) $data = $data->where('polda', $request->polda);
+
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
         if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
         if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
 
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+
+        return $data->get();
+    }
+
+    private function getWujudPerbuatanPidana($request, $jenis_pelanggaran = null)
+    {
+        $data = PelanggaranList::groupBy('wujud_perbuatan_pidana', 'wujud_perbuatan_pidanas.name', 'jenis_pelanggarans.name')
+            ->join('wujud_perbuatan_pidanas', 'wujud_perbuatan_pidanas.id', 'pelanggaran_lists.wujud_perbuatan_pidana')
+            ->join('jenis_pelanggarans', 'jenis_pelanggarans.id', 'wujud_perbuatan_pidanas.jenis_pelanggaran_id')
+            ->select(DB::raw('count(*) as total'), 'wujud_perbuatan_pidanas.name', 'jenis_pelanggarans.name as type')
+            ->orderBy(DB::raw('count(*)'), 'desc')
+            ->limit(5);
+
+        if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
+
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
         return $data->get();
     }
 
@@ -154,13 +268,67 @@ class DashboardController extends Controller
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
 
-        if ($request->polda) $data = $data->where('polda', $request->polda);
+
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
         if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
         if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
 
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+
+
+
         return $data->get();
+    }
+
+    private function getChartPoldaNew($request, $jenis_pelanggaran = null)
+    {
+        $data = PelanggaranList::groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
+            ->select(DB::raw('count(*) as total'), 'satuan_poldas.name', 'polda');
+
+        if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
+
+
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+
+        $data = $data->get();
+        foreach ($data as $key => $value) {
+            $query = PelanggaranList::groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
+                ->whereNotNull('penyelesaian')
+                ->where('polda', $value->polda)
+                ->select(DB::raw('count(*) as total'), 'satuan_poldas.name', 'polda');
+            if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
+            if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
+            if ($request->tanggal_mulai) $query = $query->where('created_at', '>=', $request->tanggal_mulai);
+            if ($request->tanggal_akhir) $query = $query->where('created_at', '<=', $request->tanggal_akhir);
+            $query = $query->first();
+            $value->selesai = is_null($query) ? 0 : $query->total;
+            // if (auth()->user()->getRoleNames()[0] == 'polda') {
+            //     $data->where('polda', auth()->user()->polda_id);
+            // } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            //     $data->where('polres', auth()->user()->polres_id);
+            // } else {
+            //     if ($request->polda) $data = $data->where('polda', $request->polda);
+            // }
+        }
+        return $data;
     }
 
     private function getDataByGender($request, $jenis_pelanggaran = null)
@@ -169,11 +337,19 @@ class DashboardController extends Controller
             ->select(DB::raw('count(*) as total'), 'gender');
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
-        if ($request->polda) $data = $data->where('polda', $request->polda);
+
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
         if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
         if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
 
         return $data->get();
     }
@@ -184,11 +360,19 @@ class DashboardController extends Controller
             ->select(DB::raw('count(*) as total'), 'name');
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
-        if ($request->polda) $data = $data->where('polda', $request->polda);
+
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
         if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
         if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
 
         return $data->get();
     }
@@ -200,11 +384,20 @@ class DashboardController extends Controller
             ->join('pangkat_pelanggarans', 'pangkat_pelanggarans.id', 'pangkats.pangkat_pelanggar_id')
             ->select(DB::raw('count(*) as percent'), 'pangkat_pelanggarans.name as type', 'pangkat_pelanggarans.id');
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
-        if ($request->polda) $data = $data->where('polda', $request->polda);
+
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
         if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
         if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+
         $data = $data->get();
         foreach ($data as $value) {
             $value->subs = PelanggaranList::groupBy('pangkat', 'pangkats.name')->join('pangkats', 'pangkats.id', 'pelanggaran_lists.pangkat')
@@ -221,23 +414,38 @@ class DashboardController extends Controller
 
         if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->count();
 
-        if ($request->polda) $data = $data->where('polda', $request->polda);
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
         if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
         if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
 
         return $data->count();
     }
 
-    private function getJenisPelanggaran($request, $jenis_pelanggaran)
+    private function getJenisPelanggaran($request, $jenis_pelanggaran = null)
     {
         $data = PelanggaranList::where('jenis_pelanggaran', $jenis_pelanggaran);
-        if ($request->polda) $data = $data->where('polda', $request->polda);
+
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
         if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
         if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
 
         // if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->count();
 

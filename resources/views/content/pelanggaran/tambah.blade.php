@@ -77,16 +77,16 @@
                                         <h4>Identitas Pelanggar</h4>
                                         <div class="form-group">
                                             <label>Pelanggar</label>
-                                            <select class="form-control" id="pelanggar_orang" style="width: 100%"
-                                                name="pelanggar_orang" onchange="check_pelanggar_orang()">
+                                            <select class="form-control" id="pelanggar" style="width: 100%" name="pelanggar"
+                                                onchange="check_pelanggar_orang()">
                                                 <option value="polri">Polri</option>
                                                 <option value="asn">ASN</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label>NRP / NIP</label>
-                                            <input type="text" name="nrp_nip" placeholder="" class="form-control" id="nrp_nip"
-                                                required="true" maxlength="8" minlength="8">
+                                            <input type="text" name="nrp_nip" placeholder="" class="form-control"
+                                                id="nrp_nip" required="true" maxlength="8" minlength="8">
                                         </div>
                                         <div class="form-group">
                                             <label>Nama</label>
@@ -116,7 +116,7 @@
                                         <div class="form-group" id="div_diktuk">
                                             <label>Diktuk</label>
                                             <select class="form-control" id="diktuk" style="width: 100%" name="diktuk">
-                                                <option value="">--> select diktuk <--</option>
+                                                <option value="">pilih </option>
                                                 @foreach ($diktuks as $diktuk)
                                                     <option value="{{ $diktuk->id }}">{{ $diktuk->name }}</option>
                                                 @endforeach
@@ -134,8 +134,8 @@
                                         <h4>Kesatuan</h4>
                                         <div class="form-group">
                                             <label>Polda</label>
-                                            <select class="form-control" id="polda" style="width: 100%" name="polda"
-                                                onchange="getPolres()">
+                                            <select class="form-control" id="polda" style="width: 100%"
+                                                name="polda" onchange="getPolres()">
                                                 @foreach ($poldas as $polda)
                                                     <option value="{{ $polda->id }}">{{ $polda->name }}</option>
                                                 @endforeach
@@ -215,7 +215,7 @@
                                             <div class="form-group" id="jenis_narkoba_baru_div" style="display:none">
                                                 <label>Tambah Jenis Narkoba</label>
                                                 <input type="text" name="jenis_narkoba_baru" id="jenis_narkoba_baru"
-                                                class="form-control">
+                                                    class="form-control">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -280,61 +280,64 @@
                                         <div class="form-group">
                                             <select class="form-control" id="penyelesaian" style="width: 100%"
                                                 name="penyelesaian" onchange="check_penyelesaian()">
+                                                <option value="">Pilih</option>
                                                 <option value="sidang">Sidang</option>
                                                 <option value="dihentikan">Dihentikan</option>
                                             </select>
                                         </div>
                                         <hr>
-                                       <div id="sidang_div">
-                                        <h5>Sidang</h5>
-                                        <div class="form-group">
-                                            <label>No Kep</label>
-                                            <input type="text" name="no_kep" id="no_kep" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Tgl Kep</label>
-                                            <input type="date" name="tgl_kep" id="tgl_kep"
-                                                class="form-control datePicker">
-                                        </div>
-                                        @for ($i = 1; $i < 13; $i++)
-                                            <?php $putusans = Helper::getPutusan($i); ?>
+                                        <div id="sidang_div">
+                                            <h5>Sidang</h5>
                                             <div class="form-group">
-                                                <label>Putusan {{ $i }}</label>
-                                                <select class="form-control putusan" id="putusan_{{ $i }}"
-                                                    style="width: 100%" name="putusan_{{ $i }}">
-                                                    <option value="">Pilih</option>
-                                                    {{-- @foreach ($putusans as $putusan)
+                                                <label>No Kep</label>
+                                                <input type="text" name="no_kep" id="no_kep"
+                                                    class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Tgl Kep</label>
+                                                <input type="date" name="tgl_kep" id="tgl_kep"
+                                                    class="form-control datePicker">
+                                            </div>
+                                            @for ($i = 1; $i < 13; $i++)
+                                                <?php $putusans = Helper::getPutusan($i); ?>
+                                                <div class="form-group">
+                                                    <label>Putusan {{ $i }}</label>
+                                                    <select class="form-control putusan" id="putusan_{{ $i }}"
+                                                        style="width: 100%" name="putusan_{{ $i }}">
+                                                        <option value="">Pilih</option>
+                                                        {{-- @foreach ($putusans as $putusan)
                                                         <option value="{{ $putusan->id }}">
                                                             {{ $putusan->name }}</option>
                                                     @endforeach --}}
+                                                    </select>
+                                                </div>
+                                            @endfor
+                                        </div>
+                                        <hr>
+                                        <div id="dihentikan_div">
+                                            <h5>Dihentikan</h5>
+                                            <div class="form-group">
+                                                <label>Alasan Dihentikan</label>
+                                                <select class="form-control" id="alasan_dihentikan" style="width: 100%"
+                                                    name="alasan_dihentikan">
+                                                    <option value="">Pilih</option>
+                                                    @foreach ($alasan_berhentis as $alasan_berhenti)
+                                                        <option value="{{ $alasan_berhenti->id }}">
+                                                            {{ $alasan_berhenti->name }}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
-                                        @endfor
-                                       </div>
-                                        <hr>
-                                       <div id="dihentikan_div">
-                                        <h5>Dihentikan</h5>
-                                        <div class="form-group">
-                                            <label>Alasan Dihentikan</label>
-                                            <select class="form-control" id="alasan_dihentikan" style="width: 100%"
-                                                name="alasan_dihentikan">
-                                                <option value="">Pilih</option>
-                                                @foreach ($alasan_berhentis as $alasan_berhenti)
-                                                    <option value="{{ $alasan_berhenti->id }}">
-                                                        {{ $alasan_berhenti->name }}</option>
-                                                @endforeach
-                                            </select>
+                                            <div class="form-group">
+                                                <label>No. Kep SP3 / SP4</label>
+                                                <input type="text" name="nokepsp3" id="nokepsp3"
+                                                    class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Tgl. Kep SP3 / SP4</label>
+                                                <input type="date" name="tglkepsp3" placeholder="0" id="tglkepsp3"
+                                                    class="form-control datePicker">
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label>No. Kep SP3 / SP4</label>
-                                            <input type="text" name="nokepsp3" id="nokepsp3" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Tgl. Kep SP3 / SP4</label>
-                                            <input type="date" name="tglkepsp3" placeholder="0" id="tglkepsp3"
-                                                class="form-control datePicker">
-                                        </div>
-                                       </div>
                                         <div class="f1-buttons">
                                             <button type="button" class="btn btn-warning btn-previous"><i
                                                     class="fa fa-arrow-left"></i> Sebelumnya</button>
@@ -478,10 +481,15 @@
                         $('#narkobaDiv').css("display", "block");
                     } else {
                         $('#narkobaDiv').css("display", "none");
+                        $('#peran_narkoba').val('')
+                        $('#peran_narkoba').trigger('change');
+                        $('#jenis_narkoba').val('')
+                        $('#jenis_narkoba').trigger('change');
                     }
                 }
             });
         }
+
         function check_jenis_narkoba() {
             var val = $('#jenis_narkoba').val()
             if (val == '0') {
@@ -490,8 +498,9 @@
                 $('#jenis_narkoba_baru_div').css('display', 'none')
             }
         }
+
         function check_pelanggar_orang() {
-            var val = $('#pelanggar_orang').val()
+            var val = $('#pelanggar').val()
             getPangkat(val)
             if (val == 'asn') {
                 $('#div_diktuk').css('display', 'none')
@@ -507,6 +516,7 @@
                 $('#nrp_nip').attr('maxlength', 8)
             }
         }
+
         function getPangkat(type) {
             $.ajax({
                 url: "/api/pangkat/type/" + type,
@@ -521,6 +531,7 @@
                 }
             });
         }
+
         function scroll_to_class(element_class, removed_height) {
             var scroll_to = $(element_class).offset().top - removed_height;
             if ($(window).scrollTop() != scroll_to) {
@@ -567,26 +578,26 @@
             $("#tgl_kep").pDatePicker({
                 lang: "id",
                 range: {
-                endDate:new Date(),// Dec 31, 2024
+                    endDate: new Date(), // Dec 31, 2024
                 }
 
             });
             $("#tglkepsp3").pDatePicker({
                 lang: "id",
                 range: {
-                endDate:new Date(),// Dec 31, 2024
+                    endDate: new Date(), // Dec 31, 2024
                 }
             });
             $("#tgllp").pDatePicker({
                 lang: "id",
                 range: {
-                endDate:new Date(),// Dec 31, 2024
+                    endDate: new Date(), // Dec 31, 2024
                 }
             });
             $("#tgllp_pidana").pDatePicker({
                 lang: "id",
                 range: {
-                endDate:new Date(),// Dec 31, 2024
+                    endDate: new Date(), // Dec 31, 2024
                 }
             });
             // Form
