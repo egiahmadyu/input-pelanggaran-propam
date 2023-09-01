@@ -128,7 +128,14 @@ class PelanggaranController extends Controller
 
         $data = PelanggaranList::with('jenis_pelanggarans')->with('satuan_poldas')->with('pangkats');
 
-        if ($request->polda) $data = $data->where('polda', $request->polda);
+
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
 
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
 
@@ -195,6 +202,34 @@ class PelanggaranController extends Controller
 
             $request_data['jenis_narkoba'] = $narkoba->id;
         }
+        if ($request->tgllp) {
+            $tgl = explode('/', $request->tgllp);
+            $tgllp = "$tgl[2]-$tgl[1]-$tgl[0]";
+            $tgl = date('Y-m-d', strtotime($tgllp));
+            $request_data['tgllp'] = $tgl;
+        }
+
+        if ($request->tglkepsp3) {
+            $tgl = explode('/', $request->tglkepsp3);
+            $tgllp = "$tgl[2]-$tgl[1]-$tgl[0]";
+            $tgl = date('Y-m-d', strtotime($tgllp));
+            $request_data['tglkepsp3'] = $tgl;
+        }
+
+        if ($request->tgl_kep) {
+            $tgl = explode('/', $request->tgl_kep);
+            $tgllp = "$tgl[2]-$tgl[1]-$tgl[0]";
+            $tgl = date('Y-m-d', strtotime($tgllp));
+            $request_data['tgl_kep'] = $tgl;
+        }
+
+        if ($request->tgllp_pidana) {
+            $tgl = explode('/', $request->tgllp_pidana);
+            $tgllp = "$tgl[2]-$tgl[1]-$tgl[0]";
+            $tgl = date('Y-m-d', strtotime($tgllp));
+            $request_data['tgllp_pidana'] = $tgl;
+        }
+
         $data = PelanggaranList::create($request_data);
         if ($request->pidana == 'TIDAK') {
             $data->wujud_perbuatan_pidana = null;
