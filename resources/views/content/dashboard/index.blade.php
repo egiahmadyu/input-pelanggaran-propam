@@ -330,7 +330,7 @@
                 <div class="card">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
-                            <h4 class="mb-1">Putusan Disiplin</h4>
+                            <h4 class="mb-1">Putusan KEPP</h4>
                         </div>
                     </div>
                     <div class="card-body">
