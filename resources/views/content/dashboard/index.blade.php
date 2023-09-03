@@ -59,12 +59,18 @@
                                         <input type="date" name="tangal_akhir" id="tanggal_akhir" class="form-control">
                                     </div>
                                 </div>
-                                <div class="col-lg-2">
+                                <div class="col-lg-1">
                                     <div class="form-group">
                                         <label for="exampleFormControlInput1">.</label>
-                                        <button class="btn btn-primary form-control">Filter</button>
+                                        <button class="btn btn-primary form-control" type="submit" value="filter" name="submit">Filter</button>
                                     </div>
                                 </div>
+                                {{-- <div class="col-lg-1">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlInput1">.</label>
+                                        <button class="btn btn-danger form-control" type="submit" value="print" name="submit">Print</button>
+                                    </div>
+                                </div> --}}
                             </div>
                         </form>
                     </div>
@@ -284,6 +290,72 @@
         </div>
 
         <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body pb-0 d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-1">Putusan Disiplin</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Putusan</th>
+                                    <th scope="col">Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($putusans_disiplin as $index => $value)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $value->name }}</td>
+                                        <td>{{ $value->total }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2">Total</td>
+                                    <td><b>{{ $putusans_disiplin->sum('total') }}</b></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        {{-- <div id="chartWujudPerbuatan"></div> --}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body pb-0 d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-1">Putusan Disiplin</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Putusan</th>
+                                    <th scope="col">Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($putusans_kepp as $index => $value)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $value->name }}</td>
+                                        <td>{{ $value->total }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        {{-- <div id="chartWujudPerbuatan"></div> --}}
+                    </div>
+                </div>
+            </div>
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body pb-0 d-flex justify-content-between">
@@ -351,12 +423,6 @@
                                     </tr>
                                 @endforeach
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="2">Total</td>
-                                    <td><b>{{ $dataWujudPerbuatanDisiplin->sum('total') }}</b></td>
-                                </tr>
-                            </tfoot>
                         </table>
                         {{-- <div id="chartWujudPerbuatan"></div> --}}
                     </div>

@@ -134,12 +134,19 @@
                                         <h4>Kesatuan</h4>
                                         <div class="form-group">
                                             <label>Polda</label>
+                                            @if (auth()->user()->getRoleNames()[0] !== 'admin')
                                             <select class="form-control" id="polda" style="width: 100%"
-                                                name="polda" onchange="getPolres()">
-                                                @foreach ($poldas as $polda)
-                                                    <option value="{{ $polda->id }}">{{ $polda->name }}</option>
-                                                @endforeach
-                                            </select>
+                                            name="polda">
+                                            <option value="{{auth()->user()->polda_id}}">{{auth()->user()->satuan_poldas->name}}</option>
+                                        </select>
+                                            @else
+                                            <select class="form-control" id="polda" style="width: 100%"
+                                            name="polda" onchange="getPolres()">
+                                            @foreach ($poldas as $polda)
+                                                <option value="{{ $polda->id }}">{{ $polda->name }}</option>
+                                            @endforeach
+                                        </select>
+                                            @endif
                                         </div>
                                         <div class="form-group">
                                             <label>Satker / Fungsi / Polres</label>
@@ -173,8 +180,8 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Tanggal Lp</label>
-                                            <input type="text" name="tgllp" id="tgllp" class="form-control"
-                                                data-toggle="datepicker">
+                                            <input type="date" name="tgllp" id="tgllp" class="form-control"
+                                                >
                                         </div>
                                         <div class="form-group">
                                             <label>Wujud Perbuatan</label>
@@ -245,8 +252,8 @@
                                         </div>
                                         <div class="form-group divCheckPidana">
                                             <label>Tanggal LP Pidana</label>
-                                            <input type="text" name="tgllp_pidana" id="tgllp_pidana"
-                                                class="form-control" data-toggle="datepicker">
+                                            <input type="date" name="tgllp_pidana" id="tgllp_pidana"
+                                                class="form-control" >
                                         </div>
                                         <div class="form-group divCheckPidana">
                                             <label>Wujud Perbuatan Pidana</label>
@@ -295,8 +302,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>Tgl Kep</label>
-                                                <input type="text" name="tgl_kep" id="tgl_kep" class="form-control"
-                                                    data-toggle="datepicker">
+                                                <input type="date" name="tgl_kep" id="tgl_kep" class="form-control"
+                                                    >
                                             </div>
                                             @for ($i = 1; $i < 13; $i++)
                                                 <?php $putusans = Helper::getPutusan($i); ?>
@@ -334,8 +341,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>Tgl. Kep SP3 / SP4</label>
-                                                <input type="text" name="tglkepsp3" placeholder="0" id="tglkepsp3"
-                                                    class="form-control" data-toggle="datepicker">
+                                                <input type="date" name="tglkepsp3" placeholder="0" id="tglkepsp3"
+                                                    class="form-control" >
                                             </div>
                                         </div>
                                         <div class="f1-buttons">
@@ -452,14 +459,14 @@
                 theme: "bootstrap4"
             });
             $('#narkobaDiv').css("display", "none");
-            await getPolres()
+            getPolres()
             getWujudPerbuatan()
             checkWPP()
             check_penyelesaian()
 
 
 
-            $('[data-toggle="datepicker"]').datepicker({
+            $('[]').datepicker({
                 endDate: Date.now(),
                 format: 'dd/mm/yyyy'
             });
@@ -471,11 +478,16 @@
             if (val == 'sidang') {
                 $('#sidang_div').css('display', 'block')
                 $('#dihentikan_div').css('display', 'none')
-            } else {
+            } else if(val == 'dihentikan'){
                 $('.putusan').val('')
-                $('.putusan').trigger('change');
+                // $('.putusan').trigger('change');
                 $('#sidang_div').css('display', 'none')
                 $('#dihentikan_div').css('display', 'block')
+            } else {
+                $('#dihentikan_div').css('display', 'none')
+                $('.putusan').val('')
+                // $('.putusan').trigger('change');
+                $('#sidang_div').css('display', 'none')
             }
         }
 
@@ -561,52 +573,52 @@
         }
 
         $(document).ready(function() {
-            // const dayText = {
-            //     en: "Su,Mo,Tu,We,Th,Fr,Sa".split(","),
-            //     id: "Mi,Se,Sl,Ra,Ka,Ju,Sa".split(","),
-            // };
+            const dayText = {
+                en: "Su,Mo,Tu,We,Th,Fr,Sa".split(","),
+                id: "Mi,Se,Sl,Ra,Ka,Ju,Sa".split(","),
+            };
 
-            // const monthText = {
-            //     en: "January,February,March,April,May,June,July,Augustus,September,October,November,December"
-            //         .split(
-            //             ","
-            //         ),
-            //     id: "Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,September,Oktober,November,Desember"
-            //         .split(
-            //             ","
-            //         ),
-            // };
+            const monthText = {
+                en: "January,February,March,April,May,June,July,Augustus,September,October,November,December"
+                    .split(
+                        ","
+                    ),
+                id: "Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,September,Oktober,November,Desember"
+                    .split(
+                        ","
+                    ),
+            };
 
-            // const todayText = {
-            //     en: "Today",
-            //     id: "Hari ini",
-            // };
+            const todayText = {
+                en: "Today",
+                id: "Hari ini",
+            };
 
-            // $("#tgl_kep").pDatePicker({
-            //     lang: "id",
-            //     range: {
-            //         endDate: new Date(), // Dec 31, 2024
-            //     }
+            $("#tgl_kep").pDatePicker({
+                lang: "id",
+                range: {
+                    endDate: new Date(), // Dec 31, 2024
+                }
 
-            // });
-            // $("#tglkepsp3").pDatePicker({
-            //     lang: "id",
-            //     range: {
-            //         endDate: new Date(), // Dec 31, 2024
-            //     }
-            // });
-            // $("#tgllp").pDatePicker({
-            //     lang: "id",
-            //     range: {
-            //         endDate: new Date(), // Dec 31, 2024
-            //     }
-            // });
-            // $("#tgllp_pidana").pDatePicker({
-            //     lang: "id",
-            //     range: {
-            //         endDate: new Date(), // Dec 31, 2024
-            //     }
-            // });
+            });
+            $("#tglkepsp3").pDatePicker({
+                lang: "id",
+                range: {
+                    endDate: new Date(), // Dec 31, 2024
+                }
+            });
+            $("#tgllp").pDatePicker({
+                lang: "id",
+                range: {
+                    endDate: new Date(), // Dec 31, 2024
+                }
+            });
+            $("#tgllp_pidana").pDatePicker({
+                lang: "id",
+                range: {
+                    endDate: new Date(), // Dec 31, 2024
+                }
+            });
             // Form
             $('.f1 fieldset:first').fadeIn('slow');
 

@@ -27,5 +27,7 @@ class UserSeeder extends Seeder
         ]);
 
         $user->assignRole($adminRole);
+        Role::create(['name' => 'polda']);
+        Role::create(['name' => 'polres']);
     }
 }

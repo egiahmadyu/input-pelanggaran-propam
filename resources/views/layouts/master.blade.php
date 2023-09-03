@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Pelanggaran - Propam</title>
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon.png">
+    {{-- <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon.png"> --}}
 
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
@@ -100,12 +100,12 @@
         <!--**********************************
             Footer start
         ***********************************-->
-        <div class="footer">
+        {{-- <div class="footer">
             <div class="copyright">
                 <p>Copyright &copy; Designed & Developed by <a href="https://themeforest.net/user/quixlab">Quixlab</a>
                     2018</p>
             </div>
-        </div>
+        </div> --}}
         <!--**********************************
             Footer end
         ***********************************-->

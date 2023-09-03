@@ -38,11 +38,59 @@ class SideBarSeeder extends Seeder
             'url' => 'tambah-data'
         ]);
 
+        $data_master = SideMenu::create([
+            'name' => 'Data-Master',
+            'icon' => 'fa fa-database',
+            'type' => 2,
+            'sort' => 4,
+            'url' => 'data-master'
+        ]);
+
+        SideMenu::create([
+            'name' => 'Polda / Sederajat',
+            'url' => 'satuan-polda',
+            'type' => 3,
+            'sort' => 1,
+            'parent_id' => $data_master->id
+        ]);
+
+        SideMenu::create([
+            'name' => 'Polres',
+            'url' => 'satuan-polres',
+            'type' => 3,
+            'sort' => 1,
+            'parent_id' => $data_master->id
+        ]);
+
+        SideMenu::create([
+            'name' => 'Polsek',
+            'url' => 'satuan-polsek',
+            'type' => 3,
+            'sort' => 1,
+            'parent_id' => $data_master->id
+        ]);
+
+        SideMenu::create([
+            'name' => 'Wujud Perbuatan',
+            'url' => 'wujud-perbuatan',
+            'type' => 3,
+            'sort' => 1,
+            'parent_id' => $data_master->id
+        ]);
+
+        SideMenu::create([
+            'name' => 'Wujud Perbuatan Pidana',
+            'url' => 'wujud-perbuatan-pidana',
+            'type' => 3,
+            'sort' => 1,
+            'parent_id' => $data_master->id
+        ]);
+
         $manage = SideMenu::create([
             'name' => 'Manage',
             'icon' => 'fa fa-cog',
             'type' => 2,
-            'sort' => 4,
+            'sort' => 5,
             'url' => 'manage'
         ]);
         SideMenu::create([

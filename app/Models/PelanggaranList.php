@@ -55,6 +55,11 @@ class PelanggaranList extends Model
         return $this->hasOne(WujudPerbuatan::class, 'id', 'wujud_perbuatan');
     }
 
+    public function wujud_perbuatans()
+    {
+        return $this->hasOne(WujudPerbuatan::class, 'id', 'wujud_perbuatan');
+    }
+
     public function getWujudPerbuatanPidana()
     {
         return $this->hasOne(WujudPerbuatanPidana::class, 'id', 'wujud_perbuatan_pidana');

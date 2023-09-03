@@ -37,20 +37,31 @@
                                 </div>
                                 <form action="/pelanggaran-data/edit/{{ $id }}/save" method="post">
                                     @csrf
-                                    <h5>Sidang</h5>
+                                    <h4>Penyelesaian</h4>
+                                        <div class="form-group">
+                                            <select class="form-control" id="penyelesaian" style="width: 100%"
+                                                name="penyelesaian" onchange="check_penyelesaian()">
+                                                <option value="">Pilih</option>
+                                                <option value="sidang" {{$list_petusan['penyelesaian'] == 'sidang' ? 'selected' : ''}}>Sidang</option>
+                                                <option value="dihentikan" {{$list_petusan['penyelesaian'] == 'dihentikan' ? 'selected' : ''}}>Dihentikan</option>
+                                            </select>
+                                        </div>
+                                        <hr>
+                                        <div id="sidang_div">
+                                            <h5>Sidang</h5>
                                     <div class="form-group">
                                         <label>No Kep</label>
-                                        <input type="text" name="no_kep" id="no_kep" class="form-control"
+                                        <input type="text" name="no_kep" id="no_kep" class="form-control putusan"
                                             value="{{ $list_petusan['no_kep'] }}">
                                     </div>
                                     <div class="form-group">
                                         <label>Tgl Kep</label>
-                                        <input type="date" name="tgl_kep" id="tgl_kep" class="form-control datePicker">
+                                        <input type="date" name="tgl_kep" id="tgl_kep" class="form-control datePicker putusan">
                                     </div>
                                     @for ($i = 1; $i < 13; $i++)
                                         <div class="form-group">
                                             <label>Putusan {{ $i }}</label>
-                                            <select class="form-control" id="putusan_{{ $i }}"
+                                            <select class="form-control putusan" id="putusan_{{ $i }}"
                                                 style="width: 100%" name="putusan_{{ $i }}">
                                                 <option value="">Pilih</option>
                                                 @foreach ($putusans as $index => $putusan)
@@ -61,6 +72,32 @@
                                             </select>
                                         </div>
                                     @endfor
+                                        </div>
+                                        <div id="dihentikan_div">
+                                            <h5>Dihentikan</h5>
+                                            <div class="form-group">
+                                                <label>Alasan Dihentikan</label>
+                                                <select class="form-control" id="alasan_dihentikan" style="width: 100%"
+                                                    name="alasan_dihentikan">
+                                                    <option value="">Pilih</option>
+                                                    @foreach ($alasan_berhentis as $alasan_berhenti)
+                                                        <option value="{{ $alasan_berhenti->id }}">
+                                                            {{ $alasan_berhenti->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>No. Kep SP3 / SP4</label>
+                                                <input type="text" name="nokepsp3" id="nokepsp3"
+                                                    class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Tgl. Kep SP3 / SP4</label>
+                                                <input type="text" name="tglkepsp3" placeholder="0" id="tglkepsp3"
+                                                    class="form-control" data-toggle="datepicker">
+                                            </div>
+                                        </div>
+
                                     <button type="submit" class="btn btn-primary btn-submit"><i class="fa fa-save"></i>
                                         Submit</button>
                                 </form>
@@ -83,6 +120,7 @@
     <script>
         $(document).ready(function() {
             // getData()
+            check_penyelesaian()
             <?php if($list_petusan['tgl_kep']) {?>
             $("#tgl_kep").pDatePicker({
                 lang: "id",
@@ -97,47 +135,22 @@
             <?php } ?>
         });
 
-        function getData() {
-            var table = $('#list-pelanggaran').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: "{{ route('pelanggaran.show') }}",
-                    method: "post",
-                    data: {
-                        _token: '{{ csrf_token() }}'
-                    }
-                },
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'nama',
-                        name: 'nama'
-                    },
-                    {
-                        data: 'get_jenis_pelanggar.name',
-                        name: 'get_jenis_pelanggar.name'
-                    },
-                    {
-                        data: 'nolp',
-                        name: 'nolp'
-                    },
-                    {
-                        data: 'pidana',
-                        name: 'pidana'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    },
-                ]
-            });
+        function check_penyelesaian() {
+            var val = $('#penyelesaian').val();
+            if (val == 'sidang') {
+                $('#sidang_div').css('display', 'block')
+                $('#dihentikan_div').css('display', 'none')
+            } else if(val == 'dihentikan'){
+                $('.putusan').val('')
+                // $('.putusan').trigger('change');
+                $('#sidang_div').css('display', 'none')
+                $('#dihentikan_div').css('display', 'block')
+            } else {
+                $('#dihentikan_div').css('display', 'none')
+                $('.putusan').val('')
+                // $('.putusan').trigger('change');
+                $('#sidang_div').css('display', 'none')
+            }
         }
     </script>
 @endpush

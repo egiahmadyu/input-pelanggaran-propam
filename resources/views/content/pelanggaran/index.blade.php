@@ -60,6 +60,7 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        @if (auth()->user()->getRoleNames()[0] == 'admin')
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="exampleFormControlInput1">Kesatuan / Polda</label>
@@ -71,6 +72,8 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        @endif
+
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="exampleFormControlInput1">Wujud Perbuatan</label>
@@ -352,8 +355,8 @@
                 console.log(data)
                 var data = data.data
                 $('#detail_name').val(data.nama)
-                $('#detail_polda').val(data.get_polda.name)
-                $('#detail_jenis_pelanggaran').val(data.get_jenis_pelanggar.name)
+                $('#detail_polda').val(data.satuan_poldas.name)
+                $('#detail_jenis_pelanggaran').val(data.jenis_pelanggarans.name)
                 $('#detail_diktuk').val(data.get_diktuk.name)
                 $('#detail_jabatan').val(data.jabatan)
                 $('#detail_pasal').val(data.pasal_pelanggaran)

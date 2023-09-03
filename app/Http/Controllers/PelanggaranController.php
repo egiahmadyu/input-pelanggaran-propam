@@ -12,6 +12,7 @@ use App\Models\PangkatPelanggaran;
 use App\Models\PelanggaranList;
 use App\Models\PeranNarkoba;
 use App\Models\Putusan;
+use App\Models\PutusanPelanggar;
 use App\Models\SatuanPolda;
 use App\Models\User;
 use App\Models\WujudPerbuatan;
@@ -98,6 +99,7 @@ class PelanggaranController extends Controller
     {
         $data['list_petusan'] = PelanggaranList::find($id)->toArray();
         $data['putusans'] = Putusan::where('jenis_pelanggaran_id', $data['list_petusan']['jenis_pelanggaran'])->get();
+        $data['alasan_berhentis'] =AlasanBerhenti::all();
         $data['id'] = $id;
         return view('content.pelanggaran.edit_putusan', $data);
     }
@@ -110,10 +112,10 @@ class PelanggaranController extends Controller
         return Datatables::eloquent($data)->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $res = base64_encode(json_encode($row));
-                $btn = '<a href="/pelanggaran-data/edit/' . $row->id . '" class="btn btn-secondary btn-sm">Update Putusan</a> | <a href="javascript:void(0)" onclick="openDetail(' . $row->id . ')" class="btn btn-primary btn-sm">View</a>';
+                $btn = '<a href="/pelanggaran-data/edit/' . $row->id . '" class="btn btn-secondary btn-sm">Update Penyelesaian</a> | <a href="javascript:void(0)" onclick="openDetail(' . $row->id . ')" class="btn btn-primary btn-sm">View</a>';
                 $user = User::find(auth()->user()->id);
                 if ($user->can('manage-auth')) {
-                    $btn .= ' | <a href="/pelanggaran-data/edit-data/' . $row->id . '" class="btn btn-secondary btn-sm">Edit Data</a> | <button class="btn btn-danger btn-sm" onclick="deletePelanggaran(' . $row->id . ')">Delete</button>';
+                    $btn .= ' |  <button class="btn btn-danger btn-sm" onclick="deletePelanggaran(' . $row->id . ')">Delete</button>';
                 }
                 return $btn;
             })
@@ -202,45 +204,24 @@ class PelanggaranController extends Controller
 
             $request_data['jenis_narkoba'] = $narkoba->id;
         }
-        if ($request->tgllp) {
-            $tgl = explode('/', $request->tgllp);
-            $tgllp = "$tgl[2]-$tgl[1]-$tgl[0]";
-            $tgl = date('Y-m-d', strtotime($tgllp));
-            $request_data['tgllp'] = $tgl;
-        }
-
-        if ($request->tglkepsp3) {
-            $tgl = explode('/', $request->tglkepsp3);
-            $tgllp = "$tgl[2]-$tgl[1]-$tgl[0]";
-            $tgl = date('Y-m-d', strtotime($tgllp));
-            $request_data['tglkepsp3'] = $tgl;
-        }
-
-        if ($request->tgl_kep) {
-            $tgl = explode('/', $request->tgl_kep);
-            $tgllp = "$tgl[2]-$tgl[1]-$tgl[0]";
-            $tgl = date('Y-m-d', strtotime($tgllp));
-            $request_data['tgl_kep'] = $tgl;
-        }
-
-        if ($request->tgllp_pidana) {
-            $tgl = explode('/', $request->tgllp_pidana);
-            $tgllp = "$tgl[2]-$tgl[1]-$tgl[0]";
-            $tgl = date('Y-m-d', strtotime($tgllp));
-            $request_data['tgllp_pidana'] = $tgl;
-        }
 
         $data = PelanggaranList::create($request_data);
+        $putusan = $data->toArray();
+        if ($putusan['penyelesaian'] == 'sidang') {
+            for ($i=1; $i < 11; $i++) {
+                if ($putusan['putusan_'.$i]) {
+                    PutusanPelanggar::create([
+                        'pelanggar_id' => $putusan['id'],
+                        'putusan' => 'putusan_'.$i,
+                        'putusan_id' => $putusan['putusan_'.$i]
+                    ]);
+                }
+            }
+        }
         if ($request->pidana == 'TIDAK') {
             $data->wujud_perbuatan_pidana = null;
             $data->nolp_pidana = null;
             $data->tgllp_pidana = null;
-        } else {
-            // $wpp = WujudPerbuatanPidana::find($request->wujud_perbuatan_pidana)->first();
-            // if ($wpp->name != 'Narkoba') {
-            //     $data->peran_narkoba = null;
-            //     $data->jenis_narkoba = null;
-            // }
         }
         $data->save();
         return redirect('/');
@@ -274,21 +255,22 @@ class PelanggaranController extends Controller
         unset($request['_token']);
         // dd($request->all());
         PelanggaranList::where('id', $id)->update($request->all());
-        $data = PelanggaranList::find($id);
-        if ($request->pidana == 'TIDAK') {
-            $data->wujud_perbuatan_pidana = null;
-            $data->nolp_pidana = null;
-            $data->tgllp_pidana = null;
-            $data->peran_narkoba = null;
-            $data->jenis_narkoba = null;
-        } else {
-            $wpp = WujudPerbuatanPidana::find($request->wujud_perbuatan_pidana)->first();
-            if ($wpp->name != 'Narkoba') {
-                $data->peran_narkoba = null;
-                $data->jenis_narkoba = null;
+        PutusanPelanggar::where('pelanggar_id', $id)->delete();
+        if($request->penyelesaian == 'sidang') {
+            $putusan = PelanggaranList::find($id)->toArray();
+            for ($i=1; $i < 11; $i++) {
+                if ($putusan['putusan_'.$i]) {
+                    PutusanPelanggar::create([
+                        'pelanggar_id' => $putusan['id'],
+                        'putusan' => 'putusan_'.$i,
+                        'putusan_id' => $putusan['putusan_'.$i]
+                    ]);
+                }
             }
+
+
         }
-        $data->save();
+
         return redirect()->back();
     }
 

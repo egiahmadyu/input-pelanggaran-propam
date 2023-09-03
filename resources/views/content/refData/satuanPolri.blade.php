@@ -9,7 +9,7 @@
                         <div class="card">
                             <div class="card-body pb-0 d-flex justify-content-between">
                                 <div>
-                                    <h4 class="mb-1">Data - Data Wujud Perbuatan Pidana</h4>
+                                    <h4 class="mb-1">Data - Data Satuan</h4>
                                 </div>
                                 <div><button class="btn btn-primary" data-toggle="modal"
                                         data-target="#{{ $modal_id }}">Tambah

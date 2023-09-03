@@ -15,33 +15,33 @@ class WujudPerbuatanSeeder extends Seeder
      */
     public function run()
     {
-        $data = array(
-            'Arogansi',
-            'Asusila',
-            'Balapan Liar',
-            'Bekerjasama dengan orang lain untuk keuntungan pribadi atau golongan'
-        );
+        $file_to_read = fopen(storage_path('app/wpdisiplin.csv'), 'r');
+        while (($data = fgetcsv($file_to_read, 2000000, '.')) !== FALSE) {
+            for ($i = 0; $i < count($data); $i++) {
+                echo $data[$i] . strlen($data[$i]) . '<br>';
+                if (!$wpkepp = WujudPerbuatan::where('name', $data[$i])->where('jenis_pelanggaran_id', 1)->first() and strlen($data[$i]) !== 0) {
+                    WujudPerbuatan::create([
+                        'name' => $data[$i],
+                        'jenis_pelanggaran_id' => 1
+                    ]);
+                }
+            }
+        }
+        fclose($file_to_read);
 
-        for ($i = 0; $i < count($data); $i++) {
-            WujudPerbuatan::create([
-                'name' => $data[$i],
-                'jenis_pelanggaran_id' => 1
-            ]);
+        $file_to_read = fopen(storage_path('app/wpkepp.csv'), 'r');
+        while (($data = fgetcsv($file_to_read, 2000000, '.')) !== FALSE) {
+            for ($i = 0; $i < count($data); $i++) {
+                echo $data[$i] . '<br>';
+                if (!$wpkepp = WujudPerbuatan::where('name', $data[$i])->where('jenis_pelanggaran_id', 2)->first() and strlen($data[$i]) !== 0) {
+                    WujudPerbuatan::create([
+                        'name' => $data[$i],
+                        'jenis_pelanggaran_id' => 2
+                    ]);
+                }
+            }
         }
 
-
-        $data = array(
-            'Terlibat Dalam Kegiatan Yang Bertujuan Untuk Mengubah, Mengganti Atau Menentang Pancasila Dan Undang- Undang Dasar Negara Republik Indonesia Tahun 1945 Secara Tidak Sah',
-            'Melibatkan Diri Pada Kegiatan Politik Praktis',
-            'Menggunakan Hak Memilih Dan Dipilih',
-            'Mendukung, Mengikuti, Atau Menjadi Simpatisan Paham/Aliran Terorisme, Atau Ekstrimisme Berbasis Kekerasan Yang Dapat Mengarah Pada Terorisme'
-        );
-
-        for ($i = 0; $i < count($data); $i++) {
-            WujudPerbuatan::create([
-                'name' => $data[$i],
-                'jenis_pelanggaran_id' => 2
-            ]);
-        }
+        fclose($file_to_read);
     }
 }

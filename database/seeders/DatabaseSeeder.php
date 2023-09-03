@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
             ViolationSeeder::class,
             GenderSeeder::class,
             DiktukSeeder::class,
-            // WujudPerbuatanSeeder::class,
+            WujudPerbuatanSeeder::class,
             Narkoba::class,
         ]);
 

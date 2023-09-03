@@ -4,17 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Pangkat;
 use App\Models\PelanggaranList;
+use App\Models\Putusan;
+use App\Models\PutusanPelanggar;
 use App\Models\SatuanPolda;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
+
         $data = [
             'pelanggarans' => $this->getAllPelanggaran($request),
-            // 'chartPolda' => $this->getChartPolda($request),
+            'putusans_disiplin' => $this->get_putusan($request, 1),
+            'putusans_kepp' => $this->get_putusan($request, 2),
             'chartPoldaNew' => $this->getChartPoldaNew($request),
             'dataByGender' => $this->getDataByGender($request),
             'dataByWpp' => $this->getDataByWpp($request),
@@ -35,7 +40,29 @@ class DashboardController extends Controller
             'kepp_selesai' => $this->kepp_selesai($request)
         ];
 
+        if ($request->submit == 'print') {
+            $pdf = PDF::loadView('content.dashboard.index', $data);
+            return $pdf->stream();
+        }
+
         return view('content.dashboard.index', $data);
+    }
+
+    public function print_dashboard($data) {
+        // $pdf = PDF::loadView('content.dashboard.index', $data);
+        // return $pdf->stream();
+        // dd($pdf);
+    }
+
+    public function get_putusan(Request $request, $jenis)
+    {
+        $data = Putusan::leftJoin('putusan_pelanggars', 'putusan_pelanggars.putusan_id', 'putusans.id')
+            ->where('putusans.jenis_pelanggaran_id', $jenis)
+            ->select('putusans.name', DB::raw('count(putusan_pelanggars.id) as total'))
+            ->groupBy('putusans.id')
+            ->get();
+        return $data;
+
     }
 
     public function disiplin_selesai(Request $request)
@@ -146,7 +173,7 @@ class DashboardController extends Controller
         $data = PelanggaranList::groupBy('wujud_perbuatan', 'wujud_perbuatans.name')
             // ->join('wujud_perbuatan_pidanas', 'wujud_perbuatan_pidanas.id', 'pelanggaran_lists.wujud_perbuatan_pidana')
             ->join('wujud_perbuatans', 'wujud_perbuatans.id', 'pelanggaran_lists.wujud_perbuatan')
-            ->whereIn('wujud_perbuatans.name', ['Pungli', 'Gratifikasi', 'Penyimpangan Anggaran', 'Korupsi'])
+            ->whereIn('wujud_perbuatans.name', ['6w Melakukan pungutan tidak sah dalam bentuk apa pun untuk kepentingan pribadi, golongan, atau pihak lain', '5a Korupsi '])
             // ->orWhereIn('wujud_perbuatan_pidanas.name', ['Pungli', 'Gratifikasi', 'Penyimpangan Anggaran', 'Korupsi'])
             ->select('wujud_perbuatans.name', 'wujud_perbuatan', (DB::raw('count(*) as total')));
         if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->get();
