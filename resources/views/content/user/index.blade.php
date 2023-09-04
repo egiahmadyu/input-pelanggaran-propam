@@ -37,6 +37,7 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Name</th>
+                                                <th>username</th>
                                                 <th>Role</th>
                                                 <th>Polda</th>
                                                 <th>Actions</th>
@@ -47,6 +48,7 @@
                                                 <tr>
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $list->name }}</td>
+                                                    <td>{{ $list->username }}</td>
                                                     <td>{{ $list->getRoleNames()[0] }}</td>
                                                     <td>{{ is_null($list->poldas) ? '' : $list->poldas->name }}</td>
 
@@ -112,7 +114,7 @@
                             </select>
                         </div>
                         <div class="mb-3 div_polda" style="display:none">
-                            <label for="exampleFormControlInput1" class="form-label">Polda</label>
+                            <label for="exampleFormControlInput1" class="form-label">Polda / Mabes</label>
                             <select class="form-control" id="polda" name="polda" onchange="getPolres()">
                                 <option value="">Semua</option>
                                 @foreach ($poldas as $value)
@@ -121,7 +123,7 @@
                             </select>
                         </div>
                         <div class="mb-3 div_polres" style="display:none">
-                            <label for="exampleFormControlInput1" class="form-label">Polda</label>
+                            <label for="exampleFormControlInput1" class="form-label">Polres / Satker Mabes</label>
                             <select class="form-control" id="polres" name="polres">
                                 <option value="">Semua</option>
                             </select>

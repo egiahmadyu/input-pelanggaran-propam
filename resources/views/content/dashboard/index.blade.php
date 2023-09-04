@@ -400,7 +400,7 @@
                 <div class="card">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
-                            <h4 class="mb-1">5 Wujud Perbuatan Pelanggaran Disiplin</h4>
+                            <h4 class="mb-1">5 Wujud Perbuatan Pelanggaran Disiplin</h4><a href="/export/disiplin" class="btn btn-sm btn-info">Export</a>
                         </div>
                     </div>
                     <div class="card-body">
@@ -432,7 +432,7 @@
                 <div class="card">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
-                            <h4 class="mb-1">5 Wujud Perbuatan Pelanggaran KEPP</h4>
+                            <h4 class="mb-1">5 Wujud Perbuatan Pelanggaran KEPP</h4> <a href="/export/kepp" class="btn btn-sm btn-info">Export</a>
                         </div>
                     </div>
                     <div class="card-body">

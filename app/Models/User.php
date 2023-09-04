@@ -50,4 +50,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(SatuanPolda::class, 'id', 'polda_id');
     }
+
+    public function satuan_polres()
+    {
+        return $this->hasOne(SatuanPolres::class, 'id', 'polres_id');
+    }
 }

@@ -149,10 +149,18 @@
                                             @endif
                                         </div>
                                         <div class="form-group">
-                                            <label>Satker / Fungsi / Polres</label>
-                                            <select class="form-control" id="polres" style="width: 100%"
-                                                name="polres" onchange="getPolsek()">
+                                            <label>Satker / Fungsi / Polres {{auth()->user()->getRoleNames()[0]}}</label>
+                                            @if (auth()->user()->getRoleNames()[0] == 'polres')
+                                            <select class="form-control" id="polress" style="width: 100%"
+                                            name="polres">
+                                            <option value="{{auth()->user()->polres_id}}">{{auth()->user()->satuan_polres->name}}</option>
                                             </select>
+                                            @else
+                                            <select class="form-control" id="polres" style="width: 100%"
+                                            name="polres" onchange="getPolsek()">
+                                            </select>
+                                            @endif
+
                                         </div>
                                         <div class="form-group">
                                             <label>Polsek</label>

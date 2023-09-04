@@ -21,7 +21,7 @@ class RefDataController extends Controller
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('action', function($row){
                     $res = base64_encode(json_encode($row));
-                    $btn = '<a href="/wujud-perbuatan-pidana/delete/'.$row->id.'" class="btn btn-danger btn-sm">Delete</a>';
+                    $btn = '| <a href="/wujud-perbuatan-pidana/delete/'.$row->id.'" class="btn btn-danger btn-sm">Delete</a>';
                     return $btn;
                 })
                 ->rawColumns(['action'])
@@ -86,7 +86,8 @@ class RefDataController extends Controller
             'url_data' => 'satuan-data/polda',
             'modal_id' => 'modalPolda',
             'poldas' => array(),
-            'polres' => array()
+            'polres' => array(),
+            'type' => 'Polda / Mabes'
 
         ];
         return view('content.refData.satuanPolri', $data);

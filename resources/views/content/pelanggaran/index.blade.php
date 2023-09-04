@@ -144,6 +144,7 @@
                                             <th>Jenis Pelanggaran</th>
                                             <th>Polda</th>
                                             <th>Pangkat</th>
+                                            <th>Jabatan</th>
                                             <th>No LP</th>
                                             <th>Pidana</th>
                                             <th>Action</th>
@@ -316,6 +317,10 @@
                     {
                         data: 'pangkats.name',
                         name: 'pangkats.name'
+                    },
+                    {
+                        data: 'jabatan',
+                        name: 'jabatan'
                     },
                     {
                         data: 'nolp',

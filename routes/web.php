@@ -38,6 +38,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/', [DashboardController::class, 'index']);
     Route::get('/disiplin', [DashboardController::class, 'disiplin']);
     Route::get('/kode-etik', [DashboardController::class, 'kodeEtik']);
+    Route::get('/export/kepp', [DashboardController::class, 'exportWPKepp']);
+    Route::get('/export/disiplin', [DashboardController::class, 'exportWPDisiplin']);
 
     // Pelanggaran
     Route::get('/tambah-data', [PelanggaranController::class, 'form'])->name('pelanggaran.add');

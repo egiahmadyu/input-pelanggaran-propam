@@ -361,9 +361,9 @@ class PelanggaranController extends Controller
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->satuan_poldas->name ?? '');
             $startCol++;
-            $sheet->setCellValue("{$startCol}{$startRow}", $value->getPolres->name ?? '');
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->satuan_polres->name ?? '');
             $startCol++;
-            $sheet->setCellValue("{$startCol}{$startRow}", $value->getPolsek->name ?? '');
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->satuan_polseks->name ?? '');
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->nolp);
             $startCol++;
@@ -371,7 +371,7 @@ class PelanggaranController extends Controller
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->getWujudPerbuatan->name ?? '');
             $startCol++;
-            $sheet->setCellValue("{$startCol}{$startRow}", $value->kronolog_singkat);
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->kronologi_singkat);
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->pasal_pelanggaran ?? '');
             $startCol++;

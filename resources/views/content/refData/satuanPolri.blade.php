@@ -62,15 +62,20 @@
                     <form method="post" action="/satuan-polres/save">
                         @csrf
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Polda</label>
+                            <label for="exampleInputEmail1">Polda / Mabes</label>
                             <select class="form-control" id="polda_id" name="polda_id">
+                                @if (auth()->user()->getRoleNames()[0] !== 'admin')
+                                <option value="{{auth()->user()->polda}}">{{ auth()->user()->satuan_poldas->name }}</option>
+                                @else
                                 @foreach ($poldas as $value)
-                                    <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                @endforeach
+                                <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                 @endforeach
+                                @endif
+
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Polres</label>
+                            <label for="exampleInputEmail1">Polres / Satker Mabes</label>
                             <input type="text" class="form-control" name="name">
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
@@ -121,7 +126,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Polres</h5>
+                    <h5 class="modal-title">Tambah Polda / Mabes</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -130,7 +135,7 @@
                     <form method="post" action="/satuan-polda/save">
                         @csrf
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Polda</label>
+                            <label for="exampleInputEmail1">Polda / Mabes</label>
                             <input type="text" class="form-control" name="name">
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>

@@ -10,9 +10,61 @@ use App\Models\SatuanPolda;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDF;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class DashboardController extends Controller
 {
+    private $headerStyle;
+    private $fontStyle;
+    private $fontStylePdf;
+    public function __construct()
+    {
+        $this->headerStyle = [
+            'font' => [
+                'bold' => true,
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ],
+            'borders' => [
+                'allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => [
+                    'argb' => 'FCE0E0E0',
+                ],
+            ],
+        ];
+
+        $this->fontStyle = [
+            'font' => [
+                'size' => 12,
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ],
+            'borders' => [
+                'allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
+            ],
+        ];
+
+        $this->fontStylePdf = [
+            'font' => [
+                'size' => 25,
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ],
+            'borders' => [
+                'allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
+            ],
+        ];
+    }
     public function index(Request $request)
     {
 
@@ -316,6 +368,7 @@ class DashboardController extends Controller
 
     private function getChartPoldaNew($request, $jenis_pelanggaran = null)
     {
+        if (auth()->user()->getRoleNames()[0] !== 'admin') return $this->chartPolres($request);
         $data = PelanggaranList::groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
             ->select(DB::raw('count(*) as total'), 'satuan_poldas.name', 'polda');
 
@@ -347,13 +400,43 @@ class DashboardController extends Controller
             if ($request->tanggal_akhir) $query = $query->where('created_at', '<=', $request->tanggal_akhir);
             $query = $query->first();
             $value->selesai = is_null($query) ? 0 : $query->total;
-            // if (auth()->user()->getRoleNames()[0] == 'polda') {
-            //     $data->where('polda', auth()->user()->polda_id);
-            // } else if (auth()->user()->getRoleNames()[0] == 'polres') {
-            //     $data->where('polres', auth()->user()->polres_id);
-            // } else {
-            //     if ($request->polda) $data = $data->where('polda', $request->polda);
-            // }
+        }
+        return $data;
+    }
+
+    public function chartPolres($request, $jenis_pelanggaran = null)
+    {
+        $data = PelanggaranList::groupBy('polres', 'satuan_polres.name')->join('satuan_polres', 'satuan_polres.id', 'pelanggaran_lists.polres')
+            ->select(DB::raw('count(*) as total'), 'satuan_polres.name', 'polres');
+
+        if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
+
+
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+
+        $data = $data->get();
+        foreach ($data as $key => $value) {
+            $query = PelanggaranList::groupBy('polres', 'satuan_polres.name')->join('satuan_polres', 'satuan_polres.id', 'pelanggaran_lists.polres')
+                ->whereNotNull('penyelesaian')
+                ->where('polres', $value->polres)
+                ->select(DB::raw('count(*) as total'), 'satuan_polres.name', 'polres');
+            if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
+            if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
+            if ($request->tanggal_mulai) $query = $query->where('created_at', '>=', $request->tanggal_mulai);
+            if ($request->tanggal_akhir) $query = $query->where('created_at', '<=', $request->tanggal_akhir);
+            $query = $query->first();
+            $value->selesai = is_null($query) ? 0 : $query->total;
         }
         return $data;
     }
@@ -477,5 +560,85 @@ class DashboardController extends Controller
         // if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->count();
 
         return $data->count();
+    }
+
+    public function exportWPKepp()
+    {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+        $sheet->setCellValue('A1', '#');
+        $sheet->setCellValue('B1', 'Wujud Perbuatan Pelanggaran KEPP');
+        $sheet->setCellValue('C1', 'Total');
+
+        $data = PelanggaranList::groupBy('wujud_perbuatan', 'wujud_perbuatans.name', 'jenis_pelanggarans.name')->join('wujud_perbuatans', 'wujud_perbuatans.id', 'pelanggaran_lists.wujud_perbuatan')
+            ->join('jenis_pelanggarans', 'jenis_pelanggarans.id', 'wujud_perbuatans.jenis_pelanggaran_id')
+            ->select(DB::raw('count(*) as total'), 'wujud_perbuatans.name', 'jenis_pelanggarans.name as type')
+            ->orderBy(DB::raw('count(*)'), 'desc')
+            ->where('jenis_pelanggaran', 2);
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        }
+
+        $data = $data->get();
+        $spreadsheet->getActiveSheet()->getStyle('A1:C1')->applyFromArray($this->headerStyle);
+        $startRow = 2;
+        $startCol = 'A';
+        foreach ($data as $key => $value) {
+            $sheet->setCellValue("{$startCol}{$startRow}", $key + 1);
+            $startCol++;
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->name);
+            $startCol++;
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->total);
+        }
+        $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+        $writer = new Xlsx($spreadsheet);
+        $path = storage_path("/app/wujud_perbuatan_KEPP.xlsx");
+        $writer->save($path);
+        return response()->download($path, 'wpkepp' . time() . '.xlsx');
+    }
+
+    public function exportWPDisiplin()
+    {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+        $sheet->setCellValue('A1', '#');
+        $sheet->setCellValue('B1', 'Wujud Perbuatan Pelanggaran KEPP');
+        $sheet->setCellValue('C1', 'Total');
+
+        $data = PelanggaranList::groupBy('wujud_perbuatan', 'wujud_perbuatans.name', 'jenis_pelanggarans.name')->join('wujud_perbuatans', 'wujud_perbuatans.id', 'pelanggaran_lists.wujud_perbuatan')
+            ->join('jenis_pelanggarans', 'jenis_pelanggarans.id', 'wujud_perbuatans.jenis_pelanggaran_id')
+            ->select(DB::raw('count(*) as total'), 'wujud_perbuatans.name', 'jenis_pelanggarans.name as type')
+            ->orderBy(DB::raw('count(*)'), 'desc')
+            ->where('jenis_pelanggaran', 1);
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        }
+
+        $data = $data->get();
+        $spreadsheet->getActiveSheet()->getStyle('A1:C1')->applyFromArray($this->headerStyle);
+        $startRow = 2;
+        $startCol = 'A';
+        foreach ($data as $key => $value) {
+            $sheet->setCellValue("{$startCol}{$startRow}", $key + 1);
+            $startCol++;
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->name);
+            $startCol++;
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->total);
+        }
+        $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+        $writer = new Xlsx($spreadsheet);
+        $path = storage_path("/app/wujud_perbuatan_KEPP.xlsx");
+        $writer->save($path);
+        return response()->download($path, 'wpdisiplin' . time() . '.xlsx');
     }
 }
