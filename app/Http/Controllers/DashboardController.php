@@ -100,7 +100,8 @@ class DashboardController extends Controller
         return view('content.dashboard.index', $data);
     }
 
-    public function print_dashboard($data) {
+    public function print_dashboard($data)
+    {
         // $pdf = PDF::loadView('content.dashboard.index', $data);
         // return $pdf->stream();
         // dd($pdf);
@@ -114,7 +115,6 @@ class DashboardController extends Controller
             ->groupBy('putusans.id')
             ->get();
         return $data;
-
     }
 
     public function disiplin_selesai(Request $request)
@@ -592,6 +592,8 @@ class DashboardController extends Controller
             $sheet->setCellValue("{$startCol}{$startRow}", $value->name);
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->total);
+            $startRow++;
+            $startCol = 'A';
         }
         $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
         $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
@@ -632,6 +634,8 @@ class DashboardController extends Controller
             $sheet->setCellValue("{$startCol}{$startRow}", $value->name);
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->total);
+            $startRow++;
+            $startCol = 'A';
         }
         $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
         $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);

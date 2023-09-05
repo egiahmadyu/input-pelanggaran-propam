@@ -99,7 +99,7 @@ class PelanggaranController extends Controller
     {
         $data['list_petusan'] = PelanggaranList::find($id)->toArray();
         $data['putusans'] = Putusan::where('jenis_pelanggaran_id', $data['list_petusan']['jenis_pelanggaran'])->get();
-        $data['alasan_berhentis'] =AlasanBerhenti::all();
+        $data['alasan_berhentis'] = AlasanBerhenti::all();
         $data['id'] = $id;
         return view('content.pelanggaran.edit_putusan', $data);
     }
@@ -107,8 +107,6 @@ class PelanggaranController extends Controller
     public function show(Request $request)
     {
         $data  = $this->getData($request);
-
-
         return Datatables::eloquent($data)->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $res = base64_encode(json_encode($row));
@@ -208,12 +206,12 @@ class PelanggaranController extends Controller
         $data = PelanggaranList::create($request_data);
         $putusan = $data->toArray();
         if ($putusan['penyelesaian'] == 'sidang') {
-            for ($i=1; $i < 11; $i++) {
-                if ($putusan['putusan_'.$i]) {
+            for ($i = 1; $i < 11; $i++) {
+                if ($putusan['putusan_' . $i]) {
                     PutusanPelanggar::create([
                         'pelanggar_id' => $putusan['id'],
-                        'putusan' => 'putusan_'.$i,
-                        'putusan_id' => $putusan['putusan_'.$i]
+                        'putusan' => 'putusan_' . $i,
+                        'putusan_id' => $putusan['putusan_' . $i]
                     ]);
                 }
             }
@@ -256,19 +254,17 @@ class PelanggaranController extends Controller
         // dd($request->all());
         PelanggaranList::where('id', $id)->update($request->all());
         PutusanPelanggar::where('pelanggar_id', $id)->delete();
-        if($request->penyelesaian == 'sidang') {
+        if ($request->penyelesaian == 'sidang') {
             $putusan = PelanggaranList::find($id)->toArray();
-            for ($i=1; $i < 11; $i++) {
-                if ($putusan['putusan_'.$i]) {
+            for ($i = 1; $i < 11; $i++) {
+                if ($putusan['putusan_' . $i]) {
                     PutusanPelanggar::create([
                         'pelanggar_id' => $putusan['id'],
-                        'putusan' => 'putusan_'.$i,
-                        'putusan_id' => $putusan['putusan_'.$i]
+                        'putusan' => 'putusan_' . $i,
+                        'putusan_id' => $putusan['putusan_' . $i]
                     ]);
                 }
             }
-
-
         }
 
         return redirect()->back();

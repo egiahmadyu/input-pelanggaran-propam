@@ -57,11 +57,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('data-master/wujud-perbuatan-pidana', [RefDataController::class, 'wujudPerbuatanPidana'])->name('refData.wujud_perbuatan_pidana');
     Route::post('data-master/wujud-perbuatan-pidana', [RefDataController::class, 'wujudPerbuatanPidana'])->name('refData.wujud_perbuatan_pidana.view');
     Route::post('data-master/wujud-perbuatan-pidana/save', [RefDataController::class, 'saveWPP'])->name('refData.wujud_perbuatan_pidana.save');
+    Route::post('data-master/wujud-perbuatan-pidana/save/edit', [RefDataController::class, 'saveEditWPP'])->name('refData.wujud_perbuatan_pidana.edit');
     Route::get('data-master/wujud-perbuatan-pidana/delete/{id}', [RefDataController::class, 'deleteWPP'])->name('refData.wujud_perbuatan_pidana.delete');
 
     Route::get('data-master/wujud-perbuatan', [RefDataController::class, 'wujudPerbuatan'])->name('refData.wujud_perbuatan');
     Route::post('data-master/wujud-perbuatan', [RefDataController::class, 'wujudPerbuatan'])->name('refData.wujud_perbuatan.view');
     Route::post('data-master/wujud-perbuatan/save', [RefDataController::class, 'saveWujudPerbuatan'])->name('refData.wujud_perbuatan.save');
+    Route::post('data-master/wujud-perbuatan/save/edit', [RefDataController::class, 'saveEditWP'])->name('refData.wujud_perbuatan.edit');
     Route::get('data-master/wujud-perbuatan/delete/{id}', [RefDataController::class, 'deleteWujudPerbuatan'])->name('refData.wujud_perbuatan.delete');
 
     Route::get('data-master/satuan-polda', [RefDataController::class, 'satuanPolda'])->name('refData.satuan-polda');

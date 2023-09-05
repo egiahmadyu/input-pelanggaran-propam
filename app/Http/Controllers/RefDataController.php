@@ -15,13 +15,12 @@ class RefDataController extends Controller
 {
     public function wujudPerbuatanPidana(Request $request)
     {
-        if ($request->isMethod('post'))
-        {
+        if ($request->isMethod('post')) {
             $data = WujudPerbuatanPidana::orderBy('id', 'desc');
             return DataTables::of($data)->addIndexColumn()
-                ->addColumn('action', function($row){
+                ->addColumn('action', function ($row) {
                     $res = base64_encode(json_encode($row));
-                    $btn = '| <a href="/wujud-perbuatan-pidana/delete/'.$row->id.'" class="btn btn-danger btn-sm">Delete</a>';
+                    $btn = '<button class="btn btn-warning btn-sm" onclick=modalEdit(' . $row->id . ')>Edit</button> | <a href="/wujud-perbuatan-pidana/delete/' . $row->id . '" class="btn btn-danger btn-sm">Delete</a>';
                     return $btn;
                 })
                 ->rawColumns(['action'])
@@ -32,13 +31,12 @@ class RefDataController extends Controller
 
     public function wujudPerbuatan(Request $request)
     {
-        if ($request->isMethod('post'))
-        {
+        if ($request->isMethod('post')) {
             $data = WujudPerbuatan::orderBy('id', 'desc')->with('jenisPelanggaran');
             return DataTables::of($data)->addIndexColumn()
-                ->addColumn('action', function($row){
+                ->addColumn('action', function ($row) {
                     $res = base64_encode(json_encode($row));
-                    $btn = '<a href="/wujud-perbuatan/delete/'.$row->id.'" class="btn btn-danger btn-sm">Delete</a>';
+                    $btn = '<button class="btn btn-warning btn-sm" onclick=modalEdit(' . $row->id . ')>Edit</button> | <a href="/wujud-perbuatan/delete/' . $row->id . '" class="btn btn-danger btn-sm">Delete</a>';
                     return $btn;
                 })
                 ->rawColumns(['action'])
@@ -57,6 +55,26 @@ class RefDataController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Menambahkan Data');
+    }
+
+    public function saveEditWPP(Request $request)
+    {
+        $data = WujudPerbuatanPidana::where('id', $request->id)
+            ->update([
+                'name' => $request->name
+            ]);
+
+        return redirect()->back()->with('success', 'Berhasil Edit Data');
+    }
+
+    public function saveEditWP(Request $request)
+    {
+        $data = WujudPerbuatan::where('id', $request->id)
+            ->update([
+                'name' => $request->name
+            ]);
+
+        return redirect()->back()->with('success', 'Berhasil Edit Data');
     }
 
     public function deleteWPP($id)
@@ -96,14 +114,14 @@ class RefDataController extends Controller
     public function getPolda()
     {
         $data = SatuanPolda::orderBy('id', 'desc');
-            return DataTables::of($data)->addIndexColumn()
-                ->addColumn('action', function($row){
-                    $res = base64_encode(json_encode($row));
-                    $btn = '<a href="/satuan-data/polda/delete/'.$row->id.'" class="btn btn-danger btn-sm">Delete</a>';
-                    return $btn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+        return DataTables::of($data)->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                $res = base64_encode(json_encode($row));
+                $btn = '<a href="/satuan-data/polda/delete/' . $row->id . '" class="btn btn-danger btn-sm">Delete</a>';
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
     public function satuanPolres()
@@ -133,27 +151,27 @@ class RefDataController extends Controller
     public function getPolres()
     {
         $data = SatuanPolres::orderBy('id', 'desc');
-            return DataTables::of($data)->addIndexColumn()
-                ->addColumn('action', function($row){
-                    $res = base64_encode(json_encode($row));
-                    $btn = '<a href="satuan-data/polres/delete/'.$row->id.'" class="btn btn-danger btn-sm">Delete</a>';
-                    return $btn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+        return DataTables::of($data)->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                $res = base64_encode(json_encode($row));
+                $btn = '<a href="satuan-data/polres/delete/' . $row->id . '" class="btn btn-danger btn-sm">Delete</a>';
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
     public function getPolsek()
     {
         $data = SatuanPolsek::orderBy('id', 'desc');
-            return DataTables::of($data)->addIndexColumn()
-                ->addColumn('action', function($row){
-                    $res = base64_encode(json_encode($row));
-                    $btn = '<a href="/satuan-data/polsek/delete/'.$row->id.'" class="btn btn-danger btn-sm">Delete</a>';
-                    return $btn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+        return DataTables::of($data)->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                $res = base64_encode(json_encode($row));
+                $btn = '<a href="/satuan-data/polsek/delete/' . $row->id . '" class="btn btn-danger btn-sm">Delete</a>';
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
     public function savePolda(Request $request)
@@ -217,5 +235,4 @@ class RefDataController extends Controller
 
         return redirect()->back()->with('success', 'Berhasil Menghapus Data');
     }
-
 }

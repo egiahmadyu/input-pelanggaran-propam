@@ -158,6 +158,32 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="modalEdit">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Wujud Perbuatan Pidana</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="/data-master/wujud-perbuatan/save/edit">
+                        @csrf
+                        <input type="text" class="form-control" name="id" hidden id="edit_wp">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Wujud Perbuatan</label>
+                            <input type="text" class="form-control" name="name" id="nama_edit">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('style')
@@ -174,6 +200,11 @@
             });
             getData()
         });
+
+        function modalEdit(id) {
+            $('#edit_wp').val(id)
+            $('#modalEdit').modal('show')
+        }
 
         function getData() {
 
