@@ -193,13 +193,23 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Wujud Perbuatan</label>
-                                            <select class="form-control" id="wujud_perbuatan" style="width: 100%"
-                                                name="wujud_perbuatan" onchange="checkWujudPerbuatan()">
-                                                @foreach ($wujud_perbuatans as $wujud_perbuatan)
-                                                    <option value="{{ $wujud_perbuatan->id }}">
-                                                        {{ $wujud_perbuatan->name }}</option>
-                                                @endforeach
-                                            </select>
+                                            <div class="row">
+                                                <div class="col-lg-11">
+                                                    <select class="form-control" id="wujud_perbuatan" style="width: 100%"
+                                                    name="wujud_perbuatan" onchange="checkWujudPerbuatan()">
+                                                        @foreach ($wujud_perbuatans as $wujud_perbuatan)
+                                                            <option value="{{ $wujud_perbuatan->id }}">
+                                                                {{ $wujud_perbuatan->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg-1">
+                                                    <button class="btn btn-info" onclick="tambah_wp()" type="button">+</button>
+                                                </div>
+                                            </div>
+                                            <div id="div_wp_tambah" class="mt-2">
+
+                                            </div>
                                         </div>
                                         <div id="narkobaDiv">
                                             <h5>Pelanggaran Narkoba</h5>
@@ -507,6 +517,7 @@
                     if (data.data == true) {
                         $('#narkobaDiv').css("display", "block");
                     } else {
+                        alert('aw')
                         $('#narkobaDiv').css("display", "none");
                         $('#peran_narkoba').val('')
                         $('#peran_narkoba').trigger('change');
@@ -705,6 +716,28 @@
     </script>
 
     <script>
+        var option_wp = ""
+        var wp_number = 1;
+        function tambah_wp() {
+            var html = `<div class="form-group" id="div_wujud_perbuatan_${wp_number}">
+                            <div class="row">
+                                <div class="col-lg-11">
+                                    <select class="form-control" id="wujud_perbuatan_${wp_number}" style="width: 100%"
+                                    name="wp[]">${option_wp}</select>
+                            </div>
+                            <div class="col-lg-1">
+                                <button class="btn btn-info" onclick="kurang_wp('div_wujud_perbuatan_${wp_number}')" type="button">-</button>
+                            </div>
+                        </div>
+                    </div>`
+                    wp_number++;
+                    $('#div_wp_tambah').append(html)
+        }
+
+        function kurang_wp(id) {
+            $( "#"+id ).remove();
+        }
+
         function getPolres() {
             var polda = $('#polda').val()
             $.ajax({
@@ -750,6 +783,7 @@
 
                     }
                     $('#wujud_perbuatan').html(option)
+                    option_wp = option
                     getPutusan()
                 }
             });

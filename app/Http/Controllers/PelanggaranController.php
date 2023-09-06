@@ -16,6 +16,7 @@ use App\Models\PutusanPelanggar;
 use App\Models\SatuanPolda;
 use App\Models\User;
 use App\Models\WujudPerbuatan;
+use App\Models\WujudPerbuatanPelanggar;
 use App\Models\WujudPerbuatanPidana;
 use Illuminate\Http\Request;
 use DataTables;
@@ -222,6 +223,17 @@ class PelanggaranController extends Controller
             $data->tgllp_pidana = null;
         }
         $data->save();
+
+        WujudPerbuatanPelanggar::create([
+            'pelanggar_id' => $data->id,
+            'wujud_perbuatan_id' => $request->wujud_perbuatan
+        ]);
+        for ($i=0; $i < count($request->wp); $i++) {
+            WujudPerbuatanPelanggar::create([
+                'pelanggar_id' => $data->id,
+                'wujud_perbuatan_id' => $request->wp[$i]
+            ]);
+        }
         return redirect('/');
     }
 
