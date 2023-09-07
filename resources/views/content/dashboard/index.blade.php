@@ -62,7 +62,8 @@
                                 <div class="col-lg-1">
                                     <div class="form-group">
                                         <label for="exampleFormControlInput1">.</label>
-                                        <button class="btn btn-primary form-control" type="submit" value="filter" name="submit">Filter</button>
+                                        <button class="btn btn-primary form-control" type="submit" value="filter"
+                                            name="submit">Filter</button>
                                     </div>
                                 </div>
                                 {{-- <div class="col-lg-1">
@@ -400,7 +401,8 @@
                 <div class="card">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
-                            <h4 class="mb-1">5 Wujud Perbuatan Pelanggaran Disiplin</h4><a href="/export/disiplin" class="btn btn-sm btn-info">Export</a>
+                            <h4 class="mb-1">5 Wujud Perbuatan Pelanggaran Disiplin</h4><a href="/export/disiplin"
+                                class="btn btn-sm btn-info">Export</a>
                         </div>
                     </div>
                     <div class="card-body">
@@ -432,7 +434,8 @@
                 <div class="card">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
-                            <h4 class="mb-1">5 Wujud Perbuatan Pelanggaran KEPP</h4> <a href="/export/kepp" class="btn btn-sm btn-info">Export</a>
+                            <h4 class="mb-1">5 Wujud Perbuatan Pelanggaran KEPP</h4> <a href="/export/kepp"
+                                class="btn btn-sm btn-info">Export</a>
                         </div>
                     </div>
                     <div class="card-body">
@@ -504,6 +507,26 @@
                 </div>
             </div>
         </div>
+        @if (auth()->user()->getRoleNames()[0] != 'admin')
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body pb-0 d-flex justify-content-between">
+                                    <div>
+                                        <h4 class="mb-1">Data Pelanggar Berdasarkan Wilayah Polres</h4>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="chart_new_polres"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 @endsection
 
@@ -515,6 +538,11 @@
         }
 
         #chart_new {
+            width: 100%;
+            height: 500px;
+        }
+
+        #chart_new_polres {
             width: 100%;
             height: 500px;
         }
@@ -876,5 +904,51 @@
             chart.cursor.lineX.disabled = true;
             chart.cursor.lineY.disabled = true;
         });
+
+        @if (auth()->user()->getRoleNames()[0] != 'admin')
+            am4core.ready(function() {
+                // Themes begin
+                am4core.useTheme(am4themes_animated);
+                // Themes end
+
+                // Create chart instance
+                var chart = am4core.create("chart_new_polres", am4charts.XYChart);
+
+                // Add percent sign to all numbers
+                // chart.numberFormatter.numberFormat = "#";
+
+                var dataChart = {!! json_encode($chart_polres, true) !!}
+                // Add data
+                chart.data = dataChart
+
+                // Create axes
+                var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+                categoryAxis.dataFields.category = "name";
+                categoryAxis.renderer.grid.template.location = 0;
+                categoryAxis.renderer.minGridDistance = 30;
+
+                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                valueAxis.title.text = "Polda";
+                valueAxis.title.fontWeight = 800;
+
+                // Create series
+                var series = chart.series.push(new am4charts.ColumnSeries());
+                series.dataFields.valueY = "selesai";
+                series.dataFields.categoryX = "name";
+                series.clustered = false;
+                series.tooltipText = "Total Penyelesaian {categoryX} : [bold]{valueY}[/]";
+
+                var series2 = chart.series.push(new am4charts.ColumnSeries());
+                series2.dataFields.valueY = "total";
+                series2.dataFields.categoryX = "name";
+                series2.clustered = false;
+                series2.columns.template.width = am4core.percent(50);
+                series2.tooltipText = "Total Pelanggaran {categoryX} : [bold]{valueY}[/]";
+
+                chart.cursor = new am4charts.XYCursor();
+                chart.cursor.lineX.disabled = true;
+                chart.cursor.lineY.disabled = true;
+            });
+        @endif
     </script>
 @endpush

@@ -97,6 +97,11 @@ class DashboardController extends Controller
             return $pdf->stream();
         }
 
+
+        if (auth()->user()->getRoleNames()[0] != 'admin') {
+            $data['chart_polres'] = $this->chartPolres($request);
+        }
+
         return view('content.dashboard.index', $data);
     }
 
@@ -368,7 +373,7 @@ class DashboardController extends Controller
 
     private function getChartPoldaNew($request, $jenis_pelanggaran = null)
     {
-        if (auth()->user()->getRoleNames()[0] !== 'admin') return $this->chartPolres($request);
+        // if (auth()->user()->getRoleNames()[0] !== 'admin') return $this->chartPolres($request);
         $data = PelanggaranList::groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
             ->select(DB::raw('count(*) as total'), 'satuan_poldas.name', 'polda');
 
