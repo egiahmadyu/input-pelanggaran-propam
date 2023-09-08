@@ -53,14 +53,21 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $user = User::find($request->id);
         $user->name = $request->name;
         $user->username = $request->username;
         if ($request->password) $user->password = bcrypt($request->password);
         $role = Role::find($request->role);
-        $user->assignRole($role);
+        // dd($role);
+        $user->syncRoles($role);
+        if ($role->name == 'polda') {
+            $user->polda_id = $request->polda;
+        } elseif ($role->name == 'polres') {
+            $user->polda_id = $request->polda;
+            $user->polres_id = $request->polres;
+        }
         $user->save();
 
         return redirect()->back()->with('success', 'Success Edit User');

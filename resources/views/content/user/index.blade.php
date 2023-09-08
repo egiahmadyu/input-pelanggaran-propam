@@ -153,28 +153,38 @@
                             <input type="text" class="form-control" name="id" id="id_user" required hidden>
                         </div>
                         <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Email</label>
-                            <input type="email" class="form-control" name="email" id="email_user" required>
+                            <label for="exampleFormControlInput1" class="form-label">username</label>
+                            <input type="text" class="form-control" name="username" id="username_edit" required>
                         </div>
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Password</label>
                             <input type="password" class="form-control" name="password" id="password_user">
+                            <small id="emailHelp" class="form-text text-muted">Kosongkan Password Jika Tidak Ingin
+                                Dirubah.</small>
                         </div>
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Role</label>
-                            <select class="form-control" id="role_user" name="role">
+                            <select class="form-control" id="role_user_edit" name="role" onchange="checkRoleEdit()">
                                 <option value="">Semua</option>
                                 @foreach ($roles as $value)
                                     <option value="{{ $value->id }}">{{ $value->name }}</option>
                                 @endforeach
                             </select>
-                            {{-- <select class="form-select" aria-label="Default select example" id="role_user"
-                                name="role">
-                                <option value="">Open this select menu</option>
-                                @foreach ($roles as $value)
+                        </div>
+                        <div class="mb-3 div_polda" style="display:none">
+                            <label for="exampleFormControlInput1" class="form-label">Polda / Mabes</label>
+                            <select class="form-control" id="polda_edit" name="polda" onchange="getPolresEdit()">
+                                <option value="">Semua</option>
+                                @foreach ($poldas as $value)
                                     <option value="{{ $value->id }}">{{ $value->name }}</option>
                                 @endforeach
-                            </select> --}}
+                            </select>
+                        </div>
+                        <div class="mb-3 div_polres" style="display:none">
+                            <label for="exampleFormControlInput1" class="form-label">Polres / Satker Mabes</label>
+                            <select class="form-control" id="polres_edit" name="polres">
+                                <option value="">Semua</option>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -201,16 +211,30 @@
 
         function editUser(id) {
             $('#modal-edit-user').modal('show')
+            $('.div_polda').css('display', 'none')
+            $('.div_polres').css('display', 'none')
+            $("#polda_edit").prop('required', false);
+            $("#polda_edit").val('');
+            $("#polres_edit").prop('required', false);
+            $("#polres_edit").val('');
             $.ajax({
                     url: "/manage/user/show/" + id,
                     method: 'get',
                 })
-                .done(function(data) {
-                    console.log(data.data.id)
+                .done(async function(data) {
                     $('#id_user').val(data.data.id)
                     $('#name_user').val(data.data.name)
-                    $('#email_user').val(data.data.email)
-                    $('#role_user').val(data.role.id)
+                    $('#username_edit').val(data.data.username)
+                    $('#role_user_edit').val(data.role.id)
+                    if (data.role.id != 1) {
+                        $('#polda_edit').val(data.data.polda_id)
+                        checkRoleEdit()
+                        if (data.role.id == 3) {
+                            await getPolresEdit(data.data.polres_id)
+                            // $('#polres_edit').val(380)
+                        }
+
+                    }
                 });
         }
 
@@ -234,6 +258,54 @@
             }
         }
 
+        function checkRoleEdit() {
+            var val = $('#role_user_edit').val()
+            console.log(val, 'role')
+            // Polda
+            if (val == '2') {
+                $('.div_polda').css('display', 'block')
+                $("#polda_edit").prop('required', 'required')
+                $('.div_polres').css('display', 'none')
+                $("#polres_edit").prop('required', false);
+            } else if (val == '3') {
+                $('.div_polda').css('display', 'block')
+                $('.div_polres').css('display', 'block')
+                $("#polda_edit").prop('required', 'required')
+                $("#polres_edit").prop('required', 'required')
+            } else {
+                $('.div_polda').css('display', 'none')
+                $('.div_polres').css('display', 'none')
+                $("#polda_edit").prop('required', false);
+                $("#polres_edit").prop('required', false);
+            }
+        }
+
+        async function getPolresEdit(polres_id = null) {
+            var polda = $('#polda_edit').val()
+            $.ajax({
+                url: "/api/polda/" + polda,
+                success: function(data) {
+                    var polres = data.data
+                    var option = '<option value="">Pilih</option>'
+                    if (polres_id) {
+                        for (let index = 0; index < polres.length; index++) {
+                            if (polres_id == polres[index].id) option +=
+                                `<option value="${polres[index].id}" selected>${polres[index].name}</option>`
+                            else
+                                option +=
+                                `<option value="${polres[index].id}">${polres[index].name}</option>`
+                        }
+                    } else {
+                        for (let index = 0; index < polres.length; index++) {
+                            option += `<option value="${polres[index].id}">${polres[index].name}</option>`
+                        }
+                    }
+                    console.log(option)
+                    $('#polres_edit').html(option)
+                }
+            });
+        }
+
         function getPolres() {
             var polda = $('#polda').val()
             $.ajax({
@@ -245,6 +317,7 @@
                         option += `<option value="${polres[index].id}">${polres[index].name}</option>`
 
                     }
+                    console.log(option)
                     $('#polres').html(option)
                     getPolsek()
                 }
