@@ -135,30 +135,32 @@
                                         <div class="form-group">
                                             <label>Polda</label>
                                             @if (auth()->user()->getRoleNames()[0] !== 'admin')
-                                            <select class="form-control" id="polda" style="width: 100%"
-                                            name="polda">
-                                            <option value="{{auth()->user()->polda_id}}">{{auth()->user()->satuan_poldas->name}}</option>
-                                        </select>
+                                                <select class="form-control" id="polda" style="width: 100%"
+                                                    name="polda">
+                                                    <option value="{{ auth()->user()->polda_id }}">
+                                                        {{ auth()->user()->satuan_poldas->name }}</option>
+                                                </select>
                                             @else
-                                            <select class="form-control" id="polda" style="width: 100%"
-                                            name="polda" onchange="getPolres()">
-                                            @foreach ($poldas as $polda)
-                                                <option value="{{ $polda->id }}">{{ $polda->name }}</option>
-                                            @endforeach
-                                        </select>
+                                                <select class="form-control" id="polda" style="width: 100%"
+                                                    name="polda" onchange="getPolres()">
+                                                    @foreach ($poldas as $polda)
+                                                        <option value="{{ $polda->id }}">{{ $polda->name }}</option>
+                                                    @endforeach
+                                                </select>
                                             @endif
                                         </div>
                                         <div class="form-group">
-                                            <label>Satker / Fungsi / Polres {{auth()->user()->getRoleNames()[0]}}</label>
+                                            <label>Satker / Fungsi / Polres {{ auth()->user()->getRoleNames()[0] }}</label>
                                             @if (auth()->user()->getRoleNames()[0] == 'polres')
-                                            <select class="form-control" id="polress" style="width: 100%"
-                                            name="polres">
-                                            <option value="{{auth()->user()->polres_id}}">{{auth()->user()->satuan_polres->name}}</option>
-                                            </select>
+                                                <select class="form-control" id="polress" style="width: 100%"
+                                                    name="polres">
+                                                    <option value="{{ auth()->user()->polres_id }}">
+                                                        {{ auth()->user()->satuan_polres->name }}</option>
+                                                </select>
                                             @else
-                                            <select class="form-control" id="polres" style="width: 100%"
-                                            name="polres" onchange="getPolsek()">
-                                            </select>
+                                                <select class="form-control" id="polres" style="width: 100%"
+                                                    name="polres" onchange="getPolsek()">
+                                                </select>
                                             @endif
 
                                         </div>
@@ -188,15 +190,14 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Tanggal Lp</label>
-                                            <input type="date" name="tgllp" id="tgllp" class="form-control"
-                                                >
+                                            <input type="date" name="tgllp" id="tgllp" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label>Wujud Perbuatan</label>
                                             <div class="row">
                                                 <div class="col-lg-11">
                                                     <select class="form-control" id="wujud_perbuatan" style="width: 100%"
-                                                    name="wujud_perbuatan" onchange="checkWujudPerbuatan()">
+                                                        name="wujud_perbuatan" onchange="checkWujudPerbuatan()">
                                                         @foreach ($wujud_perbuatans as $wujud_perbuatan)
                                                             <option value="{{ $wujud_perbuatan->id }}">
                                                                 {{ $wujud_perbuatan->name }}</option>
@@ -204,7 +205,8 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-lg-1">
-                                                    <button class="btn btn-info" onclick="tambah_wp()" type="button">+</button>
+                                                    <button class="btn btn-info" onclick="tambah_wp()"
+                                                        type="button">+</button>
                                                 </div>
                                             </div>
                                             <div id="div_wp_tambah" class="mt-2">
@@ -271,7 +273,7 @@
                                         <div class="form-group divCheckPidana">
                                             <label>Tanggal LP Pidana</label>
                                             <input type="date" name="tgllp_pidana" id="tgllp_pidana"
-                                                class="form-control" >
+                                                class="form-control">
                                         </div>
                                         <div class="form-group divCheckPidana">
                                             <label>Wujud Perbuatan Pidana</label>
@@ -320,8 +322,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>Tgl Kep</label>
-                                                <input type="date" name="tgl_kep" id="tgl_kep" class="form-control"
-                                                    >
+                                                <input type="date" name="tgl_kep" id="tgl_kep"
+                                                    class="form-control">
                                             </div>
                                             @for ($i = 1; $i < 13; $i++)
                                                 <?php $putusans = Helper::getPutusan($i); ?>
@@ -360,7 +362,7 @@
                                             <div class="form-group">
                                                 <label>Tgl. Kep SP3 / SP4</label>
                                                 <input type="date" name="tglkepsp3" placeholder="0" id="tglkepsp3"
-                                                    class="form-control" >
+                                                    class="form-control">
                                             </div>
                                         </div>
                                         <div class="f1-buttons">
@@ -496,7 +498,7 @@
             if (val == 'sidang') {
                 $('#sidang_div').css('display', 'block')
                 $('#dihentikan_div').css('display', 'none')
-            } else if(val == 'dihentikan'){
+            } else if (val == 'dihentikan') {
                 $('.putusan').val('')
                 // $('.putusan').trigger('change');
                 $('#sidang_div').css('display', 'none')
@@ -517,7 +519,6 @@
                     if (data.data == true) {
                         $('#narkobaDiv').css("display", "block");
                     } else {
-                        alert('aw')
                         $('#narkobaDiv').css("display", "none");
                         $('#peran_narkoba').val('')
                         $('#peran_narkoba').trigger('change');
@@ -718,6 +719,7 @@
     <script>
         var option_wp = ""
         var wp_number = 1;
+
         function tambah_wp() {
             var html = `<div class="form-group" id="div_wujud_perbuatan_${wp_number}">
                             <div class="row">
@@ -730,12 +732,12 @@
                             </div>
                         </div>
                     </div>`
-                    wp_number++;
-                    $('#div_wp_tambah').append(html)
+            wp_number++;
+            $('#div_wp_tambah').append(html)
         }
 
         function kurang_wp(id) {
-            $( "#"+id ).remove();
+            $("#" + id).remove();
         }
 
         function getPolres() {
