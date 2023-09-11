@@ -7,6 +7,7 @@ use App\Models\PelanggaranList;
 use App\Models\Putusan;
 use App\Models\PutusanPelanggar;
 use App\Models\SatuanPolda;
+use App\Models\SatuanPolres;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDF;
@@ -100,6 +101,9 @@ class DashboardController extends Controller
 
         if (auth()->user()->getRoleNames()[0] != 'admin') {
             $data['chart_polres'] = $this->chartPolres($request);
+            if (auth()->user()->getRoleNames()[0] == 'polda') {
+                $data['list_polres'] = SatuanPolres::where('polda_id', auth()->user()->polda_id)->get();
+            }
         }
 
         return view('content.dashboard.index', $data);
@@ -222,6 +226,9 @@ class DashboardController extends Controller
         } else {
             if ($request->polda) $data = $data->where('polda', $request->polda);
         }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
+        }
         return $data->get();
     }
 
@@ -245,6 +252,9 @@ class DashboardController extends Controller
         } else {
             if ($request->polda) $data = $data->where('polda', $request->polda);
         }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
+        }
         return $data->get();
     }
 
@@ -265,6 +275,9 @@ class DashboardController extends Controller
             $data->where('polres', auth()->user()->polres_id);
         } else {
             if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
         }
 
         return $data->get();
@@ -288,6 +301,9 @@ class DashboardController extends Controller
             $data->where('polres', auth()->user()->polres_id);
         } else {
             if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
         }
 
         return $data->get();
@@ -314,6 +330,9 @@ class DashboardController extends Controller
             $data->where('polres', auth()->user()->polres_id);
         } else {
             if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
         }
 
         return $data->get();
@@ -342,6 +361,9 @@ class DashboardController extends Controller
         } else {
             if ($request->polda) $data = $data->where('polda', $request->polda);
         }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
+        }
         return $data->get();
     }
 
@@ -365,7 +387,9 @@ class DashboardController extends Controller
         } else {
             if ($request->polda) $data = $data->where('polda', $request->polda);
         }
-
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
+        }
 
 
         return $data->get();
@@ -374,7 +398,8 @@ class DashboardController extends Controller
     private function getChartPoldaNew($request, $jenis_pelanggaran = null)
     {
         // if (auth()->user()->getRoleNames()[0] !== 'admin') return $this->chartPolres($request);
-        $data = PelanggaranList::groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
+        $data = PelanggaranList::whereNull('polres')
+            ->groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
             ->select(DB::raw('count(*) as total'), 'satuan_poldas.name', 'polda');
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
@@ -391,6 +416,9 @@ class DashboardController extends Controller
             $data->where('polres', auth()->user()->polres_id);
         } else {
             if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
         }
 
         $data = $data->get();
@@ -412,6 +440,8 @@ class DashboardController extends Controller
     public function chartPolres($request, $jenis_pelanggaran = null)
     {
         $data = PelanggaranList::groupBy('polres', 'satuan_polres.name')->join('satuan_polres', 'satuan_polres.id', 'pelanggaran_lists.polres')
+            ->whereNotNull('polres')
+            ->whereNull('polsek')
             ->select(DB::raw('count(*) as total'), 'satuan_polres.name', 'polres');
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
@@ -428,6 +458,9 @@ class DashboardController extends Controller
             $data->where('polres', auth()->user()->polres_id);
         } else {
             if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
         }
 
         $data = $data->get();
@@ -465,6 +498,9 @@ class DashboardController extends Controller
         } else {
             if ($request->polda) $data = $data->where('polda', $request->polda);
         }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
+        }
 
         return $data->get();
     }
@@ -487,6 +523,9 @@ class DashboardController extends Controller
             $data->where('polres', auth()->user()->polres_id);
         } else {
             if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
         }
 
         return $data->get();
@@ -541,6 +580,9 @@ class DashboardController extends Controller
         } else {
             if ($request->polda) $data = $data->where('polda', $request->polda);
         }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
+        }
 
         return $data->count();
     }
@@ -560,6 +602,9 @@ class DashboardController extends Controller
             $data->where('polres', auth()->user()->polres_id);
         } else {
             if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
         }
 
         // if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->count();

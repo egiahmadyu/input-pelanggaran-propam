@@ -90,12 +90,13 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Nama</label>
-                                            <input type="text" name="nama" placeholder="" class="form-control">
+                                            <input type="text" name="nama" placeholder="" class="form-control"
+                                                required="true">
                                         </div>
                                         <div class="form-group">
                                             <label>Jenis Kelamin</label>
                                             <select class="form-control" id="jenis_kelamin" style="width: 100%"
-                                                name="jenis_kelamin">
+                                                name="jenis_kelamin" required="true">
                                                 @foreach ($genders as $gender)
                                                     <option value="{{ $gender->id }}">{{ $gender->gender }}</option>
                                                 @endforeach
@@ -103,7 +104,8 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Pangkat</label>
-                                            <select class="form-control" id="pangkat" style="width: 100%" name="pangkat">
+                                            <select class="form-control" id="pangkat" style="width: 100%" name="pangkat"
+                                                required="true">
                                                 @foreach ($pangkats as $pangkat)
                                                     <option value="{{ $pangkat->id }}">{{ $pangkat->name }}</option>
                                                 @endforeach
@@ -111,11 +113,12 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Jabatan</label>
-                                            <textarea name="jabatan" class="form-control"></textarea>
+                                            <textarea name="jabatan" class="form-control" required="true"></textarea>
                                         </div>
                                         <div class="form-group" id="div_diktuk">
                                             <label>Diktuk</label>
-                                            <select class="form-control" id="diktuk" style="width: 100%" name="diktuk">
+                                            <select class="form-control" id="diktuk" style="width: 100%"
+                                                name="diktuk" required=true>
                                                 <option value="">pilih </option>
                                                 @foreach ($diktuks as $diktuk)
                                                     <option value="{{ $diktuk->id }}">{{ $diktuk->name }}</option>
@@ -133,7 +136,7 @@
                                     <fieldset>
                                         <h4>Kesatuan</h4>
                                         <div class="form-group">
-                                            <label>Polda</label>
+                                            <label>Polda / Mabes</label>
                                             @if (auth()->user()->getRoleNames()[0] !== 'admin')
                                                 <select class="form-control" id="polda" style="width: 100%"
                                                     name="polda">
@@ -150,7 +153,7 @@
                                             @endif
                                         </div>
                                         <div class="form-group">
-                                            <label>Satker / Fungsi / Polres {{ auth()->user()->getRoleNames()[0] }}</label>
+                                            <label>Polres / Satker / Fungsi</label>
                                             @if (auth()->user()->getRoleNames()[0] == 'polres')
                                                 <select class="form-control" id="polress" style="width: 100%"
                                                     name="polres">
@@ -186,18 +189,21 @@
                                         <h4>Pelanggaran</h4>
                                         <div class="form-group">
                                             <label>No Lp</label>
-                                            <input type="text" name="nolp" id="nolp" class="form-control">
+                                            <input type="text" name="nolp" id="nolp" class="form-control"
+                                                required=true>
                                         </div>
                                         <div class="form-group">
                                             <label>Tanggal Lp</label>
-                                            <input type="date" name="tgllp" id="tgllp" class="form-control">
+                                            <input type="date" name="tgllp" id="tgllp" class="form-control"
+                                                required=true>
                                         </div>
                                         <div class="form-group">
                                             <label>Wujud Perbuatan</label>
                                             <div class="row">
                                                 <div class="col-lg-11">
                                                     <select class="form-control" id="wujud_perbuatan" style="width: 100%"
-                                                        name="wujud_perbuatan" onchange="checkWujudPerbuatan()">
+                                                        name="wujud_perbuatan" onchange="checkWujudPerbuatan()"
+                                                        required=true>
                                                         @foreach ($wujud_perbuatans as $wujud_perbuatan)
                                                             <option value="{{ $wujud_perbuatan->id }}">
                                                                 {{ $wujud_perbuatan->name }}</option>
@@ -247,22 +253,22 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Kronologis Singkat</label>
-                                            <textarea name="kronologi_singkat" class="form-control"></textarea>
+                                            <textarea name="kronologi_singkat" class="form-control" required=true></textarea>
                                         </div>
                                         <div class="form-group">
                                             <label>pasal Pelanggaran</label>
                                             <input type="text" name="pasal_pelanggaran" id="pasal_pelanggaran"
-                                                class="form-control">
+                                                class="form-control" required=true>
                                         </div>
                                         <hr>
                                         <div class="form-group">
                                             <label><b>Dilakukan Pidana</b></label>
                                             <select class="form-control" id="dilakukan_pidana" style="width: 100%"
                                                 name="pidana" onchange="checkPidana()">
-                                                <option value="YA">
-                                                    YA</option>
                                                 <option value="TIDAK">
                                                     TIDAK</option>
+                                                <option value="YA">
+                                                    YA</option>
                                             </select>
                                         </div>
                                         <div class="form-group divCheckPidana">
@@ -361,7 +367,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>Tgl. Kep SP3 / SP4</label>
-                                                <input type="date" name="tglkepsp3" placeholder="0" id="tglkepsp3"
+                                                <input type="date" name="tglkepsp3" id="tglkepsp3"
                                                     class="form-control">
                                             </div>
                                         </div>
@@ -385,6 +391,10 @@
 @push('style')
     {{-- <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"> --}}
     <style>
+        input[type=text] {
+            text-transform: uppercase;
+        }
+
         .f1-steps {
             overflow: hidden;
             position: relative;
@@ -483,6 +493,7 @@
             getWujudPerbuatan()
             checkWPP()
             check_penyelesaian()
+            checkPidana()
 
 
 
@@ -655,7 +666,9 @@
                 var progress_line = $(this).parents('.f1').find('.f1-progress-line');
 
                 // validasi form
-                parent_fieldset.find('input[required="true"], textarea[required="true"]').each(
+                parent_fieldset.find(
+                    'input[required="true"], textarea[required="true"], select[required="true"], input[required="required"], textarea[required="required"], select[required="required"]'
+                ).each(
                     function() {
                         if ($(this).val() == "") {
                             $(this).addClass('input-error');
@@ -734,6 +747,9 @@
                     </div>`
             wp_number++;
             $('#div_wp_tambah').append(html)
+            $('select').select2({
+                theme: "bootstrap4"
+            });
         }
 
         function kurang_wp(id) {
@@ -821,8 +837,16 @@
             var wpp = $('#dilakukan_pidana').val()
 
             if (wpp == 'YA') {
+                $('#nolp_pidana').attr('required', 'true')
+                $('#tgllp_pidana').attr('required', 'true')
+                $('#wujud_perbuatan_pidana').attr('required', 'true')
+                $('#pasal_pidana').attr('required', 'true')
                 $('.divCheckPidana').css("display", "block");
             } else {
+                $('#nolp_pidana').removeAttr('required')
+                $('#tgllp_pidana').removeAttr('required')
+                $('#wujud_perbuatan_pidana').removeAttr('required')
+                $('#pasal_pidana').removeAttr('required')
                 $('.divCheckPidana').css("display", "none");
             }
         }

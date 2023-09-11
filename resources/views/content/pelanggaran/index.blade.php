@@ -40,19 +40,21 @@
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="exampleFormControlInput1">Nama Pelanggar</label>
-                                                <input type="text" class="form-control" id="nama_pelanggar">
+                                                <input type="text" class="form-control" id="nama_pelanggar"
+                                                    name="nama_pelanggar">
                                             </div>
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="exampleFormControlInput1">NRP</label>
-                                                <input type="text" class="form-control" id="nrp">
+                                                <input type="text" class="form-control" id="nrp" name="nrp">
                                             </div>
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="exampleFormControlInput1">Jenis Pelanggaran</label>
-                                                <select class="form-control" id="jenis_pelanggaran">
+                                                <select class="form-control" id="jenis_pelanggaran"
+                                                    name="jenis_pelanggaran">
                                                     <option value="">Semua</option>
                                                     @foreach ($jenis_pelanggarans as $value)
                                                         <option value="{{ $value->id }}">{{ $value->name }}</option>
@@ -61,23 +63,23 @@
                                             </div>
                                         </div>
                                         @if (auth()->user()->getRoleNames()[0] == 'admin')
-                                        <div class="col-lg-3">
-                                            <div class="form-group">
-                                                <label for="exampleFormControlInput1">Kesatuan / Polda</label>
-                                                <select class="form-control" id="polda">
-                                                    <option value="">Semua</option>
-                                                    @foreach ($poldas as $value)
-                                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                                    @endforeach
-                                                </select>
+                                            <div class="col-lg-3">
+                                                <div class="form-group">
+                                                    <label for="exampleFormControlInput1">Kesatuan / Polda</label>
+                                                    <select class="form-control" id="polda" name="polda">
+                                                        <option value="">Semua</option>
+                                                        @foreach ($poldas as $value)
+                                                            <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
                                         @endif
 
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="exampleFormControlInput1">Wujud Perbuatan</label>
-                                                <select class="form-control" id="wujud_perbuatan">
+                                                <select class="form-control" id="wujud_perbuatan" name="wujud_perbuatan">
                                                     <option value="">Semua</option>
                                                     @foreach ($wujud_perbuatans as $value)
                                                         <option value="{{ $value->id }}">{{ $value->name }}</option>
@@ -88,7 +90,7 @@
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="exampleFormControlInput1">Jenis Kelamin</label>
-                                                <select class="form-control" id="jenis_kelamin">
+                                                <select class="form-control" id="jenis_kelamin" name="jenis_kelamin">
                                                     <option value="">Semua</option>
                                                     @foreach ($jenis_kelamins as $value)
                                                         <option value="{{ $value->id }}">{{ $value->gender }}</option>
@@ -99,7 +101,7 @@
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="exampleFormControlInput1">Pangkat</label>
-                                                <select class="form-control" id="pangkat">
+                                                <select class="form-control" id="pangkat" name="pangkat">
                                                     <option value="">Semua</option>
                                                     @foreach ($pangkats as $value)
                                                         <option value="{{ $value->id }}">{{ $value->name }}</option>
@@ -116,20 +118,25 @@
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="exampleFormControlInput1">Tanggal Mulai</label>
-                                                <input type="date" class="form-control" id="tanggal_mulai">
+                                                <input type="date" class="form-control" id="tanggal_mulai"
+                                                    name="tanggal_mulai">
                                             </div>
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="exampleFormControlInput1">Tanggal Akhir</label>
-                                                <input type="date" class="form-control" id="tanggal_akhir">
+                                                <input type="date" class="form-control" id="tanggal_akhir"
+                                                    name="tanggal_akhir">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <button class="btn btn-secondary" id="kt_reset" type="button">Reset</button> |
-                                            <button class="btn btn-primary" id="kt_search" type="button">Filter</button> |
+                                            <button class="btn btn-secondary" id="kt_reset"
+                                                type="button">Reset</button>
+                                            |
+                                            <button class="btn btn-primary" id="kt_search" type="button">Filter</button>
+                                            |
                                             <button class="btn btn-success" type="submit">Export</button>
                                         </div>
 
@@ -141,12 +148,15 @@
                                             <th>#</th>
                                             <th>NRP / NIP</th>
                                             <th>Nama Pelanggar</th>
+                                            <th>Jenis Kelamin</th>
                                             <th>Jenis Pelanggaran</th>
                                             <th>Polda</th>
                                             <th>Pangkat</th>
                                             <th>Jabatan</th>
                                             <th>No LP</th>
+                                            <th>Tgl LP</th>
                                             <th>Pidana</th>
+                                            <th>Wujud Perbuatan</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -172,6 +182,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">NRP / NIP</label>
+                                <input type="text" class="form-control" id="detail_nrp" readonly>
+                            </div>
+                        </div>
                         <div class="col-lg-4">
                             <div class="form-group">
                                 <label for="exampleFormControlInput1">Nama Pelanggar</label>
@@ -208,6 +224,12 @@
                                 <input type="text" class="form-control" id="detail_pasal" readonly>
                             </div>
                         </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Penyelesaian</label>
+                                <input type="text" class="form-control" id="detail_penyelesaian" readonly>
+                            </div>
+                        </div>
                         <div class="col-lg-12">
                             <div class="form-group">
                                 <label for="exampleFormControlInput1">Kronologi Singkat</label>
@@ -227,11 +249,13 @@
 
 @push('style')
     <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 @endpush
 
 @push('script')
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
@@ -242,18 +266,20 @@
             const dayText = {
                 en: "Su,Mo,Tu,We,Th,Fr,Sa".split(","),
                 id: "Mi,Se,Sl,Ra,Ka,Ju,Sa".split(","),
-                };
+            };
 
-                const monthText = {
-                en: "January,February,March,April,May,June,July,Augustus,September,October,November,December".split(
-                    ","
-                ),
-                id: "Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,September,Oktober,November,Desember".split(
-                    ","
-                ),
-                };
+            const monthText = {
+                en: "January,February,March,April,May,June,July,Augustus,September,October,November,December"
+                    .split(
+                        ","
+                    ),
+                id: "Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,September,Oktober,November,Desember"
+                    .split(
+                        ","
+                    ),
+            };
 
-                const todayText = {
+            const todayText = {
                 en: "Today",
                 id: "Hari ini",
             };
@@ -272,9 +298,10 @@
                 processing: true,
                 serverSide: true,
                 searching: true,
+                responsive: true,
                 search: {
-        "regex": true
-      },
+                    "regex": true
+                },
                 ajax: {
                     url: "{{ route('pelanggaran.show') }}",
                     method: "post",
@@ -307,6 +334,10 @@
                         name: 'nama'
                     },
                     {
+                        data: 'genders.gender',
+                        name: 'genders.gender'
+                    },
+                    {
                         data: 'jenis_pelanggarans.name',
                         name: 'jenis_pelanggarans.name'
                     },
@@ -327,8 +358,16 @@
                         name: 'nolp'
                     },
                     {
+                        data: 'tgllp',
+                        name: 'tgllp'
+                    },
+                    {
                         data: 'pidana',
                         name: 'pidana'
+                    },
+                    {
+                        data: 'wujud_perbuatans.name',
+                        name: 'wujud_perbuatans.names'
                     },
                     {
                         data: 'action',
@@ -359,12 +398,14 @@
             }).done(function(data) {
                 console.log(data)
                 var data = data.data
+                $('#detail_nrp').val(data.nrp_nip)
                 $('#detail_name').val(data.nama)
                 $('#detail_polda').val(data.satuan_poldas.name)
                 $('#detail_jenis_pelanggaran').val(data.jenis_pelanggarans.name)
                 $('#detail_diktuk').val(data.get_diktuk.name)
                 $('#detail_jabatan').val(data.jabatan)
                 $('#detail_pasal').val(data.pasal_pelanggaran)
+                $('#detail_penyelesaian').val(data.penyelesaian)
                 $('#kronologi_singkat').val(data.kronologi_singkat)
                 console.log(data.nama)
             });

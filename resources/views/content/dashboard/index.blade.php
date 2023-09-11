@@ -10,20 +10,26 @@
                             <div class="row">
                                 <div class="col-lg-2">
                                     <div class="form-group">
-                                        <label for="exampleFormControlInput1">Kesatuan / Polda</label>
-                                        <select class="form-control" id="polda" name="polda"
-                                            {{ auth()->user()->getRoleNames()[0] != 'admin'? 'disabled': '' }}>
-                                            @if (auth()->user()->getRoleNames()[0] != 'admin')
-                                                <option value="">{{ auth()->user()->poldas->name }}</option>
-                                            @else
+                                        <label
+                                            for="exampleFormControlInput1">{{ auth()->user()->getRoleNames()[0] == 'polda'? 'Polres / Satker/ Fungsi': 'Kesatuan / Polda' }}</label>
+
+                                        @if (auth()->user()->getRoleNames()[0] == 'polda')
+                                            <select class="form-control" id="polres" name="polres">
+                                                <option value="">Polres / Satker/ Fungsi</option>
+                                                @foreach ($list_polres as $value)
+                                                    <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        @else
+                                            <select class="form-control" id="polda" name="polda">
                                                 <option value="">Polda</option>
                                                 @foreach ($poldas as $value)
                                                     <option value="{{ $value->id }}">{{ $value->name }}</option>
                                                 @endforeach
-                                            @endif
-                                            <option value="">Semua</option>
+                                            </select>
+                                        @endif
 
-                                        </select>
+
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
@@ -59,19 +65,13 @@
                                         <input type="date" name="tangal_akhir" id="tanggal_akhir" class="form-control">
                                     </div>
                                 </div>
-                                <div class="col-lg-1">
+                                <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="exampleFormControlInput1">.</label>
                                         <button class="btn btn-primary form-control" type="submit" value="filter"
                                             name="submit">Filter</button>
                                     </div>
                                 </div>
-                                {{-- <div class="col-lg-1">
-                                    <div class="form-group">
-                                        <label for="exampleFormControlInput1">.</label>
-                                        <button class="btn btn-danger form-control" type="submit" value="print" name="submit">Print</button>
-                                    </div>
-                                </div> --}}
                             </div>
                         </form>
                     </div>
@@ -186,7 +186,7 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
@@ -199,7 +199,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
@@ -212,7 +212,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
@@ -224,11 +224,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="row">
-
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <div class="card" style="height: 300px">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
@@ -240,7 +236,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
                 <div class="card" style="height: 300px">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
@@ -276,7 +275,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <div class="card" style="height: 300px">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
@@ -619,27 +618,50 @@
 
         am4core.ready(function() {
 
-            // Themes begin
+            // // Themes begin
+            // am4core.useTheme(am4themes_animated);
+            // // Themes end
+
+            // // Create chart
+            // var dataChart = {!! json_encode($dataByWpp, true) !!}
+            // var chart = am4core.create("chartWpp", am4charts.PieChart);
+            // chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+
+            // chart.data = dataChart
+
+            // var series = chart.series.push(new am4charts.PieSeries());
+            // series.dataFields.value = "total";
+            // series.dataFields.radiusValue = "total";
+            // series.dataFields.category = "name";
+            // series.slices.template.cornerRadius = 6;
+            // series.colors.step = 3;
+
+            // series.hiddenState.properties.endAngle = -90;
+
+            // chart.legend = new am4charts.Legend();
             am4core.useTheme(am4themes_animated);
             // Themes end
 
-            // Create chart
-            var dataChart = {!! json_encode($dataByWpp, true) !!}
+            // Create chart instance
             var chart = am4core.create("chartWpp", am4charts.PieChart);
-            chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+            var dataChart = {!! json_encode($dataByWpp, true) !!}
 
+            // Add data
             chart.data = dataChart
 
-            var series = chart.series.push(new am4charts.PieSeries());
-            series.dataFields.value = "total";
-            series.dataFields.radiusValue = "total";
-            series.dataFields.category = "name";
-            series.slices.template.cornerRadius = 6;
-            series.colors.step = 3;
+            // Add and configure Series
+            var pieSeries = chart.series.push(new am4charts.PieSeries());
+            pieSeries.dataFields.value = "total";
+            pieSeries.dataFields.category = "name";
+            pieSeries.slices.template.stroke = am4core.color("#fff");
+            pieSeries.slices.template.strokeOpacity = 1;
 
-            series.hiddenState.properties.endAngle = -90;
+            // This creates initial animation
+            pieSeries.hiddenState.properties.opacity = 1;
+            pieSeries.hiddenState.properties.endAngle = -90;
+            pieSeries.hiddenState.properties.startAngle = -90;
 
-            // chart.legend = new am4charts.Legend();
+            chart.hiddenState.properties.radius = am4core.percent(0);
 
         });
 
@@ -928,7 +950,7 @@
                 categoryAxis.renderer.minGridDistance = 30;
 
                 var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-                valueAxis.title.text = "Polda";
+                valueAxis.title.text = "Polres";
                 valueAxis.title.fontWeight = 800;
 
                 // Create series

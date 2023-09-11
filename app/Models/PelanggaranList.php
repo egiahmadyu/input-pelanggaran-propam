@@ -50,6 +50,11 @@ class PelanggaranList extends Model
         return $this->hasOne(Gender::class, 'id', 'jenis_kelamin');
     }
 
+    public function genders()
+    {
+        return $this->hasOne(Gender::class, 'id', 'jenis_kelamin');
+    }
+
     public function getWujudPerbuatan()
     {
         return $this->hasOne(WujudPerbuatan::class, 'id', 'wujud_perbuatan');

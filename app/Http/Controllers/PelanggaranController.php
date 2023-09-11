@@ -117,7 +117,11 @@ class PelanggaranController extends Controller
                     $btn .= ' |  <button class="btn btn-danger btn-sm" onclick="deletePelanggaran(' . $row->id . ')">Delete</button>';
                 }
                 return $btn;
-            })
+            })->setRowAttr([
+                'style' => function ($data) {
+                    return $data->penyelesaian ? 'background-color: #2f13bd;color:white' : '';
+                }
+            ])
             ->rawColumns(['action'])
             ->make(true);
     }
@@ -127,7 +131,8 @@ class PelanggaranController extends Controller
     {
         // if ($request->button == 'export') return $this->exportData($request);
 
-        $data = PelanggaranList::with('jenis_pelanggarans')->with('satuan_poldas')->with('pangkats');
+        $data = PelanggaranList::with('jenis_pelanggarans')->with('satuan_poldas')->with('pangkats')
+            ->with('genders')->with('wujud_perbuatans');
 
 
         if (auth()->user()->getRoleNames()[0] == 'polda') {
@@ -136,6 +141,10 @@ class PelanggaranController extends Controller
             $data->where('polres', auth()->user()->polres_id);
         } else {
             if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
         }
 
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
@@ -156,20 +165,21 @@ class PelanggaranController extends Controller
 
 
         if ($request->jabatan) {
-            $jabatan = $request->jabatan;
-            $data = $data->join('satuan_poldas', 'satuan_poldas.id', 'polda')
-                ->join('satuan_polres', 'satuan_polres.id', 'polres')
-                ->join('satuan_polseks', 'satuan_polseks.id', 'polsek');
+            $data = $data->where('jabatan', 'like', '%' . $request->jabatan . '%');
+            // $jabatan = $request->jabatan;
+            // $data = $data->join('satuan_poldas', 'satuan_poldas.id', 'polda')
+            //     ->join('satuan_polres', 'satuan_polres.id', 'polres')
+            //     ->join('satuan_polseks', 'satuan_polseks.id', 'polsek');
 
-            $data = $data->where(function ($query) use ($jabatan) {
-                $query->where('jabatan', 'like', '%' . $jabatan . '%')
-                    ->orWhere('satuan_poldas.name', 'like', '%' . $jabatan . '%')
-                    ->orWhere('satuan_polres.name', 'like', '%' . $jabatan . '%')
-                    ->orWhere('satuan_polseks.name', 'like', '%' . $jabatan . '%');
-            });
-            $data = $data->select('pelanggaran_lists.*');
+            // $data = $data->where(function ($query) use ($jabatan) {
+            //     $query->where('jabatan', 'like', '%' . $jabatan . '%')
+            //         ->orWhere('satuan_poldas.name', 'like', '%' . $jabatan . '%')
+            //         ->orWhere('satuan_polres.name', 'like', '%' . $jabatan . '%')
+            //         ->orWhere('satuan_polseks.name', 'like', '%' . $jabatan . '%');
+            // });
+            // $data = $data->select('pelanggaran_lists.*');
         }
-
+        $data = $data->orderBy('tgllp', 'desc');
         return $data;
     }
 
@@ -228,12 +238,15 @@ class PelanggaranController extends Controller
             'pelanggar_id' => $data->id,
             'wujud_perbuatan_id' => $request->wujud_perbuatan
         ]);
-        for ($i=0; $i < count($request->wp); $i++) {
-            WujudPerbuatanPelanggar::create([
-                'pelanggar_id' => $data->id,
-                'wujud_perbuatan_id' => $request->wp[$i]
-            ]);
+        if ($request->wp) {
+            for ($i = 0; $i < count($request->wp); $i++) {
+                WujudPerbuatanPelanggar::create([
+                    'pelanggar_id' => $data->id,
+                    'wujud_perbuatan_id' => $request->wp[$i]
+                ]);
+            }
         }
+
         return redirect('/');
     }
 
