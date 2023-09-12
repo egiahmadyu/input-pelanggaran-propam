@@ -404,8 +404,7 @@ class DashboardController extends Controller
     private function getChartPoldaNew($request, $jenis_pelanggaran = null)
     {
         // if (auth()->user()->getRoleNames()[0] !== 'admin') return $this->chartPolres($request);
-        $data = PelanggaranList::whereNull('polres')
-            ->groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
+        $data = PelanggaranList::groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
             ->select(DB::raw('count(*) as total'), 'satuan_poldas.name', 'polda');
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
@@ -426,7 +425,6 @@ class DashboardController extends Controller
         if ($request->polres) {
             $data = $data->where('polres', $request->polres);
         }
-
         $data = $data->get();
         foreach ($data as $key => $value) {
             $query = PelanggaranList::groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
@@ -446,8 +444,8 @@ class DashboardController extends Controller
     public function chartPolres($request, $jenis_pelanggaran = null)
     {
         $data = PelanggaranList::groupBy('polres', 'satuan_polres.name')->join('satuan_polres', 'satuan_polres.id', 'pelanggaran_lists.polres')
-            ->whereNotNull('polres')
-            ->whereNull('polsek')
+            // ->whereNotNull('polres')
+            // ->whereNull('polsek')
             ->select(DB::raw('count(*) as total'), 'satuan_polres.name', 'polres');
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
@@ -468,7 +466,6 @@ class DashboardController extends Controller
         if ($request->polres) {
             $data = $data->where('polres', $request->polres);
         }
-
         $data = $data->get();
         foreach ($data as $key => $value) {
             $query = PelanggaranList::groupBy('polres', 'satuan_polres.name')->join('satuan_polres', 'satuan_polres.id', 'pelanggaran_lists.polres')
