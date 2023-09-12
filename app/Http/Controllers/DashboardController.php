@@ -443,7 +443,7 @@ class DashboardController extends Controller
 
     public function chartPolres($request, $jenis_pelanggaran = null)
     {
-        $data = PelanggaranList::groupBy('polres', 'satuan_polres.name')->join('satuan_polres', 'satuan_polres.id', 'pelanggaran_lists.polres')
+        $data = PelanggaranList::groupBy('polres', 'satuan_polres.name')->leftJoin('satuan_polres', 'satuan_polres.id', 'pelanggaran_lists.polres')
             // ->whereNotNull('polres')
             // ->whereNull('polsek')
             ->select(DB::raw('count(*) as total'), 'satuan_polres.name', 'polres');
@@ -458,6 +458,7 @@ class DashboardController extends Controller
 
         if (auth()->user()->getRoleNames()[0] == 'polda') {
             $data->where('polda', auth()->user()->polda_id);
+            // dd($data->get());
         } else if (auth()->user()->getRoleNames()[0] == 'polres') {
             $data->where('polres', auth()->user()->polres_id);
         } else {
