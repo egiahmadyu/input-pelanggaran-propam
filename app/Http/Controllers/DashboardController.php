@@ -142,6 +142,9 @@ class DashboardController extends Controller
         } else {
             if ($request->polda) $data = $data->where('polda', $request->polda);
         }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
+        }
         return $data->get();
     }
 
@@ -160,6 +163,9 @@ class DashboardController extends Controller
             $data->where('polres', auth()->user()->polres_id);
         } else {
             if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
         }
         return $data->get();
     }

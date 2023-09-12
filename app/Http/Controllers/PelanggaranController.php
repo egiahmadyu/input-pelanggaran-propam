@@ -20,6 +20,7 @@ use App\Models\WujudPerbuatanPelanggar;
 use App\Models\WujudPerbuatanPidana;
 use Illuminate\Http\Request;
 use DataTables;
+use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -165,7 +166,7 @@ class PelanggaranController extends Controller
 
 
         if ($request->jabatan) {
-            $data = $data->where('jabatan', 'like', '%' . $request->jabatan . '%');
+            $data = $data->where(DB::raw('upper(jabatan)'), 'like', '%' . strtoupper($request->jabatan) . '%');
             // $jabatan = $request->jabatan;
             // $data = $data->join('satuan_poldas', 'satuan_poldas.id', 'polda')
             //     ->join('satuan_polres', 'satuan_polres.id', 'polres')
