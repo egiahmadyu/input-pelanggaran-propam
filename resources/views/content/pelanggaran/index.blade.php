@@ -53,8 +53,8 @@
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="exampleFormControlInput1">Jenis Pelanggaran</label>
-                                                <select class="form-control" id="jenis_pelanggaran"
-                                                    name="jenis_pelanggaran">
+                                                <select class="form-control" id="jenis_pelanggaran" name="jenis_pelanggaran"
+                                                    onchange="getWujudPerbuatan()">
                                                     <option value="">Semua</option>
                                                     @foreach ($jenis_pelanggarans as $value)
                                                         <option value="{{ $value->id }}">{{ $value->name }}</option>
@@ -410,6 +410,24 @@
                 console.log(data.nama)
             });
             $('#modal_detail').modal('show')
+        }
+
+        function getWujudPerbuatan() {
+            var jenis_pelanggaran = $('#jenis_pelanggaran').val()
+            $.ajax({
+                url: "/api/wujud_perbuatan/type/" + jenis_pelanggaran,
+                success: function(data) {
+                    var wp = data.data
+                    var option = '<option value="">Semua</option>'
+                    for (let index = 0; index < wp.length; index++) {
+                        option += `<option value="${wp[index].id}">${wp[index].name}</option>`
+
+                    }
+                    $('#wujud_perbuatan').html(option)
+                    option_wp = option
+                    getPutusan()
+                }
+            });
         }
 
         function deletePelanggaran(id) {

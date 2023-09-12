@@ -65,11 +65,12 @@
                             <label for="exampleInputEmail1">Polda / Mabes</label>
                             <select class="form-control" id="polda_id" name="polda_id">
                                 @if (auth()->user()->getRoleNames()[0] !== 'admin')
-                                <option value="{{auth()->user()->polda}}">{{ auth()->user()->satuan_poldas->name }}</option>
+                                    <option value="{{ auth()->user()->polda }}">{{ auth()->user()->satuan_poldas->name }}
+                                    </option>
                                 @else
-                                @foreach ($poldas as $value)
-                                <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                 @endforeach
+                                    @foreach ($poldas as $value)
+                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                    @endforeach
                                 @endif
 
                             </select>
@@ -156,6 +157,7 @@
 @push('script')
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
             $('select').select2({
@@ -240,6 +242,52 @@
             $('#kt_search').on('click', function(e) {
                 e.preventDefault();
                 table.table().draw();
+            });
+        }
+
+        function deletePolres(id) {
+            $.ajax({
+                get: "GET",
+                url: "/api/polres/" + id + "/delete",
+                success: async function(data) {
+                    if (data.status == 200) {
+                        Swal.fire(
+                            'Berhasil',
+                            data.message,
+                            'success'
+                        )
+                        location.reload();
+                    } else {
+                        Swal.fire(
+                            'Gagal!',
+                            data.message,
+                            'error'
+                        )
+                    }
+                }
+            });
+        }
+
+        function deletePolda(id) {
+            $.ajax({
+                get: "GET",
+                url: "/api/polda/" + id + "/delete",
+                success: async function(data) {
+                    if (data.status == 200) {
+                        Swal.fire(
+                            'Berhasil',
+                            data.message,
+                            'success'
+                        )
+                        location.reload();
+                    } else {
+                        Swal.fire(
+                            'Gagal!',
+                            data.message,
+                            'error'
+                        )
+                    }
+                }
             });
         }
     </script>

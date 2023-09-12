@@ -117,7 +117,7 @@ class RefDataController extends Controller
         return DataTables::of($data)->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $res = base64_encode(json_encode($row));
-                $btn = '<a href="/satuan-data/polda/delete/' . $row->id . '" class="btn btn-danger btn-sm">Delete</a>';
+                $btn = '<button onclick="deletePolda(' . $row->id . ')" class="btn btn-danger btn-sm">Delete</a>';
                 return $btn;
             })
             ->rawColumns(['action'])
@@ -154,7 +154,7 @@ class RefDataController extends Controller
         return DataTables::of($data)->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $res = base64_encode(json_encode($row));
-                $btn = '<a href="satuan-data/polres/delete/' . $row->id . '" class="btn btn-danger btn-sm">Delete</a>';
+                $btn = '<button onclick="deletePolres(' . $row->id . ')" class="btn btn-danger btn-sm">Delete</button>';
                 return $btn;
             })
             ->rawColumns(['action'])

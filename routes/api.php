@@ -25,6 +25,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('polda/{id}', [SatuanController::class, 'getPolresByPolda']);
 Route::get('polres/{id}', [SatuanController::class, 'getPolseByPolres']);
+Route::get('polres/{id}/delete', [SatuanController::class, 'deletePolres']);
+Route::get('polda/{id}/delete', [SatuanController::class, 'deletePolda']);
 Route::get('wujud_perbuatan/type/{type}', [WujudPerbuatanController::class, 'getWPbyType']);
 Route::get('wujud_perbuatan/checkNarkoba/{type}', [WujudPerbuatanController::class, 'checkNarkoba']);
 Route::get('putusan/type/{type}', [PutusanController::class, 'getPutusanByType']);
