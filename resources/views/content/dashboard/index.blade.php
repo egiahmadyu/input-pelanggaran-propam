@@ -239,7 +239,7 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-12">
                 <div class="card" style="height: 300px">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
@@ -275,7 +275,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
+            {{-- <div class="col-lg-6">
                 <div class="card" style="height: 300px">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
@@ -286,7 +286,7 @@
                         <div id="chartPungli"></div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
         <div class="row">
@@ -883,94 +883,215 @@
          * https://www.amcharts.com/docs/v4/
          * ---------------------------------------
          */
+
         am4core.ready(function() {
+            /**
+             * ---------------------------------------
+             * This demo was created using amCharts 4.
+             *
+             * For more information visit:
+             * https://www.amcharts.com/
+             *
+             * Documentation is available at:
+             * https://www.amcharts.com/docs/v4/
+             * ---------------------------------------
+             */
+
             // Themes begin
             am4core.useTheme(am4themes_animated);
             // Themes end
 
-            // Create chart instance
-            var chart = am4core.create("chart_new", am4charts.XYChart);
 
-            // Add percent sign to all numbers
-            // chart.numberFormatter.numberFormat = "#";
+            var chart = am4core.create('chart_new', am4charts.XYChart)
+            chart.colors.step = 2;
 
+            chart.legend = new am4charts.Legend()
+            chart.legend.position = 'top'
+            chart.legend.paddingBottom = 20
+            chart.legend.labels.template.maxWidth = 95
+
+            var xAxis = chart.xAxes.push(new am4charts.CategoryAxis())
+            xAxis.dataFields.category = 'name'
+            xAxis.renderer.cellStartLocation = 0.1
+            xAxis.renderer.cellEndLocation = 0.9
+            xAxis.renderer.grid.template.location = 0;
+
+            var yAxis = chart.yAxes.push(new am4charts.ValueAxis());
+            yAxis.min = 0;
+
+            function createSeries(value, name) {
+                var series = chart.series.push(new am4charts.ColumnSeries())
+                series.dataFields.valueY = value
+                series.dataFields.categoryX = 'name'
+                series.name = name
+
+                series.events.on("hidden", arrangeColumns);
+                series.events.on("shown", arrangeColumns);
+
+                var bullet = series.bullets.push(new am4charts.LabelBullet())
+                bullet.interactionsEnabled = false
+                bullet.dy = 30;
+                bullet.label.text = '{valueY}'
+                bullet.label.fill = am4core.color('#ffffff')
+
+                return series;
+            }
             var dataChart = {!! json_encode($chartPoldaNew, true) !!}
-            // Add data
+
             chart.data = dataChart
 
-            // Create axes
-            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-            categoryAxis.dataFields.category = "name";
-            categoryAxis.renderer.grid.template.location = 0;
-            categoryAxis.renderer.minGridDistance = 30;
 
-            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-            valueAxis.title.text = "Polda";
-            valueAxis.title.fontWeight = 800;
+            createSeries('total', 'Total Pelanggaran');
+            createSeries('selesai', 'Total Pelanggaran Selesai');
 
-            // Create series
-            var series = chart.series.push(new am4charts.ColumnSeries());
-            series.dataFields.valueY = "selesai";
-            series.dataFields.categoryX = "name";
-            series.clustered = false;
-            series.tooltipText = "Total Penyelesaian {categoryX} : [bold]{valueY}[/]";
+            function arrangeColumns() {
 
-            var series2 = chart.series.push(new am4charts.ColumnSeries());
-            series2.dataFields.valueY = "total";
-            series2.dataFields.categoryX = "name";
-            series2.clustered = false;
-            series2.columns.template.width = am4core.percent(50);
-            series2.tooltipText = "Total Pelanggaran {categoryX} : [bold]{valueY}[/]";
+                var series = chart.series.getIndex(0);
 
-            chart.cursor = new am4charts.XYCursor();
-            chart.cursor.lineX.disabled = true;
-            chart.cursor.lineY.disabled = true;
-        });
+                var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
+                if (series.dataItems.length > 1) {
+                    var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
+                    var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
+                    var delta = ((x1 - x0) / chart.series.length) * w;
+                    if (am4core.isNumber(delta)) {
+                        var middle = chart.series.length / 2;
+
+                        var newIndex = 0;
+                        chart.series.each(function(series) {
+                            if (!series.isHidden && !series.isHiding) {
+                                series.dummyData = newIndex;
+                                newIndex++;
+                            } else {
+                                series.dummyData = chart.series.indexOf(series);
+                            }
+                        })
+                        var visibleCount = newIndex;
+                        var newMiddle = visibleCount / 2;
+
+                        chart.series.each(function(series) {
+                            var trueIndex = chart.series.indexOf(series);
+                            var newIndex = series.dummyData;
+
+                            var dx = (newIndex - trueIndex + middle - newMiddle) * delta
+
+                            series.animate({
+                                property: "dx",
+                                to: dx
+                            }, series.interpolationDuration, series.interpolationEasing);
+                            series.bulletsContainer.animate({
+                                property: "dx",
+                                to: dx
+                            }, series.interpolationDuration, series.interpolationEasing);
+                        })
+                    }
+                }
+            }
+        })
 
         @if (auth()->user()->getRoleNames()[0] != 'admin')
             am4core.ready(function() {
+                /**
+                 * ---------------------------------------
+                 * This demo was created using amCharts 4.
+                 *
+                 * For more information visit:
+                 * https://www.amcharts.com/
+                 *
+                 * Documentation is available at:
+                 * https://www.amcharts.com/docs/v4/
+                 * ---------------------------------------
+                 */
+
                 // Themes begin
                 am4core.useTheme(am4themes_animated);
                 // Themes end
 
-                // Create chart instance
-                var chart = am4core.create("chart_new_polres", am4charts.XYChart);
 
-                // Add percent sign to all numbers
-                // chart.numberFormatter.numberFormat = "#";
+                var chart = am4core.create('chart_new_polres', am4charts.XYChart)
+                chart.colors.step = 2;
 
+                chart.legend = new am4charts.Legend()
+                chart.legend.position = 'top'
+                chart.legend.paddingBottom = 20
+                chart.legend.labels.template.maxWidth = 95
+
+                var xAxis = chart.xAxes.push(new am4charts.CategoryAxis())
+                xAxis.dataFields.category = 'name'
+                xAxis.renderer.cellStartLocation = 0.1
+                xAxis.renderer.cellEndLocation = 0.9
+                xAxis.renderer.grid.template.location = 0;
+
+                var yAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                yAxis.min = 0;
+
+                function createSeries(value, name) {
+                    var series = chart.series.push(new am4charts.ColumnSeries())
+                    series.dataFields.valueY = value
+                    series.dataFields.categoryX = 'name'
+                    series.name = name
+
+                    series.events.on("hidden", arrangeColumns);
+                    series.events.on("shown", arrangeColumns);
+
+                    var bullet = series.bullets.push(new am4charts.LabelBullet())
+                    bullet.interactionsEnabled = false
+                    bullet.dy = 30;
+                    bullet.label.text = '{valueY}'
+                    bullet.label.fill = am4core.color('#ffffff')
+
+                    return series;
+                }
                 var dataChart = {!! json_encode($chart_polres, true) !!}
-                // Add data
+
                 chart.data = dataChart
 
-                // Create axes
-                var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-                categoryAxis.dataFields.category = "name";
-                categoryAxis.renderer.grid.template.location = 0;
-                categoryAxis.renderer.minGridDistance = 30;
 
-                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-                valueAxis.title.text = "Polres";
-                valueAxis.title.fontWeight = 800;
+                createSeries('total', 'Total Pelanggaran');
+                createSeries('selesai', 'Total Pelanggaran Selesai');
 
-                // Create series
-                var series = chart.series.push(new am4charts.ColumnSeries());
-                series.dataFields.valueY = "selesai";
-                series.dataFields.categoryX = "name";
-                series.clustered = false;
-                series.tooltipText = "Total Penyelesaian {categoryX} : [bold]{valueY}[/]";
+                function arrangeColumns() {
 
-                var series2 = chart.series.push(new am4charts.ColumnSeries());
-                series2.dataFields.valueY = "total";
-                series2.dataFields.categoryX = "name";
-                series2.clustered = false;
-                series2.columns.template.width = am4core.percent(50);
-                series2.tooltipText = "Total Pelanggaran {categoryX} : [bold]{valueY}[/]";
+                    var series = chart.series.getIndex(0);
 
-                chart.cursor = new am4charts.XYCursor();
-                chart.cursor.lineX.disabled = true;
-                chart.cursor.lineY.disabled = true;
-            });
+                    var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
+                    if (series.dataItems.length > 1) {
+                        var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
+                        var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
+                        var delta = ((x1 - x0) / chart.series.length) * w;
+                        if (am4core.isNumber(delta)) {
+                            var middle = chart.series.length / 2;
+
+                            var newIndex = 0;
+                            chart.series.each(function(series) {
+                                if (!series.isHidden && !series.isHiding) {
+                                    series.dummyData = newIndex;
+                                    newIndex++;
+                                } else {
+                                    series.dummyData = chart.series.indexOf(series);
+                                }
+                            })
+                            var visibleCount = newIndex;
+                            var newMiddle = visibleCount / 2;
+
+                            chart.series.each(function(series) {
+                                var trueIndex = chart.series.indexOf(series);
+                                var newIndex = series.dummyData;
+
+                                var dx = (newIndex - trueIndex + middle - newMiddle) * delta
+
+                                series.animate({
+                                    property: "dx",
+                                    to: dx
+                                }, series.interpolationDuration, series.interpolationEasing);
+                                series.bulletsContainer.animate({
+                                    property: "dx",
+                                    to: dx
+                                }, series.interpolationDuration, series.interpolationEasing);
+                            })
+                        }
+                    }
+                }
+            })
         @endif
     </script>
 @endpush

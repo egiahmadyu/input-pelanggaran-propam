@@ -415,7 +415,7 @@ class PelanggaranController extends Controller
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->no_kep);
             $startCol++;
-            $sheet->setCellValue("{$startCol}{$startRow}", $value->tgk_kep);
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->tgl_kep);
             $startCol++;
             for ($i = 1; $i < 13; $i++) {
                 $putusan = 'getPutusan' . $i;

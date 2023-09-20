@@ -85,7 +85,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>NRP / NIP</label>
-                                            <input type="text" name="nrp_nip" placeholder="" class="form-control"
+                                            <input type="number" name="nrp_nip" placeholder="" class="form-control"
                                                 id="nrp_nip" required="true" maxlength="8" minlength="8">
                                         </div>
                                         <div class="form-group">
@@ -112,7 +112,7 @@
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label>Jabatan</label>
+                                            <label>Jabatan (lengkap dengan Satkernya)</label>
                                             <textarea name="jabatan" class="form-control" required="true"></textarea>
                                         </div>
                                         <div class="form-group" id="div_diktuk">
@@ -136,7 +136,7 @@
                                     <fieldset>
                                         <h4>Kesatuan</h4>
                                         <div class="form-group">
-                                            <label>Polda / Mabes</label>
+                                            <label>Satker Mabes/ Polda</label>
                                             @if (auth()->user()->getRoleNames()[0] !== 'admin')
                                                 <select class="form-control" id="polda" style="width: 100%"
                                                     name="polda">
@@ -153,7 +153,7 @@
                                             @endif
                                         </div>
                                         <div class="form-group">
-                                            <label>Polres / Satker / Fungsi</label>
+                                            <label>Satker Polda/ Polres</label>
                                             @if (auth()->user()->getRoleNames()[0] == 'polres')
                                                 <select class="form-control" id="polress" style="width: 100%"
                                                     name="polres">
@@ -322,12 +322,12 @@
                                         <div id="sidang_div">
                                             <h5>Sidang</h5>
                                             <div class="form-group">
-                                                <label>No Kep</label>
+                                                <label>No KEP Penghentian</label>
                                                 <input type="text" name="no_kep" id="no_kep"
                                                     class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label>Tgl Kep</label>
+                                                <label>Tgl KEP Penghentian</label>
                                                 <input type="date" name="tgl_kep" id="tgl_kep"
                                                     class="form-control">
                                             </div>

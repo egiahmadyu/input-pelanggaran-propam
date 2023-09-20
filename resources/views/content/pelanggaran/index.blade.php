@@ -367,7 +367,7 @@
                     },
                     {
                         data: 'wujud_perbuatans.name',
-                        name: 'wujud_perbuatans.names'
+                        name: 'wujud_perbuatans.name'
                     },
                     {
                         data: 'action',

@@ -36,7 +36,7 @@ class RefDataController extends Controller
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $res = base64_encode(json_encode($row));
-                    $btn = '<button class="btn btn-warning btn-sm" onclick=modalEdit(' . $row->id . ')>Edit</button> | <a href="/wujud-perbuatan/delete/' . $row->id . '" class="btn btn-danger btn-sm">Delete</a>';
+                    $btn = '<button class="btn btn-warning btn-sm" onclick=modalEdit(' . $row->id . ')>Edit</button> | <a href="/data-master/wujud-perbuatan/delete/' . $row->id . '" class="btn btn-danger btn-sm">Delete</a>';
                     return $btn;
                 })
                 ->rawColumns(['action'])

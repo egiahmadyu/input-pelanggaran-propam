@@ -135,7 +135,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="/wujud-perbuatan/save">
+                    <form method="post" action="/data-master/wujud-perbuatan/save">
                         @csrf
                         <div class="form-group">
                             <label for="exampleInputEmail1">Jenis Pelanggaran</label>
