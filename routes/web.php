@@ -47,6 +47,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pelanggaran-data/edit-data/{id}', [PelanggaranController::class, 'editData'])->name('pelanggaran.edit');
     Route::post('/pelanggaran-data/export', [PelanggaranController::class, 'exportData'])->name('pelanggaran.export');
     Route::get('/pelanggaran-data/detail/{id}', [PelanggaranController::class, 'getDetail'])->name('pelanggaran.detail');
+    Route::get('/pelanggaran-data/detailnrp/{nrp}', [PelanggaranController::class, 'getDetailNrp'])->name('pelanggaran.detail.nrp');
     Route::get('/pelanggaran-data/edit/{id}', [PelanggaranController::class, 'formEdit'])->name('pelanggaran.form.edit');
     Route::post('/pelanggaran-data/edit/{id}/save', [PelanggaranController::class, 'saveEdit'])->name('pelanggaran.edit.save');
     Route::post('/pelanggaran-data/show', [PelanggaranController::class, 'show'])->name('pelanggaran.show');

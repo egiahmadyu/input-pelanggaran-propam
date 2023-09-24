@@ -62,7 +62,8 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        @if (auth()->user()->getRoleNames()[0] == 'admin')
+                                        @if (auth()->user()->getRoleNames()[0] == 'admin' ||
+                                                auth()->user()->getRoleNames()[0] == 'mabes')
                                             <div class="col-lg-3">
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Kesatuan / Polda</label>
@@ -180,7 +181,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="body_detail_modal">
                     <div class="row">
                         <div class="col-lg-4">
                             <div class="form-group">
@@ -396,18 +397,7 @@
             $.ajax({
                 url: "/pelanggaran-data/detail/" + id,
             }).done(function(data) {
-                console.log(data)
-                var data = data.data
-                $('#detail_nrp').val(data.nrp_nip)
-                $('#detail_name').val(data.nama)
-                $('#detail_polda').val(data.satuan_poldas.name)
-                $('#detail_jenis_pelanggaran').val(data.jenis_pelanggarans.name)
-                $('#detail_diktuk').val(data.get_diktuk.name)
-                $('#detail_jabatan').val(data.jabatan)
-                $('#detail_pasal').val(data.pasal_pelanggaran)
-                $('#detail_penyelesaian').val(data.penyelesaian)
-                $('#kronologi_singkat').val(data.kronologi_singkat)
-                console.log(data.nama)
+                $('#body_detail_modal').html(data)
             });
             $('#modal_detail').modal('show')
         }

@@ -59,13 +59,26 @@
                                     <fieldset>
                                         <h4>Jenis Pelanggaran</h4>
                                         <div class="form-group">
-                                            <select class="form-control select2" id="jenis_pelanggaran" style="width: 100%"
-                                                name="jenis_pelanggaran" onchange="getWujudPerbuatan()">
-                                                @foreach ($jenis_pelanggarans as $jenis_pelanggaran)
-                                                    <option value="{{ $jenis_pelanggaran->id }}">
-                                                        {{ $jenis_pelanggaran->name }}</option>
-                                                @endforeach
-                                            </select>
+                                            @if (auth()->user()->getRoleNames()[0] == 'mabes')
+                                                <select class="form-control select2" id="jenis_pelanggaran"
+                                                    style="width: 100%" name="jenis_pelanggaran"
+                                                    onchange="getWujudPerbuatan()">
+                                                    @if (auth()->user()->mabes == 'provos')
+                                                        <option value="1">Disiplin</option>
+                                                    @elseif(auth()->user()->mabes == 'wabprof')
+                                                        <option value="2">KEPP (Kode Etik Profesi Polri)</option>
+                                                    @endif
+                                                </select>
+                                            @else
+                                                <select class="form-control select2" id="jenis_pelanggaran"
+                                                    style="width: 100%" name="jenis_pelanggaran"
+                                                    onchange="getWujudPerbuatan()">
+                                                    @foreach ($jenis_pelanggarans as $jenis_pelanggaran)
+                                                        <option value="{{ $jenis_pelanggaran->id }}">
+                                                            {{ $jenis_pelanggaran->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            @endif
                                         </div>
                                         <div class="f1-buttons">
                                             <button type="button" class="btn btn-primary btn-next">Selanjutnya <i
@@ -78,15 +91,25 @@
                                         <div class="form-group">
                                             <label>Pelanggar</label>
                                             <select class="form-control" id="pelanggar" style="width: 100%" name="pelanggar"
-                                                onchange="check_pelanggar_orang()">
+                                                onchange="check_pelanggar_orang()" required="true">
+                                                <option value="">Pilih </option>
                                                 <option value="polri">Polri</option>
                                                 <option value="asn">ASN</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label>NRP / NIP</label>
-                                            <input type="number" name="nrp_nip" placeholder="" class="form-control"
-                                                id="nrp_nip" required="true" maxlength="8" minlength="8">
+                                            <div class="row">
+                                                <div class="col-lg-8">
+                                                    <input type="text" name="nrp_nip" placeholder="" class="form-control"
+                                                        id="nrp_nip" required="true" maxlength="8" minlength="8">
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <button class="btn btn-info" onclick="check_nrp()"
+                                                        type="button">Check</button>
+                                                </div>
+                                            </div>
+
                                         </div>
                                         <div class="form-group">
                                             <label>Nama</label>
@@ -97,6 +120,7 @@
                                             <label>Jenis Kelamin</label>
                                             <select class="form-control" id="jenis_kelamin" style="width: 100%"
                                                 name="jenis_kelamin" required="true">
+                                                <option value="">Pilih </option>
                                                 @foreach ($genders as $gender)
                                                     <option value="{{ $gender->id }}">{{ $gender->gender }}</option>
                                                 @endforeach
@@ -104,8 +128,9 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Pangkat</label>
-                                            <select class="form-control" id="pangkat" style="width: 100%" name="pangkat"
-                                                required="true">
+                                            <select class="form-control" id="pangkat" style="width: 100%"
+                                                name="pangkat" required="true">
+                                                <option value="">Pilih </option>
                                                 @foreach ($pangkats as $pangkat)
                                                     <option value="{{ $pangkat->id }}">{{ $pangkat->name }}</option>
                                                 @endforeach
@@ -118,8 +143,8 @@
                                         <div class="form-group" id="div_diktuk">
                                             <label>Diktuk</label>
                                             <select class="form-control" id="diktuk" style="width: 100%"
-                                                name="diktuk" required=true>
-                                                <option value="">pilih </option>
+                                                name="diktuk" required=true was-validated>
+                                                <option value="">Pilih </option>
                                                 @foreach ($diktuks as $diktuk)
                                                     <option value="{{ $diktuk->id }}">{{ $diktuk->name }}</option>
                                                 @endforeach
@@ -139,13 +164,15 @@
                                             <label>Satker Mabes/ Polda</label>
                                             @if (auth()->user()->getRoleNames()[0] !== 'admin')
                                                 <select class="form-control" id="polda" style="width: 100%"
-                                                    name="polda">
+                                                    name="polda" required=true>
+                                                    <option value="">Pilih </option>
                                                     <option value="{{ auth()->user()->polda_id }}">
-                                                        {{ auth()->user()->satuan_poldas->name }}</option>
+                                                        {{ auth()->user()->satuan_poldas->name }} selected</option>
                                                 </select>
                                             @else
                                                 <select class="form-control" id="polda" style="width: 100%"
-                                                    name="polda" onchange="getPolres()">
+                                                    name="polda" onchange="getPolres()" required=true>
+                                                    <option value="">Pilih </option>
                                                     @foreach ($poldas as $polda)
                                                         <option value="{{ $polda->id }}">{{ $polda->name }}</option>
                                                     @endforeach
@@ -188,12 +215,12 @@
                                     <fieldset>
                                         <h4>Pelanggaran</h4>
                                         <div class="form-group">
-                                            <label>No Lp</label>
+                                            <label>Nomor Laporan Polisi</label>
                                             <input type="text" name="nolp" id="nolp" class="form-control"
                                                 required=true>
                                         </div>
                                         <div class="form-group">
-                                            <label>Tanggal Lp</label>
+                                            <label>Tanggal Laporan Polisi</label>
                                             <input type="date" name="tgllp" id="tgllp" class="form-control"
                                                 required=true>
                                         </div>
@@ -256,7 +283,7 @@
                                             <textarea name="kronologi_singkat" class="form-control" required=true></textarea>
                                         </div>
                                         <div class="form-group">
-                                            <label>pasal Pelanggaran</label>
+                                            <label>Pasal Pelanggaran</label>
                                             <input type="text" name="pasal_pelanggaran" id="pasal_pelanggaran"
                                                 class="form-control" required=true>
                                         </div>
@@ -272,12 +299,12 @@
                                             </select>
                                         </div>
                                         <div class="form-group divCheckPidana">
-                                            <label>No Lp Pidana</label>
+                                            <label>Nomor Laporan Polisi Pidana</label>
                                             <input type="text" name="nolp_pidana" id="nolp_pidana"
                                                 class="form-control">
                                         </div>
                                         <div class="form-group divCheckPidana">
-                                            <label>Tanggal LP Pidana</label>
+                                            <label>Tanggal Laporan Polisi Pidana</label>
                                             <input type="date" name="tgllp_pidana" id="tgllp_pidana"
                                                 class="form-control">
                                         </div>
@@ -386,6 +413,23 @@
             </div>
         </div>
     </div>
+    <div class="modal" tabindex="-1" id="modal_check">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal Check</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="body_detail">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('style')
@@ -479,12 +523,46 @@
         .f1 .input-error {
             border-color: #f35b3f;
         }
+
+        .was-validated select.select2:invalid+.select2.select2-container.select2-container--default span.select2-selection,
+        select.select2.is-invalid+.select2.select2-container.select2-container--default span.select2-selection {
+            border-color: #fa5c7c;
+            padding-right: 2.25rem;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fa5c7c' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23fa5c7c' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+
+        .was-validated select.select2:invalid+.select2.select2-container.select2-container--default .select2-selection__arrow,
+        select.select2.is-invalid+.select2.select2-container.select2-container--default .select2-selection__arrow {
+            right: 25px !important;
+        }
+
+        .was-validated select.select2:valid+.select2.select2-container.select2-container--default span.select2-selection,
+        select.select2.is-valid+.select2.select2-container.select2-container--default span.select2-selection {
+            border-color: #0acf97;
+            padding-right: 2.25rem;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%230acf97' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+
+        .was-validated select.select2:valid+.select2.select2-container.select2-container--default .select2-selection__arrow,
+        select.select2.is-valid+.select2.select2-container.select2-container--default .select2-selection__arrow {
+            right: 25px !important;
+        }
     </style>
 @endpush
 
 @push('script')
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(async function() {
+            $('#nrp_nip').keyup(function() {
+                this.value = this.value.replace(/[^0-9\.]/g, '');
+            });
             $('select').select2({
                 theme: "bootstrap4"
             });
@@ -557,11 +635,13 @@
                 $('#nrp_nip').val('')
                 $('#diktuk').val('')
                 $('#diktuk').trigger('change');
-                $('#nrp_nip').attr('maxlength', 16)
+                $('#diktuk').removeAttr('required')
+                $('#nrp_nip').attr('maxlength', 18)
             } else {
                 $('#div_diktuk').css('display', 'block')
                 $('#nrp_nip').val('')
                 $('#diktuk').val('')
+                $('#diktuk').attr('required', 'true')
                 $('#diktuk').trigger('change');
                 $('#nrp_nip').attr('maxlength', 8)
             }
@@ -670,8 +750,18 @@
                     'input[required="true"], textarea[required="true"], select[required="true"], input[required="required"], textarea[required="required"], select[required="required"]'
                 ).each(
                     function() {
+                        var select2label
+                        console.log($(this).attr('type'))
                         if ($(this).val() == "") {
-                            $(this).addClass('input-error');
+                            if ($(this).hasClass('select2-hidden-accessible')) {
+                                $(this).siblings(".select2-container").css('border', '1px solid red');
+                            } else if ($(this).attr('type') == 'date') {
+                                $(this).siblings(".date-picker-input").css('border',
+                                    '1px solid red');
+                            } else {
+                                $(this).addClass('input-error');
+                                $(this).addClass('was-validated');
+                            }
                             next_step = false;
                         } else {
                             $(this).removeClass('input-error');
@@ -718,8 +808,10 @@
             $('.f1').on('submit', function(e) {
                 // validasi form
                 $(this).find('input[required="true"], textarea[required="true"]').each(function() {
+                    console.log($(this).val())
                     if ($(this).val() == "") {
                         e.preventDefault();
+                        $(this).addClass('was-validated');
                         $(this).addClass('input-error');
                     } else {
                         $(this).removeClass('input-error');
@@ -795,7 +887,7 @@
                 url: "/api/wujud_perbuatan/type/" + jenis_pelanggaran,
                 success: function(data) {
                     var wp = data.data
-                    var option = ''
+                    var option = '<option value="">Pilih</option>'
                     for (let index = 0; index < wp.length; index++) {
                         option += `<option value="${wp[index].id}">${wp[index].name}</option>`
 
@@ -831,6 +923,31 @@
             // } else {
             //     $('#narkobaDiv').css("display", "none");
             // }
+        }
+
+        function check_nrp() {
+            var nrp = $('#nrp_nip').val()
+            $.ajax({
+                url: "/pelanggaran-data/detailnrp/" + nrp,
+                error: function(err) {
+                    Swal.fire(
+                        'Data Not Found!',
+                        'Data Tidak Ada.',
+                        'success'
+                    )
+                },
+            }).done(function(data) {
+                if (data.status == 500) {
+                    Swal.fire(
+                        'Data Not Found!',
+                        '',
+                        'error'
+                    )
+                } else {
+                    $('#modal_check').modal('show')
+                    $('#body_detail').html(data)
+                }
+            });
         }
 
         function checkPidana() {

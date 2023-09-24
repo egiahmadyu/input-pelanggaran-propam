@@ -32,6 +32,10 @@ class UserController extends Controller
             } elseif ($role->name == 'polres') {
                 $user->polda_id = $request->polda;
                 $user->polres_id = $request->polres;
+            } elseif ($role->name == 'mabes') {
+                $polda = SatuanPolda::where('name', 'like', '%Mabes Polri%')->first();
+                $user->polda_id = $polda->id;
+                $user->mabes = $request->mabes_bagian;
             }
             $user->save();
 

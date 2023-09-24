@@ -113,6 +113,15 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="mb-3 div_mabes" style="display: none">
+                            <label for="exampleFormControlInput1" class="form-label">Mabes Bagian</label>
+                            <select class="form-control" id="role_user" name="mabes_bagian">
+                                <option value="">Pilih</option>
+                                <option value="wabprof">Wabprof</option>
+                                <option value="provos">Provos</option>
+
+                            </select>
+                        </div>
                         <div class="mb-3 div_polda" style="display:none">
                             <label for="exampleFormControlInput1" class="form-label">Polda / Mabes</label>
                             <select class="form-control" id="polda" name="polda" onchange="getPolres()">
@@ -244,17 +253,26 @@
             if (val == '2') {
                 $('.div_polda').css('display', 'block')
                 $("#polda").prop('required', 'required')
+                $('.div_mabes').css('display', 'none')
 
             } else if (val == '3') {
                 $('.div_polda').css('display', 'block')
                 $('.div_polres').css('display', 'block')
                 $("#polda").prop('required', 'required')
                 $("#polres").prop('required', 'required')
+                $('.div_mabes').css('display', 'none')
+            } else if (val == 4) {
+                $('.div_polda').css('display', 'none')
+                $('.div_polres').css('display', 'none')
+                $('.div_mabes').css('display', 'block')
+                $("#polda").prop('required', false);
+                $("#polres").prop('required', false);
             } else {
                 $('.div_polda').css('display', 'none')
                 $('.div_polres').css('display', 'none')
                 $("#polda").prop('required', false);
                 $("#polres").prop('required', false);
+                $('.div_mabes').css('display', 'none')
             }
         }
 

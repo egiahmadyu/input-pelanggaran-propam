@@ -298,13 +298,20 @@ class PelanggaranController extends Controller
 
     public function getDetail($id)
     {
-        $data = PelanggaranList::with('jenis_pelanggarans')->with('satuan_poldas')->with('pangkats')
+        $data['data'] = PelanggaranList::with('jenis_pelanggarans')->with('satuan_poldas')->with('pangkats')
             ->with('getDiktuk')
             ->where('id', $id)->first();
 
-        return response()->json([
-            'data' => $data
-        ]);
+        return view('content.pelanggaran.detail', $data);
+    }
+
+    public function getDetailNrp($nrp)
+    {
+        $data['data'] = PelanggaranList::with('jenis_pelanggarans')->with('satuan_poldas')->with('pangkats')
+            ->with('getDiktuk')
+            ->where('nrp_nip', $nrp)->first();
+
+        return view('content.pelanggaran.detail', $data);
     }
 
     public function deleteData($id)
