@@ -160,9 +160,13 @@ class PelanggaranController extends Controller
 
         if ($request->nrp) $data = $data->where('nrp_nip', 'like', '%' . $request->nrp . '%');
 
-        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
 
-        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
+
+        if ($request->tanggal_mulai_kep) $data = $data->where('tgl_kep', '>=', $request->tanggal_mulai);
+
+        if ($request->tanggal_akhir_kep) $data = $data->where('tgl_kep', '<=', $request->tanggal_akhir);
 
 
         if ($request->jabatan) {

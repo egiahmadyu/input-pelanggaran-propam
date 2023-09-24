@@ -56,20 +56,27 @@
                                 <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="exampleFormControlInput1">Tangal Mulai</label>
-                                        <input type="date" name="tangal_mulai" id="tanggal_mulai" class="form-control">
+                                        <input type="date" name="tanggal_mulai" id="tanggal_mulai" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="exampleFormControlInput1">Tanggal Akhir</label>
-                                        <input type="date" name="tangal_akhir" id="tanggal_akhir" class="form-control">
+                                        <input type="date" name="tanggal_akhir" id="tanggal_akhir" class="form-control">
                                     </div>
                                 </div>
-                                <div class="col-lg-2">
+                                <div class="col-lg-1">
                                     <div class="form-group">
                                         <label for="exampleFormControlInput1">.</label>
                                         <button class="btn btn-primary form-control" type="submit" value="filter"
                                             name="submit">Filter</button>
+                                    </div>
+                                </div>
+                                <div class="col-lg-1">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlInput1">.</label>
+                                        <button class="btn btn-success form-control" type="button" onclick="print_window()"
+                                            name="submit">Print</button>
                                     </div>
                                 </div>
                             </div>
@@ -136,7 +143,8 @@
                     <div class="col-12">
                         <div class="card gradient-3">
                             <div class="card-body">
-                                <h3 class="card-title text-white">Penyelesaian Disiplin {{ count($disiplin_selesai) }}</h3>
+                                <h3 class="card-title text-white">Penyelesaian Disiplin {{ count($disiplin_selesai) }}
+                                </h3>
                                 <div class="d-inline-block">
                                     <h2 class="text-white">
                                         {{ $disiplin == 0 ? 0 : number_format(count($disiplin_selesai) / $disiplin, 2) * 100 }}%
@@ -587,7 +595,13 @@
             $("#tanggal_mulai").pDatePicker({
                 lang: "id"
             });
+            // $('.container-fluid').print()
+
         })
+
+        function print_window() {
+            window.print()
+        }
 
         am4core.ready(function() {
             am4core.useTheme(am4themes_animated);

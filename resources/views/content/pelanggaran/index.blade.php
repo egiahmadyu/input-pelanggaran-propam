@@ -118,16 +118,30 @@
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="form-group">
-                                                <label for="exampleFormControlInput1">Tanggal Mulai</label>
+                                                <label for="exampleFormControlInput1">Tanggal Mulai Laporan</label>
                                                 <input type="date" class="form-control" id="tanggal_mulai"
                                                     name="tanggal_mulai">
                                             </div>
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="form-group">
-                                                <label for="exampleFormControlInput1">Tanggal Akhir</label>
+                                                <label for="exampleFormControlInput1">Tanggal Akhir Laporan</label>
                                                 <input type="date" class="form-control" id="tanggal_akhir"
                                                     name="tanggal_akhir">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlInput1">Tanggal Mulai KEP/KEPUTUSAN</label>
+                                                <input type="date" class="form-control" id="tanggal_mulai"
+                                                    name="tanggal_mulai_kep">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlInput1">Tanggal Akhir KEP/KEPUTUSAN</label>
+                                                <input type="date" class="form-control" id="tanggal_akhir"
+                                                    name="tanggal_akhir_kep">
                                             </div>
                                         </div>
                                     </div>

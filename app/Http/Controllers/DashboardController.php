@@ -138,8 +138,8 @@ class DashboardController extends Controller
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
-        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
-        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
         if (auth()->user()->getRoleNames()[0] == 'polda') {
             $data->where('polda', auth()->user()->polda_id);
         } else if (auth()->user()->getRoleNames()[0] == 'polres') {
@@ -160,8 +160,8 @@ class DashboardController extends Controller
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
-        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
-        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
         if (auth()->user()->getRoleNames()[0] == 'polda') {
             $data->where('polda', auth()->user()->polda_id);
         } else if (auth()->user()->getRoleNames()[0] == 'polres') {
@@ -223,13 +223,12 @@ class DashboardController extends Controller
 
     private function getAllPelanggaran($request)
     {
-        $data = PelanggaranList::orderBy('created_at', 'asc');
+        $data = PelanggaranList::orderBy('tgllp', 'asc');
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
-        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
-        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
-
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
         if (auth()->user()->getRoleNames()[0] == 'polda') {
             $data->where('polda', auth()->user()->polda_id);
         } else if (auth()->user()->getRoleNames()[0] == 'polres') {
@@ -277,8 +276,8 @@ class DashboardController extends Controller
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
-        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
-        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
 
         if (auth()->user()->getRoleNames()[0] == 'polda') {
             $data->where('polda', auth()->user()->polda_id);
@@ -303,8 +302,8 @@ class DashboardController extends Controller
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
-        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
-        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
 
         if (auth()->user()->getRoleNames()[0] == 'polda') {
             $data->where('polda', auth()->user()->polda_id);
@@ -332,8 +331,8 @@ class DashboardController extends Controller
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
-        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
-        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
 
         if (auth()->user()->getRoleNames()[0] == 'polda') {
             $data->where('polda', auth()->user()->polda_id);
@@ -362,8 +361,8 @@ class DashboardController extends Controller
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
-        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
-        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
 
         if (auth()->user()->getRoleNames()[0] == 'polda') {
             $data->where('polda', auth()->user()->polda_id);
@@ -388,8 +387,8 @@ class DashboardController extends Controller
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
-        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
-        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
 
         if (auth()->user()->getRoleNames()[0] == 'polda') {
             $data->where('polda', auth()->user()->polda_id);
@@ -416,8 +415,8 @@ class DashboardController extends Controller
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
-        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
-        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
 
         if (auth()->user()->getRoleNames()[0] == 'polda') {
             $data->where('polda', auth()->user()->polda_id);
@@ -437,8 +436,8 @@ class DashboardController extends Controller
                 ->select(DB::raw('count(*) as total'), 'satuan_poldas.name', 'polda');
             if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
             if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
-            if ($request->tanggal_mulai) $query = $query->where('created_at', '>=', $request->tanggal_mulai);
-            if ($request->tanggal_akhir) $query = $query->where('created_at', '<=', $request->tanggal_akhir);
+            if ($request->tanggal_mulai) $query = $query->where('tgllp', '>=', $request->tanggal_mulai);
+            if ($request->tanggal_akhir) $query = $query->where('tgllp', '<=', $request->tanggal_akhir);
             if ($request->polres) {
                 $query = $query->where('polres', $request->polres);
             }
@@ -460,8 +459,8 @@ class DashboardController extends Controller
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
-        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
-        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
 
         if (auth()->user()->getRoleNames()[0] == 'polda') {
             $data->where('polda', auth()->user()->polda_id);
@@ -482,8 +481,8 @@ class DashboardController extends Controller
                 ->select(DB::raw('count(*) as total'), 'satuan_polres.name', 'polres');
             if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
             if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
-            if ($request->tanggal_mulai) $query = $query->where('created_at', '>=', $request->tanggal_mulai);
-            if ($request->tanggal_akhir) $query = $query->where('created_at', '<=', $request->tanggal_akhir);
+            if ($request->tanggal_mulai) $query = $query->where('tgllp', '>=', $request->tanggal_mulai);
+            if ($request->tanggal_akhir) $query = $query->where('tgllp', '<=', $request->tanggal_akhir);
             $query = $query->first();
             $value->selesai = is_null($query) ? 0 : $query->total;
         }
@@ -499,8 +498,8 @@ class DashboardController extends Controller
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
-        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
-        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
 
         if (auth()->user()->getRoleNames()[0] == 'polda') {
             $data->where('polda', auth()->user()->polda_id);
@@ -525,8 +524,8 @@ class DashboardController extends Controller
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
-        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
-        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
 
         if (auth()->user()->getRoleNames()[0] == 'polda') {
             $data->where('polda', auth()->user()->polda_id);
@@ -552,8 +551,8 @@ class DashboardController extends Controller
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
-        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
-        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
 
         if (auth()->user()->getRoleNames()[0] == 'polda') {
             $data->where('polda', auth()->user()->polda_id);
@@ -584,8 +583,8 @@ class DashboardController extends Controller
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
-        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
-        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
 
         if (auth()->user()->getRoleNames()[0] == 'polda') {
             $data->where('polda', auth()->user()->polda_id);
@@ -607,8 +606,8 @@ class DashboardController extends Controller
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
-        if ($request->tanggal_mulai) $data = $data->where('created_at', '>=', $request->tanggal_mulai);
-        if ($request->tanggal_akhir) $data = $data->where('created_at', '<=', $request->tanggal_akhir);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
 
         if (auth()->user()->getRoleNames()[0] == 'polda') {
             $data->where('polda', auth()->user()->polda_id);
