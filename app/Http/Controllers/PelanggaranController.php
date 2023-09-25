@@ -164,9 +164,9 @@ class PelanggaranController extends Controller
 
         if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
 
-        if ($request->tanggal_mulai_kep) $data = $data->where('tgl_kep', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_mulai_kep) $data = $data->where('tgl_kep', '>=', $request->tanggal_mulai_kep);
 
-        if ($request->tanggal_akhir_kep) $data = $data->where('tgl_kep', '<=', $request->tanggal_akhir);
+        if ($request->tanggal_akhir_kep) $data = $data->where('tgl_kep', '<=', $request->tanggal_akhir_kep);
 
 
         if ($request->jabatan) {

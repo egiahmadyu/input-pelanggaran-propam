@@ -123,9 +123,20 @@ class DashboardController extends Controller
             ->select('putusans.name', DB::raw('count(putusan_pelanggars.id) as total'))
             ->groupBy('putusans.id');
         if ($request->polres) {
-
             $data = $data->join('pelanggaran_lists', 'pelanggaran_lists.id', 'putusan_pelanggars.pelanggar_id')
                 ->where('polres', $request->polres);
+        }
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->join('pelanggaran_lists', 'pelanggaran_lists.id', 'putusan_pelanggars.pelanggar_id')
+                ->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data
+                ->join('pelanggaran_lists', 'pelanggaran_lists.id', 'putusan_pelanggars.pelanggar_id')->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) {
+                $data = $data->join('pelanggaran_lists', 'pelanggaran_lists.id', 'putusan_pelanggars.pelanggar_id')
+                    ->where('polda', $request->polda);
+            }
         }
         $data = $data->get();
         return $data;
