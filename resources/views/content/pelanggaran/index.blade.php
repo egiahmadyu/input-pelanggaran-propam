@@ -116,6 +116,8 @@
                                                 <input type="text" class="form-control" id="jabatan" name="jabatan">
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="exampleFormControlInput1">Tanggal Laporan Polisi (Awal) </label>
@@ -131,6 +133,9 @@
                                                     name="tanggal_akhir">
                                             </div>
                                         </div>
+
+                                    </div>
+                                    <div class="row">
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="exampleFormControlInput1">Tanggal Kep Sidang (Awal)</label>
@@ -145,6 +150,9 @@
                                                     name="tanggal_akhir_kep">
                                             </div>
                                         </div>
+
+                                    </div>
+                                    <div class="row">
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="exampleFormControlInput1">Tanggal Kep Penghentian
