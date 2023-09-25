@@ -132,7 +132,7 @@
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="form-group">
-                                                <label for="exampleFormControlInput1">Tanggal Mulai KEP Keputusan /
+                                                <label for="exampleFormControlInput1">Tanggal Mulai KEP Putusan /
                                                     Penghentian</label>
                                                 <input type="date" class="form-control" id="tanggal_mulai_kep"
                                                     name="tanggal_mulai_kep">
@@ -140,7 +140,7 @@
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="form-group">
-                                                <label for="exampleFormControlInput1">Tanggal Akhir KEP Keputusan /
+                                                <label for="exampleFormControlInput1">Tanggal Akhir KEP Putusan /
                                                     Penghentian</label>
                                                 <input type="date" class="form-control" id="tanggal_akhir_kep"
                                                     name="tanggal_akhir_kep">
