@@ -168,6 +168,10 @@ class PelanggaranController extends Controller
 
         if ($request->tanggal_akhir_kep) $data = $data->where('tgl_kep', '<=', $request->tanggal_akhir_kep);
 
+        if ($request->tanggal_mulai_sp) $data = $data->where('tglkepsp3', '>=', $request->tanggal_mulai_sp);
+
+        if ($request->tanggal_akhir_sp) $data = $data->where('tglkepsp3', '<=', $request->tanggal_akhir_sp);
+
 
         if ($request->jabatan) {
             $data = $data->where(DB::raw('upper(jabatan)'), 'like', '%' . strtoupper($request->jabatan) . '%');

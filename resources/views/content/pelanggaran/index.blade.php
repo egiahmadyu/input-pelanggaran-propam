@@ -133,16 +133,30 @@
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="form-group">
-                                                <label for="exampleFormControlInput1">Tanggal Penyelesaian (Awal)</label>
+                                                <label for="exampleFormControlInput1">Tanggal KEP (Awal)</label>
                                                 <input type="date" class="form-control" id="tanggal_mulai_kep"
                                                     name="tanggal_mulai_kep">
                                             </div>
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="form-group">
-                                                <label for="exampleFormControlInput1">Tanggal Peneyelesaian (Akhir)</label>
+                                                <label for="exampleFormControlInput1">Tanggal KEP (Akhir)</label>
                                                 <input type="date" class="form-control" id="tanggal_akhir_kep"
                                                     name="tanggal_akhir_kep">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlInput1">Tanggal SP3/SP4 (Awal)</label>
+                                                <input type="date" class="form-control" id="tanggal_mulai_sp"
+                                                    name="tanggal_mulai_sp">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlInput1">Tanggal SP3/SP4 (Akhir)</label>
+                                                <input type="date" class="form-control" id="tanggal_akhir_sp"
+                                                    name="tanggal_akhir_sp">
                                             </div>
                                         </div>
                                     </div>
@@ -310,6 +324,13 @@
                 lang: "id"
             });
             $("#tanggal_mulai_kep").pDatePicker({
+                lang: "id"
+            });
+
+            $("#tanggal_akhir_sp").pDatePicker({
+                lang: "id"
+            });
+            $("#tanggal_mulai_sp").pDatePicker({
                 lang: "id"
             });
         });
