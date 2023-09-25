@@ -166,10 +166,10 @@
                                             <label>Satker Mabes/ Polda</label>
                                             @if (auth()->user()->getRoleNames()[0] !== 'admin')
                                                 <select class="form-control" id="polda" style="width: 100%"
-                                                    name="polda" required=true>
+                                                    name="polda" required=true onchange="getPolres()">
                                                     <option value="">Pilih </option>
                                                     <option value="{{ auth()->user()->polda_id }}">
-                                                        {{ auth()->user()->satuan_poldas->name }} selected</option>
+                                                        {{ auth()->user()->satuan_poldas->name }}</option>
                                                 </select>
                                             @else
                                                 <select class="form-control" id="polda" style="width: 100%"
