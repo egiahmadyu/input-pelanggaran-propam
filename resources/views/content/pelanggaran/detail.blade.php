@@ -61,7 +61,7 @@
     </div>
     <div class="form-group">
         <label for="exampleInputPassword1">Wujud Perbuatan Pelanggaran</label>
-        <textarea name="jabatan" class="form-control" readonly>{{ $data->wujud_perbuatans->name }}</textarea>
+        <textarea name="jabatan" class="form-control" readonly>{{ $data->wujud_perbuatan ? $data->wujud_perbuatans->name : '' }}</textarea>
     </div>
     <div class="form-group">
         <label for="exampleInputPassword1">Pasal Pelanggaran</label>
@@ -75,7 +75,7 @@
     <div class="form-group">
         <label for="exampleInputPassword1">Wujud Perbuatan Pidana</label>
         <input type="text" class="form-control" readonly id="exampleInputPassword1"
-            value="{{ $data->getWujudPerbuatanPidana->name }}">
+            value="{{ $data->wujud_perbuatan_pidana ? $data->getWujudPerbuatanPidana->name : '' }}">
     </div>
     <div class="form-group">
         <label for="exampleInputPassword1">No LP Pidana</label>
@@ -95,12 +95,12 @@
     <div class="form-group">
         <label for="exampleInputPassword1">Peran Narkoba</label>
         <input type="text" class="form-control" readonly id="exampleInputPassword1"
-            value="{{ $data->getPeranNarkoba->name }}">
+            value="{{ $data->peran_narkoba ? $data->getPeranNarkoba->name : '' }}">
     </div>
     <div class="form-group">
         <label for="exampleInputPassword1">Jenis Narkoba</label>
         <input type="text" class="form-control" readonly id="exampleInputPassword1"
-            value="{{ $data->getJenisNarkoba->name }}">
+            value="{{ $data->jenis_narkoba ? $data->getJenisNarkoba->name : '' }}">
     </div>
     <div class="form-group">
         <label for="exampleInputPassword1">No Kep</label>

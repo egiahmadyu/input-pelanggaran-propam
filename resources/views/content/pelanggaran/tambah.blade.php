@@ -63,6 +63,7 @@
                                                 <select class="form-control select2" id="jenis_pelanggaran"
                                                     style="width: 100%" name="jenis_pelanggaran"
                                                     onchange="getWujudPerbuatan()">
+                                                    <option value="">Pilih</option>
                                                     @if (auth()->user()->mabes == 'provos')
                                                         <option value="1">Disiplin</option>
                                                     @elseif(auth()->user()->mabes == 'wabprof')
@@ -73,6 +74,7 @@
                                                 <select class="form-control select2" id="jenis_pelanggaran"
                                                     style="width: 100%" name="jenis_pelanggaran"
                                                     onchange="getWujudPerbuatan()">
+                                                    <option value="">Pilih</option>
                                                     @foreach ($jenis_pelanggarans as $jenis_pelanggaran)
                                                         <option value="{{ $jenis_pelanggaran->id }}">
                                                             {{ $jenis_pelanggaran->name }}</option>

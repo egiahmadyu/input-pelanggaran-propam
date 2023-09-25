@@ -55,7 +55,7 @@
                                 </div>
                                 <div class="col-lg-2">
                                     <div class="form-group">
-                                        <label for="exampleFormControlInput1">Tangal Mulai</label>
+                                        <label for="exampleFormControlInput1">Tanggal Mulai</label>
                                         <input type="date" name="tanggal_mulai" id="tanggal_mulai" class="form-control">
                                     </div>
                                 </div>

@@ -118,29 +118,31 @@
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="form-group">
-                                                <label for="exampleFormControlInput1">Tanggal Mulai Laporan</label>
+                                                <label for="exampleFormControlInput1">Tanggal Mulai Laporan Polisi</label>
                                                 <input type="date" class="form-control" id="tanggal_mulai"
                                                     name="tanggal_mulai">
                                             </div>
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="form-group">
-                                                <label for="exampleFormControlInput1">Tanggal Akhir Laporan</label>
+                                                <label for="exampleFormControlInput1">Tanggal Akhir Laporan Polisi</label>
                                                 <input type="date" class="form-control" id="tanggal_akhir"
                                                     name="tanggal_akhir">
                                             </div>
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="form-group">
-                                                <label for="exampleFormControlInput1">Tanggal Mulai KEP/KEPUTUSAN</label>
-                                                <input type="date" class="form-control" id="tanggal_mulai"
+                                                <label for="exampleFormControlInput1">Tanggal Mulai KEP Keputusan /
+                                                    Penghentian</label>
+                                                <input type="date" class="form-control" id="tanggal_mulai_kep"
                                                     name="tanggal_mulai_kep">
                                             </div>
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="form-group">
-                                                <label for="exampleFormControlInput1">Tanggal Akhir KEP/KEPUTUSAN</label>
-                                                <input type="date" class="form-control" id="tanggal_akhir"
+                                                <label for="exampleFormControlInput1">Tanggal Akhir KEP Keputusan /
+                                                    Penghentian</label>
+                                                <input type="date" class="form-control" id="tanggal_akhir_kep"
                                                     name="tanggal_akhir_kep">
                                             </div>
                                         </div>
@@ -305,6 +307,12 @@
             $("#tanggal_mulai").pDatePicker({
                 lang: "id"
             });
+            $("#tanggal_akhir_kep").pDatePicker({
+                lang: "id"
+            });
+            $("#tanggal_mulai_kep").pDatePicker({
+                lang: "id"
+            });
         });
 
         function getData() {
@@ -407,13 +415,17 @@
         }
 
         function openDetail(id) {
+            $('.loading').css('display', 'block')
 
             $.ajax({
                 url: "/pelanggaran-data/detail/" + id,
             }).done(function(data) {
+                $('.loading').css('display', 'none')
+
                 $('#body_detail_modal').html(data)
+                $('#modal_detail').modal('show')
             });
-            $('#modal_detail').modal('show')
+
         }
 
         function getWujudPerbuatan() {
