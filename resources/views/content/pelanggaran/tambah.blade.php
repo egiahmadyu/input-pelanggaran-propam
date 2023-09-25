@@ -928,10 +928,12 @@
         }
 
         function check_nrp() {
+            $('.loading').css('display', 'block')
             var nrp = $('#nrp_nip').val()
             $.ajax({
                 url: "/pelanggaran-data/detailnrp/" + nrp,
                 error: function(err) {
+                    $('.loading').css('display', 'none')
                     Swal.fire(
                         'Data Not Found!',
                         'Data Tidak Ada.',
@@ -939,6 +941,7 @@
                     )
                 },
             }).done(function(data) {
+                $('.loading').css('display', 'none')
                 if (data.status == 500) {
                     Swal.fire(
                         'Data Not Found!',
