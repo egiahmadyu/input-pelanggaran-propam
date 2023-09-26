@@ -327,8 +327,8 @@
                                                 class="form-control">
                                         </div>
                                         <div class="form-group divCheckPidana">
-                                            <label>Putusan Pidana</label>
-                                            <input type="text" name="putusan_pidana" id="putusan_pidana"
+                                            <label>Putusan Sidang Pidana</label>
+                                            <input type="text" name="putusan_sidang_pidana" id="putusan_sidang_pidana"
                                                 class="form-control">
                                         </div>
                                         <hr>

@@ -93,6 +93,11 @@
             value="{{ $data->pasal_pidana }}">
     </div>
     <div class="form-group">
+        <label for="exampleInputPassword1">Putusan Sidang Pidana</label>
+        <input type="text" class="form-control" readonly id="exampleInputPassword1"
+            value="{{ $data->putusan_sidang_pidana }}">
+    </div>
+    <div class="form-group">
         <label for="exampleInputPassword1">Peran Narkoba</label>
         <input type="text" class="form-control" readonly id="exampleInputPassword1"
             value="{{ $data->peran_narkoba ? $data->getPeranNarkoba->name : '' }}">
