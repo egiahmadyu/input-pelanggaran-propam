@@ -233,7 +233,7 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="card" style="height: 300px">
+                <div class="card">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
                             <h4 class="mb-1">Jenis Narkoba</h4>
@@ -359,42 +359,10 @@
                                     </tr>
                                 @endforeach
                             </tbody>
-                        </table>
-                        {{-- <div id="chartWujudPerbuatan"></div> --}}
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body pb-0 d-flex justify-content-between">
-                        <div>
-                            <h4 class="mb-1">Wujud Perbuatan Pelanggaran</h4>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Jenis Pelanggaran</th>
-                                    <th scope="col">Wujud Perbuatan</th>
-                                    <th scope="col">Jumlah</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($dataWujudPerbuatan as $index => $value)
-                                    <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ $value->type }}</td>
-                                        <td>{{ $value->name }}</td>
-                                        <td>{{ $value->total }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="2">Total</td>
-                                    <td><b>{{ $dataWujudPerbuatan->sum('total') }}</b></td>
+                                    <td><b>{{ $putusans_kepp->sum('total') }}</b></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -432,6 +400,12 @@
                                     </tr>
                                 @endforeach
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2">Total</td>
+                                    <td><b>{{ $dataWujudPerbuatanDisiplin->sum('total') }}</b></td>
+                                </tr>
+                            </tfoot>
                         </table>
                         {{-- <div id="chartWujudPerbuatan"></div> --}}
                     </div>
@@ -855,7 +829,6 @@
 
         am4core.ready(function() {
 
-            // Themes begin
             am4core.useTheme(am4themes_animated);
             // Themes end
 
@@ -863,26 +836,21 @@
             var chart = am4core.create("chartJenisNarkoba", am4charts.PieChart);
 
             // Add data
-            var dataChart = {!! json_encode($jenisNarkoba, true) !!}
-            chart.data = dataChart
+            chart.data = {!! json_encode($jenisNarkoba, true) !!}
 
             // Add and configure Series
             var pieSeries = chart.series.push(new am4charts.PieSeries());
             pieSeries.dataFields.value = "total";
             pieSeries.dataFields.category = "name";
-            pieSeries.innerRadius = am4core.percent(50);
-            pieSeries.ticks.template.disabled = true;
-            pieSeries.labels.template.disabled = true;
+            pieSeries.slices.template.stroke = am4core.color("#fff");
+            pieSeries.slices.template.strokeOpacity = 1;
 
-            var rgm = new am4core.RadialGradientModifier();
-            rgm.brightnesses.push(-0.8, -0.8, -0.5, 0, -0.5);
-            pieSeries.slices.template.fillModifier = rgm;
-            pieSeries.slices.template.strokeModifier = rgm;
-            pieSeries.slices.template.strokeOpacity = 0.4;
-            pieSeries.slices.template.strokeWidth = 0;
+            // This creates initial animation
+            pieSeries.hiddenState.properties.opacity = 1;
+            pieSeries.hiddenState.properties.endAngle = -90;
+            pieSeries.hiddenState.properties.startAngle = -90;
 
-            // chart.legend = new am4charts.Legend();
-            // chart.legend.position = "right";
+            chart.hiddenState.properties.radius = am4core.percent(0);
 
         });
 

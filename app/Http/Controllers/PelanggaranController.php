@@ -140,9 +140,14 @@ class PelanggaranController extends Controller
             $data->where('polda', auth()->user()->polda_id);
         } else if (auth()->user()->getRoleNames()[0] == 'polres') {
             $data->where('polres', auth()->user()->polres_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'mabes') {
+            if (auth()->user()->mabes == 'provos') $data = $data->where('jenis_pelanggaran', 1);
+            else if (auth()->user()->mabes == 'wabprof') $data = $data->where('jenis_pelanggaran', 2);
         } else {
             if ($request->polda) $data = $data->where('polda', $request->polda);
         }
+
+
 
         if ($request->polres) {
             $data = $data->where('polres', $request->polres);
@@ -358,26 +363,28 @@ class PelanggaranController extends Controller
         $sheet->setCellValue('R1', 'No. LP Pidana');
         $sheet->setCellValue('S1', 'Tgl LP Pidana');
         $sheet->setCellValue('T1', 'Pasal Pidana');
-        $sheet->setCellValue('U1', 'Peran Narkoba');
-        $sheet->setCellValue('V1', 'Jenis Narkoba');
-        $sheet->setCellValue('W1', 'Putusan Sidang Pidana');
-        $sheet->setCellValue('X1', 'NO. Kep');
-        $sheet->setCellValue('Y1', 'Tgl. Kep');
-        $sheet->setCellValue('Z1', 'Putusan 1');
-        $sheet->setCellValue('AA1', 'Putusan 2');
-        $sheet->setCellValue('AB1', 'Putusan 3');
-        $sheet->setCellValue('AC1', 'Putusan 4');
-        $sheet->setCellValue('AD1', 'Putusan 5');
-        $sheet->setCellValue('AE1', 'Putusan 6');
-        $sheet->setCellValue('AF1', 'Putusan 7');
-        $sheet->setCellValue('AG1', 'Putusan 8');
-        $sheet->setCellValue('AH1', 'Putusan 9');
-        $sheet->setCellValue('AI1', 'Putusan 10');
-        $sheet->setCellValue('AJ1', 'Putusan 11');
-        $sheet->setCellValue('AK1', 'Putusan 12');
-        $sheet->setCellValue('AL1', 'No KEP sp3');
-        $sheet->setCellValue('AM1', 'Tgl KEP sp3');
-        $spreadsheet->getActiveSheet()->getStyle('A1:AM1')->applyFromArray($this->headerStyle);
+        $sheet->setCellValue('U1', 'Putusan Pidana');
+        $sheet->setCellValue('V1', 'Peran Narkoba');
+        $sheet->setCellValue('W1', 'Jenis Narkoba');
+        $sheet->setCellValue('X1', 'Putusan Sidang Pidana');
+        $sheet->setCellValue('Y1', 'NO. Kep');
+        $sheet->setCellValue('Z1', 'Tgl. Kep');
+        $sheet->setCellValue('AA1', 'Putusan 1');
+        $sheet->setCellValue('AB1', 'Putusan 2');
+        $sheet->setCellValue('AC1', 'Putusan 3');
+        $sheet->setCellValue('AD1', 'Putusan 4');
+        $sheet->setCellValue('AE1', 'Putusan 5');
+        $sheet->setCellValue('AF1', 'Putusan 6');
+        $sheet->setCellValue('AG1', 'Putusan 7');
+        $sheet->setCellValue('AH1', 'Putusan 8');
+        $sheet->setCellValue('AI1', 'Putusan 9');
+        $sheet->setCellValue('AJ1', 'Putusan 10');
+        $sheet->setCellValue('AK1', 'Putusan 11');
+        $sheet->setCellValue('AL1', 'Putusan 12');
+        $sheet->setCellValue('AM1', 'No KEP sp3');
+        $sheet->setCellValue('AN1', 'Tgl KEP sp3');
+        $sheet->setCellValue('AO1', 'Alasan Dihentikan');
+        $spreadsheet->getActiveSheet()->getStyle('A1:AO1')->applyFromArray($this->headerStyle);
         $startRow = 2;
         $startCol = 'A';
 
@@ -422,6 +429,8 @@ class PelanggaranController extends Controller
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->pasal_pidana);
             $startCol++;
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->putusan_pidana);
+            $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->getPeranNarkoba->name ?? '');
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->getJenisNarkoba->name ?? '');
@@ -440,6 +449,8 @@ class PelanggaranController extends Controller
             $sheet->setCellValue("{$startCol}{$startRow}", $value->nokepsp3);
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->tglkepsp3);
+            $startCol++;
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->alasan_dihentikan ? $value->alasan_berhentis->name : '');
             $startCol++;
             $startRow++;
             $startCol = 'A';

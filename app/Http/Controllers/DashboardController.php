@@ -193,7 +193,7 @@ class DashboardController extends Controller
             'chartPolda' => $this->getChartPolda($request, 1),
             'dataByGender' => $this->getDataByGender($request, 1),
             'dataByWpp' => $this->getDataByWpp($request, 1),
-            'dataWujudPerbuatan' => $this->getWujudPerbuatan($request, 1),
+            // 'dataWujudPerbuatan' => $this->getWujudPerbuatan($request, 1),
             'dataWujudPerbuatanPidana' => $this->getWujudPerbuatanPidana($request, 1),
             'dataPangkatPelanggar' => $this->getDataByPangkatPelanggar($request, 1),
             'totalPelanggarNarkoba' => $this->getDataByPelanggarNarkoba($request, 1),

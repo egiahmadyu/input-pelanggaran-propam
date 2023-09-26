@@ -10,7 +10,7 @@
     </div>
     <div class="form-group">
         <label for="exampleInputPassword1">Nama Pelanggar</label>
-        <input type="text" class="form-control" readonly id="exampleInputPassword1" value="{{ $data->name }}">
+        <input type="text" class="form-control" readonly id="exampleInputPassword1" value="{{ $data->nama }}">
     </div>
     <div class="form-group">
         <label for="exampleInputPassword1">Jenis Kelamin</label>
@@ -120,5 +120,10 @@
                 value="{{ $data->$no_putusan ? $data->$putusan->name : '' }}">
         </div>
     @endfor
+    <div class="form-group">
+        <label for="exampleInputPassword1">Alasan Dihentikan</label>
+        <input type="text" class="form-control" readonly id="exampleInputPassword1"
+            value="{{ $data->alasan_dihentikan ? $data->alasan_berhentis->name : '' }}">
+    </div>
 
 </form>

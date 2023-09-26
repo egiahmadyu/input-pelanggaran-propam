@@ -12,7 +12,8 @@ class PelanggaranList extends Model
         'jenis_pelanggaran', 'nrp_nip', 'nama', 'jenis_kelamin', 'pangkat', 'jabatan', 'diktuk', 'polda', 'polres', 'polsek', 'nolp', 'tgllp',
         'wujud_perbuatan', 'kronologi_singkat', 'pasal_pelanggaran', 'pidana', 'wujud_perbuatan_pidana', 'nolp_pidana', 'tgllp_pidana', 'peran_narkoba',
         'jenis_narkoba', 'no_kep', 'tgl_kep', 'putusan_1', 'putusan_2', 'putusan_3', 'putusan_4', 'putusan_5', 'putusan_6', 'putusan_7', 'putusan_8',
-        'putusan_9', 'putusan_10', 'putusan_11', 'putusan_12', 'nokepsp3', 'tglkepsp3', 'penyelesaian', 'pelanggar'
+        'putusan_9', 'putusan_10', 'putusan_11', 'putusan_12', 'nokepsp3', 'tglkepsp3', 'penyelesaian', 'pelanggar',
+        'alasan_dihentikan', 'putusan_pidana'
     ];
 
     public function satuan_poldas()
@@ -133,5 +134,10 @@ class PelanggaranList extends Model
     public function getPutusan12()
     {
         return $this->hasOne(Putusan::class, 'id', 'putusan_12');
+    }
+
+    public function alasan_berhentis()
+    {
+        return $this->hasOne(AlasanBerhenti::class, 'id', 'alasan_dihentikan');
     }
 }

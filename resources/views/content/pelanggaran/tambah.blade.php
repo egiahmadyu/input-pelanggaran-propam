@@ -326,6 +326,11 @@
                                             <input type="text" name="pasal_pidana" id="pasal_pidana"
                                                 class="form-control">
                                         </div>
+                                        <div class="form-group divCheckPidana">
+                                            <label>Putusan Pidana</label>
+                                            <input type="text" name="putusan_pidana" id="putusan_pidana"
+                                                class="form-control">
+                                        </div>
                                         <hr>
 
 
@@ -351,12 +356,12 @@
                                         <div id="sidang_div">
                                             <h5>Sidang</h5>
                                             <div class="form-group">
-                                                <label>No KEP Penghentian</label>
+                                                <label>Nomor KEP </label>
                                                 <input type="text" name="no_kep" id="no_kep"
                                                     class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label>Tgl KEP Penghentian</label>
+                                                <label>Tanggal KEP </label>
                                                 <input type="date" name="tgl_kep" id="tgl_kep"
                                                     class="form-control">
                                             </div>
@@ -390,12 +395,13 @@
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label>No. Kep SP3 / SP4</label>
+                                                <label>Nomor KEP Penghentian
+                                                </label>
                                                 <input type="text" name="nokepsp3" id="nokepsp3"
                                                     class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label>Tgl. Kep SP3 / SP4</label>
+                                                <label>Tanggal KEP Penghentian </label>
                                                 <input type="date" name="tglkepsp3" id="tglkepsp3"
                                                     class="form-control">
                                             </div>
