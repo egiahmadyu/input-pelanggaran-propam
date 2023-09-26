@@ -822,6 +822,7 @@
                         $(this).addClass('was-validated');
                         $(this).addClass('input-error');
                     } else {
+                        $('.loading').css('display', 'block')
                         $(this).removeClass('input-error');
                     }
                 });
