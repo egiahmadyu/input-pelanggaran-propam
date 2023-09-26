@@ -83,7 +83,7 @@
             value="{{ $data->nolp_pidana }}">
     </div>
     <div class="form-group">
-        <label for="exampleInputPassword1">Tanggal LP</label>
+        <label for="exampleInputPassword1">Tanggal LP Pidana</label>
         <input type="text" class="form-control" readonly id="exampleInputPassword1"
             value="{{ $data->tgllp_pidana ? date('d-m-Y', strtotime($data->tgllp_pidana)) : '' }}">
     </div>
