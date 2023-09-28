@@ -759,7 +759,6 @@
                 ).each(
                     function() {
                         var select2label
-                        next_step = true
                         console.log()
                         if ($(this).val() == "") {
                             if ($(this).hasClass('select2-hidden-accessible')) {
@@ -774,15 +773,15 @@
                             next_step = false;
                         } else {
                             if ($(this).attr('id') == 'nrp_nip') {
-                                if (num.toString($(this).val().length) !== $(this).attr('maxlength')) {
-
+                                if ($(this).val().length.toString() !== $(this).attr('maxlength')) {
+                                    console.log($(this).attr('maxlength'))
                                     $(this).addClass('input-error');
                                     next_step = false;
                                 } else {
                                     $(this).removeClass('input-error');
                                 }
                             } else {
-
+                                $(this).siblings(".select2-container").css('border', '1px solid black');
                                 $(this).removeClass('input-error');
                             }
                         }
