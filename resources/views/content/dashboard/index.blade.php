@@ -32,7 +32,7 @@
 
                                     </div>
                                 </div>
-                                <div class="col-lg-2">
+                                {{-- <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="exampleFormControlInput1">Pangkat</label>
                                         <select class="form-control" id="pangkat" name="pangkat">
@@ -42,8 +42,8 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
-                                <div class="col-lg-2">
+                                </div> --}}
+                                {{-- <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="exampleFormControlInput1">Jenis Kelamin</label>
                                         <select class="form-control" id="pangkat" name="jenis_kelamin">
@@ -64,21 +64,21 @@
                                         <label for="exampleFormControlInput1">Tanggal Akhir</label>
                                         <input type="date" name="tanggal_akhir" id="tanggal_akhir" class="form-control">
                                     </div>
-                                </div>
-                                <div class="col-lg-1">
+                                </div> --}}
+                                <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="exampleFormControlInput1">.</label>
                                         <button class="btn btn-primary form-control" type="submit" value="filter"
                                             name="submit">Filter</button>
                                     </div>
                                 </div>
-                                <div class="col-lg-1">
+                                {{-- <div class="col-lg-1">
                                     <div class="form-group">
                                         <label for="exampleFormControlInput1">.</label>
                                         <button class="btn btn-success form-control" type="button" onclick="print_window()"
                                             name="submit">Print</button>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </form>
                     </div>

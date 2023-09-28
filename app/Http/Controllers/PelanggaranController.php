@@ -130,8 +130,6 @@ class PelanggaranController extends Controller
 
     private function getData(Request $request)
     {
-        // if ($request->button == 'export') return $this->exportData($request);
-
         $data = PelanggaranList::with('jenis_pelanggarans')->with('satuan_poldas')->with('pangkats')
             ->with('genders')->with('wujud_perbuatans');
 
@@ -161,7 +159,7 @@ class PelanggaranController extends Controller
 
         if ($request->wujud_perbuatan) $data = $data->where('wujud_perbuatan', $request->wujud_perbuatan);
 
-        if ($request->nama_pelanggar) $data = $data->where('nama', 'like', '%' . $request->nama_pelanggar . '%');
+        if ($request->nama_pelanggar) $data = $data->where(DB::raw('upper(nama)'), 'like', '%' . strtoupper($request->nama_pelanggar) . '%');
 
         if ($request->nrp) $data = $data->where('nrp_nip', 'like', '%' . $request->nrp . '%');
 
@@ -217,7 +215,7 @@ class PelanggaranController extends Controller
 
     public function save(Request $request)
     {
-        // dd($request->all());
+
         $request_data = $request->all();
         if ($request->jenis_narkoba == '0') {
             if (!$narkoba = JenisNarkoba::where('name', 'like', '%' . $request->jenis_narkoba_baru . '%')->first()) {
@@ -247,6 +245,7 @@ class PelanggaranController extends Controller
             $data->nolp_pidana = null;
             $data->tgllp_pidana = null;
         }
+        $data->nama = strtoupper($data->nama);
         $data->save();
 
         WujudPerbuatanPelanggar::create([
@@ -344,7 +343,7 @@ class PelanggaranController extends Controller
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
-        $sheet->setCellValue('A1', 'Jeni Pelanggaran');
+        $sheet->setCellValue('A1', 'Jenis Pelanggaran');
         $sheet->setCellValue('B1', 'NRP / NIP');
         $sheet->setCellValue('C1', 'Nama');
         $sheet->setCellValue('D1', 'Jenis Kelamin');
@@ -381,8 +380,8 @@ class PelanggaranController extends Controller
         $sheet->setCellValue('AI1', 'Putusan 10');
         $sheet->setCellValue('AJ1', 'Putusan 11');
         $sheet->setCellValue('AK1', 'Putusan 12');
-        $sheet->setCellValue('AL1', 'No KEP sp3');
-        $sheet->setCellValue('AM1', 'Tgl KEP sp3');
+        $sheet->setCellValue('AL1', 'No Kep Penghentian');
+        $sheet->setCellValue('AM1', 'Tgl Kep Penghentian');
         $sheet->setCellValue('AN1', 'Alasan Dihentikan');
         $spreadsheet->getActiveSheet()->getStyle('A1:AN1')->applyFromArray($this->headerStyle);
         $startRow = 2;

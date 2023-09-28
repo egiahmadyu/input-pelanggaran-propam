@@ -369,6 +369,10 @@
                             data.nrp = $('#nrp').val(),
                             data.tanggal_mulai = $('#tanggal_mulai').val(),
                             data.tanggal_akhir = $('#tanggal_akhir').val(),
+                            data.tanggal_mulai_kep = $('#tanggal_mulai_kep').val(),
+                            data.tanggal_akhir_kep = $('#tanggal_akhir_kep').val(),
+                            data.tanggal_mulai_sp = $('#tanggal_mulai_sp').val(),
+                            data.tanggal_akhir_sp = $('#tanggal_akhir_sp').val(),
                             data.jabatan = $('#jabatan').val()
                     }
                 },

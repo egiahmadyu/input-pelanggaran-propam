@@ -759,7 +759,7 @@
                 ).each(
                     function() {
                         var select2label
-                        console.log($(this).attr('type'))
+                        console.log()
                         if ($(this).val() == "") {
                             if ($(this).hasClass('select2-hidden-accessible')) {
                                 $(this).siblings(".select2-container").css('border', '1px solid red');
@@ -772,14 +772,26 @@
                             }
                             next_step = false;
                         } else {
-                            $(this).removeClass('input-error');
+                            if ($(this).attr('id') == 'nrp_nip') {
+                                if ($(this).val().length !== $(this).attr('maxlength')) {
+                                    $(this).addClass('input-error');
+                                    next_step = false;
+                                } else {
+
+                                    $(this).removeClass('input-error');
+                                }
+                            } else {
+
+                                $(this).removeClass('input-error');
+                            }
                         }
                     });
 
                 if (next_step) {
                     parent_fieldset.fadeOut(400, function() {
                         // change icons
-                        current_active_step.removeClass('active').addClass('activated').next()
+                        current_active_step.removeClass('active').addClass('activated')
+                            .next()
                             .addClass(
                                 'active');
                         // progress bar

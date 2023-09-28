@@ -578,10 +578,27 @@ class DashboardController extends Controller
 
         $data = $data->get();
         foreach ($data as $value) {
-            $value->subs = PelanggaranList::groupBy('pangkat', 'pangkats.name')->join('pangkats', 'pangkats.id', 'pelanggaran_lists.pangkat')
+            $query = PelanggaranList::groupBy('pangkat', 'pangkats.name')->join('pangkats', 'pangkats.id', 'pelanggaran_lists.pangkat')
                 ->select(DB::raw('count(*) as percent'), 'pangkats.name as type')
-                ->where('pangkats.pangkat_pelanggar_id', $value->id)
-                ->get();
+                ->where('pangkats.pangkat_pelanggar_id', $value->id);
+            if ($jenis_pelanggaran) $query = $query->where('jenis_pelanggaran', $jenis_pelanggaran);
+
+            if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
+            if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
+            if ($request->tanggal_mulai) $query = $query->where('tgllp', '>=', $request->tanggal_mulai);
+            if ($request->tanggal_akhir) $query = $query->where('tgllp', '<=', $request->tanggal_akhir);
+
+            if (auth()->user()->getRoleNames()[0] == 'polda') {
+                $query->where('polda', auth()->user()->polda_id);
+            } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+                $query->where('polres', auth()->user()->polres_id);
+            } else {
+                if ($request->polda) $query = $query->where('polda', $request->polda);
+            }
+            if ($request->polres) {
+                $query = $query->where('polres', $request->polres);
+            }
+            $value->subs = $query->get();
         }
         return $data;
     }
