@@ -747,35 +747,35 @@
 
             // step selanjutnya (ketika klik tombol selanjutnya)
             $('.f1 .btn-next').on('click', function() {
-                    var parent_fieldset = $(this).parents('fieldset');
-                    var next_step = true;
-                    // navigation steps / progress steps
-                    var current_active_step = $(this).parents('.f1').find('.f1-step.active');
-                    var progress_line = $(this).parents('.f1').find('.f1-progress-line');
+                var parent_fieldset = $(this).parents('fieldset');
+                var next_step = true;
+                // navigation steps / progress steps
+                var current_active_step = $(this).parents('.f1').find('.f1-step.active');
+                var progress_line = $(this).parents('.f1').find('.f1-progress-line');
 
-                    // validasi form
-                    parent_fieldset.find(
-                        'input[required="true"], textarea[required="true"], select[required="true"], input[required="required"], textarea[required="required"], select[required="required"]'
-                    ).each(
-                        function() {
-                            var select2label
-                            next_step = true
-                            console.log()
-                            if ($(this).val() == "") {
-                                if ($(this).hasClass('select2-hidden-accessible')) {
-                                    $(this).siblings(".select2-container").css('border', '1px solid red');
-                                } else if ($(this).attr('type') == 'date') {
-                                    $(this).siblings(".date-picker-input").css('border',
-                                        '1px solid red');
-                                } else {
-                                    $(this).addClass('input-error');
-                                    $(this).addClass('was-validated');
-                                }
-                                next_step = false;
+                // validasi form
+                parent_fieldset.find(
+                    'input[required="true"], textarea[required="true"], select[required="true"], input[required="required"], textarea[required="required"], select[required="required"]'
+                ).each(
+                    function() {
+                        var select2label
+                        next_step = true
+                        console.log()
+                        if ($(this).val() == "") {
+                            if ($(this).hasClass('select2-hidden-accessible')) {
+                                $(this).siblings(".select2-container").css('border', '1px solid red');
+                            } else if ($(this).attr('type') == 'date') {
+                                $(this).siblings(".date-picker-input").css('border',
+                                    '1px solid red');
                             } else {
-                                if ($(this).attr('id') == 'nrp_nip') {
-                                    if (num.toString($(this).val().length) !== $(this).attr('maxlength')) {
-                                    )
+                                $(this).addClass('input-error');
+                                $(this).addClass('was-validated');
+                            }
+                            next_step = false;
+                        } else {
+                            if ($(this).attr('id') == 'nrp_nip') {
+                                if (num.toString($(this).val().length) !== $(this).attr('maxlength')) {
+
                                     $(this).addClass('input-error');
                                     next_step = false;
                                 } else {
@@ -805,41 +805,41 @@
                 }
             });
 
-        // step sbelumnya (ketika klik tombol sebelumnya)
-        $('.f1 .btn-previous').on('click', function() {
-            // navigation steps / progress steps
-            var current_active_step = $(this).parents('.f1').find('.f1-step.active');
-            var progress_line = $(this).parents('.f1').find('.f1-progress-line');
+            // step sbelumnya (ketika klik tombol sebelumnya)
+            $('.f1 .btn-previous').on('click', function() {
+                // navigation steps / progress steps
+                var current_active_step = $(this).parents('.f1').find('.f1-step.active');
+                var progress_line = $(this).parents('.f1').find('.f1-progress-line');
 
-            $(this).parents('fieldset').fadeOut(400, function() {
-                // change icons
-                current_active_step.removeClass('active').prev().removeClass('activated')
-                    .addClass(
-                        'active');
-                // progress bar
-                bar_progress(progress_line, 'left');
-                // show previous step
-                $(this).prev().fadeIn();
-                // scroll window to beginning of the form
-                scroll_to_class($('.f1'), 20);
+                $(this).parents('fieldset').fadeOut(400, function() {
+                    // change icons
+                    current_active_step.removeClass('active').prev().removeClass('activated')
+                        .addClass(
+                            'active');
+                    // progress bar
+                    bar_progress(progress_line, 'left');
+                    // show previous step
+                    $(this).prev().fadeIn();
+                    // scroll window to beginning of the form
+                    scroll_to_class($('.f1'), 20);
+                });
             });
-        });
 
-        // submit (ketika klik tombol submit diakhir wizard)
-        $('.f1').on('submit', function(e) {
-            // validasi form
-            $(this).find('input[required="true"], textarea[required="true"]').each(function() {
-                console.log($(this).val())
-                if ($(this).val() == "") {
-                    e.preventDefault();
-                    $(this).addClass('was-validated');
-                    $(this).addClass('input-error');
-                } else {
-                    $('.loading').css('display', 'block')
-                    $(this).removeClass('input-error');
-                }
+            // submit (ketika klik tombol submit diakhir wizard)
+            $('.f1').on('submit', function(e) {
+                // validasi form
+                $(this).find('input[required="true"], textarea[required="true"]').each(function() {
+                    console.log($(this).val())
+                    if ($(this).val() == "") {
+                        e.preventDefault();
+                        $(this).addClass('was-validated');
+                        $(this).addClass('input-error');
+                    } else {
+                        $('.loading').css('display', 'block')
+                        $(this).removeClass('input-error');
+                    }
+                });
             });
-        });
         });
     </script>
 
