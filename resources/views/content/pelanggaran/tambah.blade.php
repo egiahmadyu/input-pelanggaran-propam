@@ -62,7 +62,7 @@
                                             @if (auth()->user()->getRoleNames()[0] == 'mabes')
                                                 <select class="form-control select2" id="jenis_pelanggaran"
                                                     style="width: 100%" name="jenis_pelanggaran"
-                                                    onchange="getWujudPerbuatan()">
+                                                    onchange="getWujudPerbuatan()" required="true">
                                                     <option value="">Pilih</option>
                                                     @if (auth()->user()->mabes == 'provos')
                                                         <option value="1">Disiplin</option>
@@ -73,7 +73,7 @@
                                             @else
                                                 <select class="form-control select2" id="jenis_pelanggaran"
                                                     style="width: 100%" name="jenis_pelanggaran"
-                                                    onchange="getWujudPerbuatan()">
+                                                    onchange="getWujudPerbuatan()" required="true">
                                                     <option value="">Pilih</option>
                                                     @foreach ($jenis_pelanggarans as $jenis_pelanggaran)
                                                         <option value="{{ $jenis_pelanggaran->id }}">
@@ -365,20 +365,40 @@
                                                 <input type="date" name="tgl_kep" id="tgl_kep"
                                                     class="form-control">
                                             </div>
-                                            @for ($i = 1; $i < 13; $i++)
+                                            @for ($i = 1; $i < 7; $i++)
                                                 <?php $putusans = Helper::getPutusan($i); ?>
                                                 <div class="form-group">
                                                     <label>Putusan {{ $i }}</label>
                                                     <select class="form-control putusan" id="putusan_{{ $i }}"
                                                         style="width: 100%" name="putusan_{{ $i }}">
                                                         <option value="">Pilih</option>
-                                                        {{-- @foreach ($putusans as $putusan)
-                                                        <option value="{{ $putusan->id }}">
-                                                            {{ $putusan->name }}</option>
-                                                    @endforeach --}}
                                                     </select>
                                                 </div>
                                             @endfor
+                                            <div class="form-group" id="div_button_putusan_tambah"
+                                                style="display: block">
+                                                <button class="btn btn-info w-100" type="button"
+                                                    id="button_show_putusan" onclick="show_putusan_lebih()">Tambah
+                                                    Putusan</button>
+                                            </div>
+                                            <div id="putusan_lebih" style="display: none">
+                                                @for ($i = 7; $i < 13; $i++)
+                                                    <?php $putusans = Helper::getPutusan($i); ?>
+                                                    <div class="form-group">
+                                                        <label>Putusan {{ $i }}</label>
+                                                        <select class="form-control putusan"
+                                                            id="putusan_{{ $i }}" style="width: 100%"
+                                                            name="putusan_{{ $i }}">
+                                                            <option value="">Pilih</option>
+                                                        </select>
+                                                    </div>
+                                                @endfor
+                                            </div>
+                                            <div class="form-group" id="div_button_putusan_hide" style="display: none">
+                                                <button class="btn btn-info w-100" type="button"
+                                                    id="button_show_putusan" onclick="hide_putusan_lebih()">Sembunyikan
+                                                    Putusan</button>
+                                            </div>
                                         </div>
                                         <hr>
                                         <div id="dihentikan_div">
@@ -589,6 +609,18 @@
             });
 
         });
+
+        function show_putusan_lebih() {
+            $('#putusan_lebih').css('display', 'block')
+            $('#div_button_putusan_hide').css('display', 'block')
+            $('#div_button_putusan_tambah').css('display', 'none')
+        }
+
+        function hide_putusan_lebih() {
+            $('#putusan_lebih').css('display', 'none')
+            $('#div_button_putusan_hide').css('display', 'none')
+            $('#div_button_putusan_tambah').css('display', 'block')
+        }
 
         function check_penyelesaian() {
             var val = $('#penyelesaian').val();
@@ -841,6 +873,7 @@
             });
         });
     </script>
+
 
     <script>
         var option_wp = ""
