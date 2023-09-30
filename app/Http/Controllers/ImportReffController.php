@@ -124,6 +124,24 @@ class ImportReffController extends Controller
         fclose($file_to_read);
     }
 
+    public function importWpDisiplinASN()
+    {
+        $file_to_read = fopen(storage_path('app/wpdisiplinasn.csv'), 'r');
+        while (($data = fgetcsv($file_to_read, 2000000, '.')) !== FALSE) {
+            for ($i = 0; $i < count($data); $i++) {
+                echo $data[$i] . strlen($data[$i]) . '<br>';
+                if (!$wpkepp = WujudPerbuatan::where('name', $data[$i])->where('jenis_pelanggaran_id', 1)->first() and strlen($data[$i]) !== 0) {
+                    WujudPerbuatan::create([
+                        'name' => $data[$i],
+                        'jenis_pelanggaran_id' => 1
+                    ]);
+                    echo $data[$i] . strlen($data[$i]) . '<br><br>';
+                }
+            }
+        }
+        fclose($file_to_read);
+    }
+
     public function importPutusan()
     {
         $file_to_read = fopen(storage_path('app/putusan_sidang_disiplin.csv'), 'r');

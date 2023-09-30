@@ -2,37 +2,38 @@
 
 @section('content')
     <div class="container-fluid mt-3">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-                        <form action="/" method="get">
-                            <div class="row">
-                                <div class="col-lg-2">
-                                    <div class="form-group">
-                                        <label
-                                            for="exampleFormControlInput1">{{ auth()->user()->getRoleNames()[0] == 'polda'? 'Polres / Satker/ Fungsi': 'Kesatuan / Polda' }}</label>
+        @if (auth()->user()->getRoleNames()[0] != 'polres')
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="/" method="get">
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <div class="form-group">
+                                            <label
+                                                for="exampleFormControlInput1">{{ auth()->user()->getRoleNames()[0] == 'polda'? 'Polres / Satker/ Fungsi': 'Kesatuan / Polda' }}</label>
 
-                                        @if (auth()->user()->getRoleNames()[0] == 'polda')
-                                            <select class="form-control" id="polres" name="polres">
-                                                <option value="">Polres / Satker/ Fungsi</option>
-                                                @foreach ($list_polres as $value)
-                                                    <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        @else
-                                            <select class="form-control" id="polda" name="polda">
-                                                <option value="">Polda</option>
-                                                @foreach ($poldas as $value)
-                                                    <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        @endif
+                                            @if (auth()->user()->getRoleNames()[0] == 'polda')
+                                                <select class="form-control" id="polres" name="polres">
+                                                    <option value="">Polres / Satker/ Fungsi</option>
+                                                    @foreach ($list_polres as $value)
+                                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            @else
+                                                <select class="form-control" id="polda" name="polda">
+                                                    <option value="">Polda</option>
+                                                    @foreach ($poldas as $value)
+                                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            @endif
 
 
+                                        </div>
                                     </div>
-                                </div>
-                                {{-- <div class="col-lg-2">
+                                    {{-- <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="exampleFormControlInput1">Pangkat</label>
                                         <select class="form-control" id="pangkat" name="pangkat">
@@ -43,7 +44,7 @@
                                         </select>
                                     </div>
                                 </div> --}}
-                                {{-- <div class="col-lg-2">
+                                    {{-- <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="exampleFormControlInput1">Jenis Kelamin</label>
                                         <select class="form-control" id="pangkat" name="jenis_kelamin">
@@ -65,27 +66,28 @@
                                         <input type="date" name="tanggal_akhir" id="tanggal_akhir" class="form-control">
                                     </div>
                                 </div> --}}
-                                <div class="col-lg-2">
-                                    <div class="form-group">
-                                        <label for="exampleFormControlInput1">.</label>
-                                        <button class="btn btn-primary form-control" type="submit" value="filter"
-                                            name="submit">Filter</button>
+                                    <div class="col-lg-2">
+                                        <div class="form-group">
+                                            <label for="exampleFormControlInput1">.</label>
+                                            <button class="btn btn-primary form-control" type="submit" value="filter"
+                                                name="submit">Filter</button>
+                                        </div>
                                     </div>
-                                </div>
-                                {{-- <div class="col-lg-1">
+                                    {{-- <div class="col-lg-1">
                                     <div class="form-group">
                                         <label for="exampleFormControlInput1">.</label>
                                         <button class="btn btn-success form-control" type="button" onclick="print_window()"
                                             name="submit">Print</button>
                                     </div>
                                 </div> --}}
-                            </div>
-                        </form>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div>
 
+                </div>
             </div>
-        </div>
+        @endif
         <div class="row">
             <div class="col-lg-4 col-sm-6">
                 <div class="row">

@@ -936,6 +936,7 @@
         }
 
         function getWujudPerbuatan() {
+            checkJenisPelanggaran()
             var jenis_pelanggaran = $('#jenis_pelanggaran').val()
             $.ajax({
                 url: "/api/wujud_perbuatan/type/" + jenis_pelanggaran,
@@ -951,6 +952,20 @@
                     getPutusan()
                 }
             });
+        }
+
+        function checkJenisPelanggaran() {
+            var jenis_pelanggaran = $('#jenis_pelanggaran').val()
+            var html
+            if (jenis_pelanggaran == 1) {
+                html = `<option value="">Pilih </option>
+                                                <option value="polri">Polri</option>
+                                                <option value="asn">ASN</option>`
+            } else if (jenis_pelanggaran == 2) {
+                html = `<option value="">Pilih </option>
+                                                <option value="polri">Polri</option>`
+            }
+            $('#pelanggar').html(html)
         }
 
         function getPutusan() {

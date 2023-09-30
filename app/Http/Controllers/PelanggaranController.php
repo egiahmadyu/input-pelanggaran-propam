@@ -141,6 +141,7 @@ class PelanggaranController extends Controller
         } else if (auth()->user()->getRoleNames()[0] == 'mabes') {
             if (auth()->user()->mabes == 'provos') $data = $data->where('jenis_pelanggaran', 1);
             else if (auth()->user()->mabes == 'wabprof') $data = $data->where('jenis_pelanggaran', 2);
+            if ($request->polda) $data = $data->where('polda', $request->polda);
         } else {
             if ($request->polda) $data = $data->where('polda', $request->polda);
         }
@@ -246,6 +247,7 @@ class PelanggaranController extends Controller
             $data->tgllp_pidana = null;
         }
         $data->nama = strtoupper($data->nama);
+        $data->nolp = strtoupper($data->nolp);
         $data->save();
 
         WujudPerbuatanPelanggar::create([
