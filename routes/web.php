@@ -28,12 +28,13 @@ Route::get('/login', function () {
 })->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
-Route::get('/', function () {
-    return view('content.dashboard.index');
-});
 
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/change-password', function () {
+        return view('content.auth.change_password');
+    })->name('change_password');
+    Route::post('/update_password', [AuthController::class, 'update_password'])->name('change_password.post');
     // Route::get('/', $controller_path . '\dashboard\Analytics@index')->name('dashboard-analytics');
     Route::get('/', [DashboardController::class, 'index']);
     Route::get('/disiplin', [DashboardController::class, 'disiplin']);

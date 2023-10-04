@@ -51,7 +51,10 @@
                                 <li>
                                     <a href="page-lock.html"><i class="icon-lock"></i> <span>Lock
                                             Screen</span></a>
-                                </li> --}}
+                                        </li> --}}
+                                <li><a href="/change-password"><i class="icon-key"></i>
+                                        <span>Ganti Password</span></a>
+                                </li>
                                 <li><a href="/logout"><i class="icon-key"></i>
                                         <span>Logout</span></a>
                                 </li>
