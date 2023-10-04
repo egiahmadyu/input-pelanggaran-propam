@@ -83,6 +83,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('satuan-data/polda/delete/{id}', [RefDataController::class, 'deletePolda']);
 
 
+    Route::get('data-master/narkoba', [RefDataController::class, 'viewNarkoba']);
+    Route::get('narkoba/delete/{id}', [RefDataController::class, 'deleteNarkoba']);
+
+
 
 
     Route::group(['middleware' => ['role:admin']], function () {

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JenisNarkoba;
 use App\Models\JenisPelanggaran;
+use App\Models\PelanggaranList;
 use App\Models\SatuanPolda;
 use App\Models\SatuanPolres;
 use App\Models\SatuanPolsek;
 use App\Models\WujudPerbuatan;
 use App\Models\WujudPerbuatanPidana;
+use Database\Seeders\Narkoba;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -133,7 +136,7 @@ class RefDataController extends Controller
             'polres' => array()
 
         ];
-        return view('content.refData.satuanPolri', $data);
+        return view('content.refData.satuan-polres', $data);
     }
 
     public function satuanPolsek()
@@ -150,7 +153,7 @@ class RefDataController extends Controller
 
     public function getPolres()
     {
-        $data = SatuanPolres::orderBy('id', 'desc');
+        $data = SatuanPolres::orderBy('id', 'desc')->with('satuan_poldas');
         return DataTables::of($data)->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $res = base64_encode(json_encode($row));
@@ -234,5 +237,21 @@ class RefDataController extends Controller
 
 
         return redirect()->back()->with('success', 'Berhasil Menghapus Data');
+    }
+
+    public function viewNarkoba()
+    {
+        $data['narkobas'] = JenisNarkoba::all();
+        return view('content.refData.narkoba', $data);
+    }
+
+    public function deleteNarkoba($id)
+    {
+        $check = PelanggaranList::where('jenis_narkoba', $id)->get();
+        if (count($check) > 0) {
+            return redirect()->back()->with('error', 'Data terhubung ke pelanggar tidak bisa dihapus');
+        }
+        JenisNarkoba::where('id', $id)->delete();
+        return redirect()->back()->with('success', 'Berhasil Hapus Data');
     }
 }
