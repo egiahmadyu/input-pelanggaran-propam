@@ -153,12 +153,15 @@ class RefDataController extends Controller
 
     public function getPolres()
     {
-        $data = SatuanPolres::orderBy('id', 'desc')->with('satuan_poldas');
+        $data = SatuanPolres::with('satuan_poldas');
         return DataTables::of($data)->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $res = base64_encode(json_encode($row));
                 $btn = '<button onclick="deletePolres(' . $row->id . ')" class="btn btn-danger btn-sm">Delete</button>';
                 return $btn;
+            })
+            ->orderColumn('satuan_poldas.name', function ($query, $order) {
+                $query->orderBy('satuan_poldas.name', $order);
             })
             ->rawColumns(['action'])
             ->make(true);
