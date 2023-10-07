@@ -12,6 +12,8 @@ use App\Models\WujudPerbuatan;
 use App\Models\WujudPerbuatanPidana;
 use Database\Seeders\Narkoba;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yajra\DataTables\DataTables;
 
 class RefDataController extends Controller
@@ -148,7 +150,7 @@ class RefDataController extends Controller
             'poldas' => array()
 
         ];
-        return view('content.refData.satuanPolri', $data);
+        return view('content.refData.satuan-polsek', $data);
     }
 
     public function getPolres()
@@ -169,7 +171,7 @@ class RefDataController extends Controller
 
     public function getPolsek()
     {
-        $data = SatuanPolsek::orderBy('id', 'desc');
+        $data = SatuanPolsek::with('satuan_polreses', 'satuan_polreses.satuan_poldas');
         return DataTables::of($data)->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $res = base64_encode(json_encode($row));
@@ -256,5 +258,99 @@ class RefDataController extends Controller
         }
         JenisNarkoba::where('id', $id)->delete();
         return redirect()->back()->with('success', 'Berhasil Hapus Data');
+    }
+
+    public function importPolda(Request $request)
+    {
+        $the_file = $request->file('uploaded_file');
+        // dd($request->all());
+        $spreadsheet = IOFactory::load($the_file->getRealPath());
+        $sheet        = $spreadsheet->getActiveSheet();
+        $row_limit    = $sheet->getHighestDataRow();
+        $column_limit = $sheet->getHighestDataColumn();
+        $row_range    = range(2, $row_limit);
+        $column_range = range('F', $column_limit);
+        $startcount = 2;
+        foreach ($row_range as $row) {
+            $polda_name = $sheet->getCell('A' . $row)->getValue();
+            if (!$polda = SatuanPolda::where(DB::raw('upper(name)'), 'like', '%' . $polda_name . '%')->first()) {
+                echo $polda_name . '<br>';
+                $polda = SatuanPolda::create([
+                    'name' => $polda_name
+                ]);
+            }
+        }
+        return redirect()->back()->with('success', 'import data berhasil');
+    }
+
+    public function importPolres(Request $request)
+    {
+        ini_set('max_execution_time', '0');
+        $the_file = $request->file('uploaded_file');
+        // dd($request->all());
+        $spreadsheet = IOFactory::load($the_file->getRealPath());
+        $sheet        = $spreadsheet->getActiveSheet();
+        $row_limit    = $sheet->getHighestDataRow();
+        $column_limit = $sheet->getHighestDataColumn();
+        $row_range    = range(2, $row_limit);
+        $column_range = range('F', $column_limit);
+        $startcount = 2;
+        foreach ($row_range as $row) {
+            $polda_name = $sheet->getCell('A' . $row)->getValue();
+            if (!$polda = SatuanPolda::where(DB::raw('upper(name)'), 'like', '%' . $polda_name . '%')->first()) {
+                echo $polda_name . '<br>';
+                $polda = SatuanPolda::create([
+                    'name' => $polda_name
+                ]);
+            }
+            $polres_name = $sheet->getCell('B' . $row)->getValue();
+            if (!$polres = SatuanPolres::where(DB::raw('upper(name)'), 'like', '%' . $polres_name . '%')->first()) {
+                echo $polres_name . '<br>';
+                $polres = SatuanPolres::create([
+                    'polda_id' => $polda->id,
+                    'name' => $polres_name
+                ]);
+            }
+        }
+        return redirect()->back()->with('success', 'import data berhasil');
+    }
+
+    public function importPolsek(Request $request)
+    {
+        ini_set('max_execution_time', '0');
+        $the_file = $request->file('uploaded_file');
+        // dd($request->all());
+        $spreadsheet = IOFactory::load($the_file->getRealPath());
+        $sheet        = $spreadsheet->getActiveSheet();
+        $row_limit    = $sheet->getHighestDataRow();
+        $column_limit = $sheet->getHighestDataColumn();
+        $row_range    = range(2, $row_limit);
+        $column_range = range('F', $column_limit);
+        $startcount = 2;
+        foreach ($row_range as $row) {
+            $polda_name = $sheet->getCell('A' . $row)->getValue();
+            if (!$polda = SatuanPolda::where(DB::raw('upper(name)'), 'like', '%' . $polda_name . '%')->first()) {
+                echo $polda_name . '<br>';
+                $polda = SatuanPolda::create([
+                    'name' => $polda_name
+                ]);
+            }
+            $polres_name = $sheet->getCell('B' . $row)->getValue();
+            if (!$polres = SatuanPolres::where(DB::raw('upper(name)'), 'like', '%' . $polres_name . '%')->where('polda_id', $polda->id)->first()) {
+                echo $polres_name . '<br>';
+                $polres = SatuanPolres::create([
+                    'polda_id' => $polda->id,
+                    'name' => $polres_name
+                ]);
+            }
+            $polsek_name = $sheet->getCell('C' . $row)->getValue();
+            if (!$polsek = SatuanPolsek::where('polres_id', $polres->id)->where('name', $polsek_name)->first()) {
+                $polsek = SatuanPolsek::create([
+                    'polres_id' => $polres->id,
+                    'name' => $polsek_name
+                ]);
+            }
+        }
+        return redirect()->back()->with('success', 'import data berhasil');
     }
 }

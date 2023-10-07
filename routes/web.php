@@ -70,13 +70,16 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('data-master/satuan-polda', [RefDataController::class, 'satuanPolda'])->name('refData.satuan-polda');
     Route::post('satuan-polda/save', [RefDataController::class, 'savePolda'])->name('refData.satuan-polda.save');
+    Route::post('satuan-polda/import', [RefDataController::class, 'importPolda'])->name('refData.satuan-polda.importPolda');
     Route::get('data-master/satuan-polres', [RefDataController::class, 'satuanPolres'])->name('refData.satuan-polres');
     Route::post('satuan-polres/save', [RefDataController::class, 'savePolres'])->name('refData.satuan-polres.save');
+    Route::post('satuan-polres/import', [RefDataController::class, 'importPolres'])->name('refData.satuan-polres.importPolres');
     Route::get('data-master/satuan-polsek', [RefDataController::class, 'satuanPolsek'])->name('refData.satuan-polsek');
     Route::post('satuan-polsek/save', [RefDataController::class, 'savePolsek'])->name('refData.satuan-polsek.save');
     Route::post('data-master/satuan-data/polda', [RefDataController::class, 'getPolda'])->name('refData.get-polda');
     Route::post('data-master/satuan-data/polres', [RefDataController::class, 'getPolres'])->name('refData.get-polres');
     Route::post('data-master/satuan-data/polsek', [RefDataController::class, 'getPolsek'])->name('refData.get-polsek');
+    Route::post('satuan-polsek/import', [RefDataController::class, 'importPolsek'])->name('refData.satuan-polsek.polsek');
 
     Route::get('satuan-data/polsek/delete/{id}', [RefDataController::class, 'deletePolsek']);
     Route::get('satuan-data/polres/delete/{id}', [RefDataController::class, 'deletePolres']);

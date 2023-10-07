@@ -30,13 +30,15 @@
                                         </button>
                                     </div>
                                 @endif
-                                <button class="btn btn-success" onclick="$('#modalimportpolda').modal('show')">import
+                                <button class="btn btn-success" onclick="$('#modalimportpolres').modal('show')">import
                                     data</button>
                                 <table class="table table-striped table-bordered" id="list-polda">
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Jenis</th>
+                                            <th>Polda</th>
+                                            <th>Polres</th>
+                                            <th>Polsek</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -150,18 +152,17 @@
             </div>
         </div>
     </div>
-
-    <div class="modal" id="modalimportpolda">
+    <div class="modal" id="modalimportpolres">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Import Polda / Mabes</h5>
+                    <h5 class="modal-title">Import Polsek</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="/satuan-polda/import" enctype="multipart/form-data" id="form_import">
+                    <form method="post" action="/satuan-polsek/import" enctype="multipart/form-data" id="form_import">
                         @csrf
                         <div class="form-group">
                             <label for="exampleInputEmail1">File Excel</label>
@@ -194,10 +195,9 @@
             getData()
             getPolres()
             $('#form_import').submit(function() {
-                $('#modalimportpolda').modal('hide')
+                $('#modalimportpolres').modal('hide')
                 $('.loading').css('display', 'block')
             })
-
         });
 
         function getData() {
@@ -218,6 +218,14 @@
                         name: 'DT_RowIndex',
                         orderable: false,
                         searchable: false
+                    },
+                    {
+                        data: 'satuan_polreses.satuan_poldas.name',
+                        name: 'satuan_polreses.satuan_poldas.name'
+                    },
+                    {
+                        data: 'satuan_polreses.name',
+                        name: 'satuan_polreses.name'
                     },
                     {
                         data: 'name',
