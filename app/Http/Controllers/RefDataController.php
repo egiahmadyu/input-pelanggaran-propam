@@ -118,7 +118,7 @@ class RefDataController extends Controller
 
     public function getPolda()
     {
-        $data = SatuanPolda::orderBy('id', 'desc');
+        $data = SatuanPolda::select('*');
         return DataTables::of($data)->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $res = base64_encode(json_encode($row));
@@ -273,11 +273,13 @@ class RefDataController extends Controller
         $startcount = 2;
         foreach ($row_range as $row) {
             $polda_name = $sheet->getCell('A' . $row)->getValue();
-            if (!$polda = SatuanPolda::where(DB::raw('upper(name)'), 'like', '%' . $polda_name . '%')->first()) {
-                echo $polda_name . '<br>';
-                $polda = SatuanPolda::create([
-                    'name' => $polda_name
-                ]);
+            if ($polda_name) {
+                if (!$polda = SatuanPolda::where(DB::raw('upper(name)'), 'like', '%' . strtoupper($polda_name) . '%')->first()) {
+                    echo $polda_name . '<br>';
+                    $polda = SatuanPolda::create([
+                        'name' => strtoupper($polda_name)
+                    ]);
+                }
             }
         }
         return redirect()->back()->with('success', 'import data berhasil');
@@ -297,19 +299,23 @@ class RefDataController extends Controller
         $startcount = 2;
         foreach ($row_range as $row) {
             $polda_name = $sheet->getCell('A' . $row)->getValue();
-            if (!$polda = SatuanPolda::where(DB::raw('upper(name)'), 'like', '%' . $polda_name . '%')->first()) {
-                echo $polda_name . '<br>';
-                $polda = SatuanPolda::create([
-                    'name' => $polda_name
-                ]);
+            if ($polda_name) {
+                if (!$polda = SatuanPolda::where(DB::raw('upper(name)'), 'like', '%' . strtoupper($polda_name) . '%')->first()) {
+                    echo $polda_name . '<br>';
+                    $polda = SatuanPolda::create([
+                        'name' => strtoupper($polda_name)
+                    ]);
+                }
             }
             $polres_name = $sheet->getCell('B' . $row)->getValue();
-            if (!$polres = SatuanPolres::where(DB::raw('upper(name)'), 'like', '%' . $polres_name . '%')->first()) {
-                echo $polres_name . '<br>';
-                $polres = SatuanPolres::create([
-                    'polda_id' => $polda->id,
-                    'name' => $polres_name
-                ]);
+            if ($polres_name) {
+                if (!$polres = SatuanPolres::where(DB::raw('upper(name)'), 'like', '%' . strtoupper($polres_name) . '%')->first()) {
+                    echo $polres_name . '<br>';
+                    $polres = SatuanPolres::create([
+                        'polda_id' => $polda->id,
+                        'name' => strtoupper($polres_name)
+                    ]);
+                }
             }
         }
         return redirect()->back()->with('success', 'import data berhasil');
@@ -329,26 +335,32 @@ class RefDataController extends Controller
         $startcount = 2;
         foreach ($row_range as $row) {
             $polda_name = $sheet->getCell('A' . $row)->getValue();
-            if (!$polda = SatuanPolda::where(DB::raw('upper(name)'), 'like', '%' . $polda_name . '%')->first()) {
-                echo $polda_name . '<br>';
-                $polda = SatuanPolda::create([
-                    'name' => $polda_name
-                ]);
+            if ($polda_name) {
+                if (!$polda = SatuanPolda::where(DB::raw('upper(name)'), 'like', '%' . strtoupper($polda_name) . '%')->first()) {
+                    echo $polda_name . '<br>';
+                    $polda = SatuanPolda::create([
+                        'name' => strtoupper($polda_name)
+                    ]);
+                }
             }
             $polres_name = $sheet->getCell('B' . $row)->getValue();
-            if (!$polres = SatuanPolres::where(DB::raw('upper(name)'), 'like', '%' . $polres_name . '%')->where('polda_id', $polda->id)->first()) {
-                echo $polres_name . '<br>';
-                $polres = SatuanPolres::create([
-                    'polda_id' => $polda->id,
-                    'name' => $polres_name
-                ]);
+            if ($polres_name) {
+                if (!$polres = SatuanPolres::where(DB::raw('upper(name)'), 'like', '%' . strtoupper($polres_name) . '%')->where('polda_id', $polda->id)->first()) {
+                    echo $polres_name . '<br>';
+                    $polres = SatuanPolres::create([
+                        'polda_id' => $polda->id,
+                        'name' => strtoupper($polres_name)
+                    ]);
+                }
             }
             $polsek_name = $sheet->getCell('C' . $row)->getValue();
-            if (!$polsek = SatuanPolsek::where('polres_id', $polres->id)->where('name', $polsek_name)->first()) {
-                $polsek = SatuanPolsek::create([
-                    'polres_id' => $polres->id,
-                    'name' => $polsek_name
-                ]);
+            if ($polsek_name) {
+                if (!$polsek = SatuanPolsek::where('polres_id', $polres->id)->where('name', strtoupper($polsek_name))->first()) {
+                    $polsek = SatuanPolsek::create([
+                        'polres_id' => $polres->id,
+                        'name' => strtoupper($polsek_name)
+                    ]);
+                }
             }
         }
         return redirect()->back()->with('success', 'import data berhasil');
