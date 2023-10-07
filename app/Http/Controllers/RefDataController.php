@@ -263,8 +263,8 @@ class RefDataController extends Controller
     public function importPolda(Request $request)
     {
         $the_file = $request->file('uploaded_file');
-        // dd($request->all());
-        $spreadsheet = IOFactory::load($the_file->getRealPath());
+        $the_file->move('file_upload', $the_file->getClientOriginalName());
+        $spreadsheet = IOFactory::load('file_upload/' . $the_file->getClientOriginalName());
         $sheet        = $spreadsheet->getActiveSheet();
         $row_limit    = $sheet->getHighestDataRow();
         $column_limit = $sheet->getHighestDataColumn();
@@ -290,7 +290,8 @@ class RefDataController extends Controller
         ini_set('max_execution_time', '0');
         $the_file = $request->file('uploaded_file');
         // dd($request->all());
-        $spreadsheet = IOFactory::load($the_file->getRealPath());
+        $the_file->move('file_upload', $the_file->getClientOriginalName());
+        $spreadsheet = IOFactory::load('file_upload/' . $the_file->getClientOriginalName());
         $sheet        = $spreadsheet->getActiveSheet();
         $row_limit    = $sheet->getHighestDataRow();
         $column_limit = $sheet->getHighestDataColumn();
@@ -326,7 +327,8 @@ class RefDataController extends Controller
         ini_set('max_execution_time', '0');
         $the_file = $request->file('uploaded_file');
         // dd($request->all());
-        $spreadsheet = IOFactory::load($the_file->getRealPath());
+        $the_file->move('file_upload', $the_file->getClientOriginalName());
+        $spreadsheet = IOFactory::load('file_upload/' . $the_file->getClientOriginalName());
         $sheet        = $spreadsheet->getActiveSheet();
         $row_limit    = $sheet->getHighestDataRow();
         $column_limit = $sheet->getHighestDataColumn();
