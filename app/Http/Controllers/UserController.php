@@ -64,7 +64,6 @@ class UserController extends Controller
         $user->username = $request->username;
         if ($request->password) $user->password = bcrypt($request->password);
         $role = Role::find($request->role);
-        // dd($role);
         $user->syncRoles($role);
         if ($role->name == 'polda') {
             $user->polda_id = $request->polda;

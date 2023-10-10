@@ -49,7 +49,8 @@
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $list->name }}</td>
                                                     <td>{{ $list->username }}</td>
-                                                    <td>{{ $list->getRoleNames()[0] }}</td>
+                                                    <td>{{ $list->getRoleNames()[0] ?? 'Tidak Ada Role, Silahkan Hapus User!' }}
+                                                    </td>
                                                     <td>{{ is_null($list->poldas) ? '' : $list->poldas->name }}</td>
 
                                                     <td>
@@ -106,7 +107,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Role</label>
-                            <select class="form-control" id="role_user" name="role" onchange="checkRole()">
+                            <select class="form-control" id="role_user" name="role" onchange="checkRole()" required>
                                 <option value="">Semua</option>
                                 @foreach ($roles as $value)
                                     <option value="{{ $value->id }}">{{ $value->name }}</option>
