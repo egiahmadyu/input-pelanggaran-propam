@@ -163,7 +163,7 @@
                                     <fieldset>
                                         <h4>Kesatuan</h4>
                                         <div class="form-group">
-                                            <label>Satker Mabes/ Polda</label>
+                                            <label>Mabes/ Polda</label>
                                             @if (auth()->user()->getRoleNames()[0] !== 'admin')
                                                 <select class="form-control" id="polda" style="width: 100%"
                                                     name="polda" required=true onchange="getPolres()">
@@ -182,7 +182,7 @@
                                             @endif
                                         </div>
                                         <div class="form-group">
-                                            <label>Satker Polda/ Polres</label>
+                                            <label>Satker Mabes/ Satker Polda/ Polres</label>
                                             @if (auth()->user()->getRoleNames()[0] == 'polres')
                                                 <select class="form-control" id="polress" style="width: 100%"
                                                     name="polres">
@@ -197,7 +197,7 @@
 
                                         </div>
                                         <div class="form-group">
-                                            <label>Polsek</label>
+                                            <label>Satker Polres/ Polsek</label>
                                             <select class="form-control" id="polsek" style="width: 100%"
                                                 name="polsek">
                                                 {{-- <option value="001">Polres Aceh Barat Daya</option> --}}
