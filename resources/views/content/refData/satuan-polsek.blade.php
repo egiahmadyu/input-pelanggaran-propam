@@ -36,9 +36,9 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Polda</th>
-                                            <th>Polres</th>
-                                            <th>Polsek</th>
+                                            <th>Mabes/ Polda</th>
+                                            <th>Satker Mabes/ Satker Polda/ Polres </th>
+                                            <th>Satker Polres/ Polsek </th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
