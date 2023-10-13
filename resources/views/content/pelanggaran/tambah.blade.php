@@ -164,7 +164,7 @@
                                         <h4>Kesatuan</h4>
                                         <div class="form-group">
                                             <label>Mabes/ Polda</label>
-                                            @if (auth()->user()->getRoleNames()[0] !== 'admin')
+                                            @if (auth()->user()->getRoleNames()[0] !== 'admin' && auth()->user()->getRoleNames()[0] !== 'mabes')
                                                 <select class="form-control" id="polda" style="width: 100%"
                                                     name="polda" required=true onchange="getPolres()">
                                                     <option value="">Pilih </option>
