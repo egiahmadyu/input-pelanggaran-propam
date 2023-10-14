@@ -197,6 +197,8 @@
                                             <th>Tgl LP</th>
                                             <th>Pidana</th>
                                             <th>Wujud Perbuatan</th>
+                                            <th>Di Buat Oleh</th>
+                                            <th>Di Update Oleh</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -380,57 +382,82 @@
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
                         orderable: false,
-                        searchable: false
+                        searchable: false,
+                        responsivePriority: -1
                     },
                     {
                         data: 'nrp_nip',
-                        name: 'nrp_nip'
+                        name: 'nrp_nip',
+                        responsivePriority: -1
                     },
                     {
                         data: 'nama',
-                        name: 'nama'
+                        name: 'nama',
+                        responsivePriority: -1
                     },
                     {
                         data: 'genders.gender',
-                        name: 'genders.gender'
+                        name: 'genders.gender',
+                        responsivePriority: -1
                     },
                     {
                         data: 'jenis_pelanggarans.name',
-                        name: 'jenis_pelanggarans.name'
+                        name: 'jenis_pelanggarans.name',
+                        responsivePriority: -1
                     },
                     {
                         data: 'satuan_poldas.name',
-                        name: 'satuan_poldas.name'
+                        name: 'satuan_poldas.name',
+                        responsivePriority: -1
                     },
                     {
                         data: 'pangkats.name',
-                        name: 'pangkats.name'
+                        name: 'pangkats.name',
+                        responsivePriority: -1
                     },
                     {
                         data: 'jabatan',
-                        name: 'jabatan'
+                        name: 'jabatan',
+                        responsivePriority: -1
                     },
                     {
                         data: 'nolp',
-                        name: 'nolp'
+                        name: 'nolp',
+                        responsivePriority: 1
                     },
                     {
                         data: 'tgllp',
-                        name: 'tgllp'
+                        name: 'tgllp',
+                        responsivePriority: 1
                     },
                     {
                         data: 'pidana',
-                        name: 'pidana'
+                        name: 'pidana',
+                        responsivePriority: 1
                     },
                     {
                         data: 'wujud_perbuatans.name',
-                        name: 'wujud_perbuatans.name'
+                        name: 'wujud_perbuatans.name',
+                        responsivePriority: 5
+                    },
+                    {
+                        data: 'created',
+                        orderable: false,
+                        name: 'pembuat.name',
+                        responsivePriority: 1
+                    },
+                    {
+                        data: 'updated',
+                        orderable: false,
+                        name: 'pengupdate.name',
+                        responsivePriority: 2
                     },
                     {
                         data: 'action',
                         name: 'action',
                         orderable: false,
-                        searchable: false
+                        searchable: false,
+                        responsivePriority: 6
                     },
                 ]
 
@@ -491,18 +518,66 @@
                 confirmButtonText: 'Hapus Data!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $.ajax({
-                        url: "/pelanggaran-data/delete/" + id,
-                        method: "get"
-                    }).done(function(data) {
-                        console.log(data)
-                        Swal.fire(
-                            'Deleted!',
-                            'Your file has been deleted.',
-                            'success'
-                        )
-                        $("#kt_search").click();
-                    });
+                    Swal.fire({
+                        title: 'Masukan Password',
+                        input: 'password',
+                        inputAttributes: {
+                            autocapitalize: 'off'
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Hapus Data',
+                        showLoaderOnConfirm: true,
+                        preConfirm: (password) => {
+                            return fetch('/pelanggaran-data/delete/', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        _token: '{{ csrf_token() }}',
+                                        password: password,
+                                        id: id
+                                    }),
+                                    Cache: 'default'
+                                }).then(response => {
+                                    if (!response.ok) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Oops...',
+                                            text: 'Terjadi Kesalahan Pada Server'
+                                        })
+
+                                    }
+                                    return response.json()
+                                })
+                                .catch(error => {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'Terjadi Kesalahan Pada Server'
+                                    })
+                                })
+                        },
+                        allowOutsideClick: () => !Swal.isLoading()
+                    }).then((result) => {
+                        console.log(result);
+                        if (result.isConfirmed) {
+                            if (result.value.status !== 200) {
+                                return Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: result.value.message
+                                })
+                            }
+                            Swal.fire(
+                                'Deleted!',
+                                'Data Berhasil Dihapus',
+                                'success'
+                            )
+                            $("#kt_search").click();
+                        }
+                    })
 
                 }
             })

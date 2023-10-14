@@ -73,6 +73,11 @@
                                                 name="submit">Filter</button>
                                         </div>
                                     </div>
+                                    <div class="col-lg-8">
+                                        <div class="form-group">
+                                            <img src="/Tagline-Propam.png" alt="" class="img-fluid">
+                                        </div>
+                                    </div>
                                     {{-- <div class="col-lg-1">
                                     <div class="form-group">
                                         <label for="exampleFormControlInput1">.</label>
@@ -99,8 +104,8 @@
                                     <h2 class="text-white">{{ count($pelanggarans) }}</h2>
                                     {{-- <p class="text-white mb-0">{{ date('Y') }}</p> --}}
                                 </div>
-                                <span class="float-right display-5 opacity-5"><i class="fa fa-exclamation-circle"
-                                        aria-hidden="true"></i>
+                                <span class="float-right display-5 opacity-5"><img src="/propam.png" alt=""
+                                        width="60">
                                 </span>
                             </div>
                         </div>
@@ -116,8 +121,8 @@
                                     </h2>
                                     {{-- <p class="text-white mb-0">{{ date('Y') }}</p> --}}
                                 </div>
-                                <span class="float-right display-5 opacity-5"><i class="fa fa-exclamation-circle"
-                                        aria-hidden="true"></i>
+                                <span class="float-right display-5 opacity-5"><img src="/propam.png" alt=""
+                                        width="60">
                                 </span>
                             </div>
                         </div>
@@ -138,7 +143,8 @@
 
                                     </p> --}}
                                 </div>
-                                <span class="float-right display-5 opacity-5"><i class="fa fa-users"></i></span>
+                                <span class="float-right display-5 opacity-5"><img src="/Provos.png" alt=""
+                                        width="60"></span>
                             </div>
                         </div>
                     </div>
@@ -152,7 +158,8 @@
                                         {{ $disiplin == 0 ? 0 : number_format(count($disiplin_selesai) / $disiplin, 2) * 100 }}%
                                     </h2>
                                 </div>
-                                <span class="float-right display-5 opacity-5"><i class="fa fa-users"></i></span>
+                                <span class="float-right display-5 opacity-5"><img src="/Provos.png" alt=""
+                                        width="60"></span>
                             </div>
                         </div>
                     </div>
@@ -173,7 +180,8 @@
 
                                     </p> --}}
                                 </div>
-                                <span class="float-right display-5 opacity-5"><i class="fa fa-anchor"></i></span>
+                                <span class="float-right display-5 opacity-5"><img src="/wabprof.png" alt=""
+                                        width="60"></span>
                             </div>
                         </div>
                     </div>
@@ -186,7 +194,8 @@
                                         {{ count($kepp_selesai) == 0 ? 0 : number_format((count($kepp_selesai) / $kodeEtik) * 100, 2) }}%
                                     </h2>
                                 </div>
-                                <span class="float-right display-5 opacity-5"><i class="fa fa-anchor"></i></span>
+                                <span class="float-right display-5 opacity-5"><img src="/wabprof.png" alt=""
+                                        width="60"></span>
                             </div>
                         </div>
                     </div>

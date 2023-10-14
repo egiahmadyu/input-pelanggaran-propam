@@ -59,6 +59,8 @@
                                     <fieldset>
                                         <h4>Jenis Pelanggaran</h4>
                                         <div class="form-group">
+                                            <input type="text" name="created_by" id=""
+                                                value="{{ auth()->user()->id }}" hidden>
                                             @if (auth()->user()->getRoleNames()[0] == 'mabes')
                                                 <select class="form-control select2" id="jenis_pelanggaran"
                                                     style="width: 100%" name="jenis_pelanggaran"
@@ -164,7 +166,8 @@
                                         <h4>Kesatuan</h4>
                                         <div class="form-group">
                                             <label>Mabes/ Polda</label>
-                                            @if (auth()->user()->getRoleNames()[0] !== 'admin' && auth()->user()->getRoleNames()[0] !== 'mabes')
+                                            @if (auth()->user()->getRoleNames()[0] !== 'admin' &&
+                                                    auth()->user()->getRoleNames()[0] !== 'mabes')
                                                 <select class="form-control" id="polda" style="width: 100%"
                                                     name="polda" required=true onchange="getPolres()">
                                                     <option value="">Pilih </option>

@@ -37,6 +37,7 @@
                                 </div>
                                 <form action="/pelanggaran-data/edit/{{ $id }}/save" method="post">
                                     @csrf
+                                    <input type="text" value="{{ auth()->user()->id }}" name="updated_by" hidden>
                                     <h4>Penyelesaian</h4>
                                     <div class="form-group">
                                         <select class="form-control" id="penyelesaian" style="width: 100%"

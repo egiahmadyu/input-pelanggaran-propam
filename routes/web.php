@@ -53,7 +53,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pelanggaran-data/edit/{id}/save', [PelanggaranController::class, 'saveEdit'])->name('pelanggaran.edit.save');
     Route::post('/pelanggaran-data/show', [PelanggaranController::class, 'show'])->name('pelanggaran.show');
     Route::post('/tambah-data/save', [PelanggaranController::class, 'save'])->name('pelanggaran.save');
-    Route::get('/pelanggaran-data/delete/{id}', [PelanggaranController::class, 'deleteData'])->name('pelanggaran.delete');
+    Route::post('/pelanggaran-data/delete', [PelanggaranController::class, 'deleteData'])->name('pelanggaran.delete');
 
 
     Route::get('data-master/wujud-perbuatan-pidana', [RefDataController::class, 'wujudPerbuatanPidana'])->name('refData.wujud_perbuatan_pidana');

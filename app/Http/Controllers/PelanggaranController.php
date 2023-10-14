@@ -21,6 +21,7 @@ use App\Models\WujudPerbuatanPidana;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -123,6 +124,12 @@ class PelanggaranController extends Controller
                     return $data->penyelesaian ? 'background-color: #2f13bd;color:white' : '';
                 }
             ])
+            ->addColumn('created', function ($data) {
+                return $data->created_by ? $data->pembuat->name : '-';
+            })
+            ->addColumn('updated', function ($data) {
+                return $data->updated_by ? $data->pengupdate->name : '-';
+            })
             ->rawColumns(['action'])
             ->make(true);
     }
@@ -131,7 +138,8 @@ class PelanggaranController extends Controller
     private function getData(Request $request)
     {
         $data = PelanggaranList::with('jenis_pelanggarans')->with('satuan_poldas')->with('pangkats')
-            ->with('genders')->with('wujud_perbuatans');
+            ->with('genders')->with('wujud_perbuatans')->with('pembuat')->with('pengupdate')
+            ->where('is_delete', 0);
 
 
         if (auth()->user()->getRoleNames()[0] == 'polda') {
@@ -292,7 +300,6 @@ class PelanggaranController extends Controller
     {
         // dd($id);
         unset($request['_token']);
-        // dd($request->all());
         PelanggaranList::where('id', $id)->update($request->all());
         PutusanPelanggar::where('pelanggar_id', $id)->delete();
         if ($request->penyelesaian == 'sidang') {
@@ -329,12 +336,27 @@ class PelanggaranController extends Controller
         return view('content.pelanggaran.detail', $data);
     }
 
-    public function deleteData($id)
+    public function deleteData(Request $request)
     {
-        $data = PelanggaranList::where('id', $id)->delete();
-        return response()->json([
-            'data' => $data
+        $id = $request->id;
+        $password = $request->password;
+        $user = User::find(auth()->user()->id);
+        if (!Hash::check($password, $user->password)) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Password Salah!'
+            ]);
+        }
+        $data = PelanggaranList::where('id', $id)->update([
+            'is_delete' => 1,
+            'deleted_by' => auth()->user()->id
         ]);
+
+
+        return response()->json([
+            'status' => 200,
+            'data' => $data
+        ])->setStatusCode(200);
     }
 
     public function exportData(Request $request)

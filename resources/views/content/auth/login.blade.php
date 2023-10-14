@@ -34,15 +34,18 @@
 
 
 
-    <div class="login-form-bg h-100">
-        <div class="container h-100">
-            <div class="row justify-content-center h-100">
-                <div class="col-xl-6">
+    <div class="login-form-bg h-100"
+        style="background-image: url('/bg.png');background-size: cover;background-position: bottom right;
+    ">
+        <div class="container-fluid h-100">
+            <div class="row justify-content-end h-100">
+                <div class="col-xl-4">
                     <div class="form-input-content">
-                        <div class="card login-form mb-0">
+                        <div class="card login-form mb-0" style="opacity: 0.9;">
                             <div class="card-body pt-5">
                                 <div style="text-align: center">
-                                    <img src="/assets/images/logo_login.png" class="img-fluid" alt="Responsive image" width="300">
+                                    <img src="/assets/images/logo_login.png" class="img-fluid" alt="Responsive image"
+                                        width="300">
                                 </div>
 
 
