@@ -8,7 +8,7 @@
         </div>
         <div class="header-left">
             <div class="input-group icons">
-                <img src="/assets/images/propam-presisi.jpg" class="img-fluid" alt="Responsive image" width="160">
+                <img src="/PRESISI-Garbha.png" class="img-fluid" alt="Responsive image" width="160">
                 {{-- <div class="input-group-prepend">
                     <span class="input-group-text bg-transparent border-0 pr-2 pr-sm-3" id="basic-addon1"><i
                             class="mdi mdi-magnify"></i></span>
