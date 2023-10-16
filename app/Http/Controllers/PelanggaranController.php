@@ -407,7 +407,9 @@ class PelanggaranController extends Controller
         $sheet->setCellValue('AL1', 'No Kep Penghentian');
         $sheet->setCellValue('AM1', 'Tgl Kep Penghentian');
         $sheet->setCellValue('AN1', 'Alasan Dihentikan');
-        $spreadsheet->getActiveSheet()->getStyle('A1:AN1')->applyFromArray($this->headerStyle);
+        $sheet->setCellValue('AO1', 'Dibuat oleh');
+        $sheet->setCellValue('AP1', 'Diupdate oleh');
+        $spreadsheet->getActiveSheet()->getStyle('A1:AP1')->applyFromArray($this->headerStyle);
         $startRow = 2;
         $startCol = 'A';
 
@@ -472,6 +474,10 @@ class PelanggaranController extends Controller
             $sheet->setCellValue("{$startCol}{$startRow}", $value->tglkepsp3);
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->alasan_dihentikan ? $value->alasan_berhentis->name : '');
+            $startCol++;
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->created_by ? $value->pembuat->name : '');
+            $startCol++;
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->updated_by ? $value->pengupdate->name : '');
             $startCol++;
             $startRow++;
             $startCol = 'A';

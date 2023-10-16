@@ -73,11 +73,6 @@
                                                 name="submit">Filter</button>
                                         </div>
                                     </div>
-                                    <div class="col-lg-8">
-                                        <div class="form-group">
-                                            <img src="/Tagline-Propam.png" alt="" class="img-fluid">
-                                        </div>
-                                    </div>
                                     {{-- <div class="col-lg-1">
                                     <div class="form-group">
                                         <label for="exampleFormControlInput1">.</label>
@@ -427,7 +422,7 @@
                 <div class="card">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
-                            <h4 class="mb-1">wujud Perbuatan Palanggaran
+                            <h4 class="mb-1">Wujud Perbuatan Palanggaran
                                 KEPP </h4> <a href="/export/kepp" class="btn btn-sm btn-info">Export</a>
                         </div>
                     </div>
@@ -489,8 +484,7 @@
                         <div class="card">
                             <div class="card-body pb-0 d-flex justify-content-between">
                                 <div>
-                                    <h4 class="mb-1">ata Pelanggaran Berdasarkan
-                                        Satker/ Polres</h4>
+                                    <h4 class="mb-1">Data Pelanggaran Berdasarkan Wilayah</h4>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -510,7 +504,8 @@
                             <div class="card">
                                 <div class="card-body pb-0 d-flex justify-content-between">
                                     <div>
-                                        <h4 class="mb-1">Data Pelanggar Berdasarkan Wilayah Polres</h4>
+                                        <h4 class="mb-1">Data Pelanggaran Berdasarkan
+                                            Satker/ Polres</h4>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -534,7 +529,6 @@
 
         #chart_new {
             width: 100%;
-            height: 500px;
         }
 
         #chart_new_polres {
@@ -880,213 +874,250 @@
          * ---------------------------------------
          */
 
-        am4core.ready(function() {
-            /**
-             * ---------------------------------------
-             * This demo was created using amCharts 4.
-             *
-             * For more information visit:
-             * https://www.amcharts.com/
-             *
-             * Documentation is available at:
-             * https://www.amcharts.com/docs/v4/
-             * ---------------------------------------
-             */
+        // am4core.ready(function() {
+        //     /**
+        //      * ---------------------------------------
+        //      * This demo was created using amCharts 4.
+        //      *
+        //      * For more information visit:
+        //      * https://www.amcharts.com/
+        //      *
+        //      * Documentation is available at:
+        //      * https://www.amcharts.com/docs/v4/
+        //      * ---------------------------------------
+        //      */
 
-            // Themes begin
+        //     // Themes begin
+        //     am4core.useTheme(am4themes_animated);
+        //     // Themes end
+
+
+        //     var chart = am4core.create('chart_new', am4charts.XYChart)
+        //     chart.colors.step = 2;
+
+        //     chart.legend = new am4charts.Legend()
+        //     chart.legend.position = 'top'
+        //     chart.legend.paddingBottom = 20
+        //     chart.legend.labels.template.maxWidth = 95
+
+        //     var xAxis = chart.xAxes.push(new am4charts.CategoryAxis())
+        //     xAxis.dataFields.category = 'name'
+        //     xAxis.renderer.cellStartLocation = 0.1
+        //     xAxis.renderer.cellEndLocation = 0.9
+        //     xAxis.renderer.grid.template.location = 0;
+
+        //     var yAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        //     yAxis.min = 0;
+
+        //     function createSeries(value, name) {
+        //         var series = chart.series.push(new am4charts.ColumnSeries())
+        //         series.dataFields.valueY = value
+        //         series.dataFields.categoryX = 'name'
+        //         series.name = name
+
+        //         series.events.on("hidden", arrangeColumns);
+        //         series.events.on("shown", arrangeColumns);
+
+        //         var bullet = series.bullets.push(new am4charts.LabelBullet())
+        //         bullet.interactionsEnabled = false
+        //         bullet.dy = 30;
+        //         bullet.label.text = '{valueY}'
+        //         bullet.label.fill = am4core.color('#ffffff')
+
+        //         return series;
+        //     }
+        //     var dataChart = {!! json_encode($chartPoldaNew, true) !!}
+
+        //     chart.data = dataChart
+
+
+        //     createSeries('total', 'Total Pelanggaran');
+        //     createSeries('selesai', 'Total Pelanggaran Selesai');
+
+        //     function arrangeColumns() {
+
+        //         var series = chart.series.getIndex(0);
+
+        //         var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
+        //         if (series.dataItems.length > 1) {
+        //             var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
+        //             var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
+        //             var delta = ((x1 - x0) / chart.series.length) * w;
+        //             if (am4core.isNumber(delta)) {
+        //                 var middle = chart.series.length / 2;
+
+        //                 var newIndex = 0;
+        //                 chart.series.each(function(series) {
+        //                     if (!series.isHidden && !series.isHiding) {
+        //                         series.dummyData = newIndex;
+        //                         newIndex++;
+        //                     } else {
+        //                         series.dummyData = chart.series.indexOf(series);
+        //                     }
+        //                 })
+        //                 var visibleCount = newIndex;
+        //                 var newMiddle = visibleCount / 2;
+
+        //                 chart.series.each(function(series) {
+        //                     var trueIndex = chart.series.indexOf(series);
+        //                     var newIndex = series.dummyData;
+
+        //                     var dx = (newIndex - trueIndex + middle - newMiddle) * delta
+
+        //                     series.animate({
+        //                         property: "dx",
+        //                         to: dx
+        //                     }, series.interpolationDuration, series.interpolationEasing);
+        //                     series.bulletsContainer.animate({
+        //                         property: "dx",
+        //                         to: dx
+        //                     }, series.interpolationDuration, series.interpolationEasing);
+        //                 })
+        //             }
+        //         }
+        //     }
+        // })
+
+        am4core.ready(function() {
             am4core.useTheme(am4themes_animated);
             // Themes end
 
+            // Create chart instance
+            var chart = am4core.create("chart_new", am4charts.XYChart);
 
-            var chart = am4core.create('chart_new', am4charts.XYChart)
-            chart.colors.step = 2;
-
-            chart.legend = new am4charts.Legend()
-            chart.legend.position = 'top'
-            chart.legend.paddingBottom = 20
-            chart.legend.labels.template.maxWidth = 95
-
-            var xAxis = chart.xAxes.push(new am4charts.CategoryAxis())
-            xAxis.dataFields.category = 'name'
-            xAxis.renderer.cellStartLocation = 0.1
-            xAxis.renderer.cellEndLocation = 0.9
-            xAxis.renderer.grid.template.location = 0;
-
-            var yAxis = chart.yAxes.push(new am4charts.ValueAxis());
-            yAxis.min = 0;
-
-            function createSeries(value, name) {
-                var series = chart.series.push(new am4charts.ColumnSeries())
-                series.dataFields.valueY = value
-                series.dataFields.categoryX = 'name'
-                series.name = name
-
-                series.events.on("hidden", arrangeColumns);
-                series.events.on("shown", arrangeColumns);
-
-                var bullet = series.bullets.push(new am4charts.LabelBullet())
-                bullet.interactionsEnabled = false
-                bullet.dy = 30;
-                bullet.label.text = '{valueY}'
-                bullet.label.fill = am4core.color('#ffffff')
-
-                return series;
-            }
+            // Add data
             var dataChart = {!! json_encode($chartPoldaNew, true) !!}
-
             chart.data = dataChart
 
+            // Create axes
+            var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.dataFields.category = "nama";
+            categoryAxis.numberFormatter.numberFormat = "#";
+            categoryAxis.renderer.inversed = true;
+            categoryAxis.renderer.grid.template.location = 0;
+            categoryAxis.renderer.cellStartLocation = 0.1;
+            categoryAxis.renderer.cellEndLocation = 0.9;
 
-            createSeries('total', 'Total Pelanggaran');
-            createSeries('selesai', 'Total Pelanggaran Selesai');
+            var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+            valueAxis.renderer.opposite = true;
 
-            function arrangeColumns() {
+            // Create series
+            function createSeries(field, name) {
+                var series = chart.series.push(new am4charts.ColumnSeries());
+                series.dataFields.valueX = field;
+                series.dataFields.categoryY = "nama";
+                series.name = name;
+                series.columns.template.tooltipText = "{name}: [bold]{valueX}[/]";
+                series.columns.template.height = am4core.percent(100);
+                series.sequencedInterpolation = true;
 
-                var series = chart.series.getIndex(0);
+                var valueLabel = series.bullets.push(new am4charts.LabelBullet());
+                valueLabel.label.text = "{valueX}";
+                valueLabel.label.horizontalCenter = "left";
+                valueLabel.label.dx = 10;
+                valueLabel.label.hideOversized = false;
+                valueLabel.label.truncate = false;
 
-                var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
-                if (series.dataItems.length > 1) {
-                    var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
-                    var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
-                    var delta = ((x1 - x0) / chart.series.length) * w;
-                    if (am4core.isNumber(delta)) {
-                        var middle = chart.series.length / 2;
-
-                        var newIndex = 0;
-                        chart.series.each(function(series) {
-                            if (!series.isHidden && !series.isHiding) {
-                                series.dummyData = newIndex;
-                                newIndex++;
-                            } else {
-                                series.dummyData = chart.series.indexOf(series);
-                            }
-                        })
-                        var visibleCount = newIndex;
-                        var newMiddle = visibleCount / 2;
-
-                        chart.series.each(function(series) {
-                            var trueIndex = chart.series.indexOf(series);
-                            var newIndex = series.dummyData;
-
-                            var dx = (newIndex - trueIndex + middle - newMiddle) * delta
-
-                            series.animate({
-                                property: "dx",
-                                to: dx
-                            }, series.interpolationDuration, series.interpolationEasing);
-                            series.bulletsContainer.animate({
-                                property: "dx",
-                                to: dx
-                            }, series.interpolationDuration, series.interpolationEasing);
-                        })
-                    }
-                }
+                var categoryLabel = series.bullets.push(new am4charts.LabelBullet());
+                categoryLabel.label.text = "{name}";
+                categoryLabel.label.horizontalCenter = "right";
+                categoryLabel.label.dx = -10;
+                categoryLabel.label.fill = am4core.color("#fff");
+                categoryLabel.label.hideOversized = false;
+                categoryLabel.label.truncate = false;
             }
+
+            createSeries("total", "Total");
+            createSeries("selesai", "Selesai");
+
+            var cellSize = 100;
+            chart.events.on("datavalidated", function(ev) {
+
+                // Get objects of interest
+                var chart = ev.target;
+                var categoryAxis = chart.yAxes.getIndex(0);
+
+                // Calculate how we need to adjust chart height
+                var adjustHeight = chart.data.length * cellSize - categoryAxis.pixelHeight;
+
+                // get current chart height
+                var targetHeight = chart.pixelHeight + adjustHeight;
+
+                // Set it on chart's container
+                chart.svgContainer.htmlElement.style.height = targetHeight + "px";
+            });
         })
 
         @if (auth()->user()->getRoleNames()[0] != 'admin')
-            am4core.ready(function() {
-                /**
-                 * ---------------------------------------
-                 * This demo was created using amCharts 4.
-                 *
-                 * For more information visit:
-                 * https://www.amcharts.com/
-                 *
-                 * Documentation is available at:
-                 * https://www.amcharts.com/docs/v4/
-                 * ---------------------------------------
-                 */
 
-                // Themes begin
+            am4core.ready(function() {
                 am4core.useTheme(am4themes_animated);
                 // Themes end
 
+                // Create chart instance
+                var chart = am4core.create("chart_new_polres", am4charts.XYChart);
 
-                var chart = am4core.create('chart_new_polres', am4charts.XYChart)
-                chart.colors.step = 2;
-
-                chart.legend = new am4charts.Legend()
-                chart.legend.position = 'top'
-                chart.legend.paddingBottom = 20
-                chart.legend.labels.template.maxWidth = 95
-
-                var xAxis = chart.xAxes.push(new am4charts.CategoryAxis())
-                xAxis.dataFields.category = 'name'
-                xAxis.renderer.cellStartLocation = 0.1
-                xAxis.renderer.cellEndLocation = 0.9
-                xAxis.renderer.grid.template.location = 0;
-
-                var yAxis = chart.yAxes.push(new am4charts.ValueAxis());
-                yAxis.min = 0;
-
-                function createSeries(value, name) {
-                    var series = chart.series.push(new am4charts.ColumnSeries())
-                    series.dataFields.valueY = value
-                    series.dataFields.categoryX = 'name'
-                    series.name = name
-
-                    series.events.on("hidden", arrangeColumns);
-                    series.events.on("shown", arrangeColumns);
-
-                    var bullet = series.bullets.push(new am4charts.LabelBullet())
-                    bullet.interactionsEnabled = false
-                    bullet.dy = 30;
-                    bullet.label.text = '{valueY}'
-                    bullet.label.fill = am4core.color('#ffffff')
-
-                    return series;
-                }
+                // Add data
                 var dataChart = {!! json_encode($chart_polres, true) !!}
-
                 chart.data = dataChart
 
+                // Create axes
+                var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+                categoryAxis.dataFields.category = "nama";
+                categoryAxis.numberFormatter.numberFormat = "#";
+                categoryAxis.renderer.inversed = true;
+                categoryAxis.renderer.grid.template.location = 0;
+                categoryAxis.renderer.cellStartLocation = 0.1;
+                categoryAxis.renderer.cellEndLocation = 0.9;
 
-                createSeries('total', 'Total Pelanggaran');
-                createSeries('selesai', 'Total Pelanggaran Selesai');
+                var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+                valueAxis.renderer.opposite = true;
 
-                function arrangeColumns() {
+                // Create series
+                function createSeries(field, name) {
+                    var series = chart.series.push(new am4charts.ColumnSeries());
+                    series.dataFields.valueX = field;
+                    series.dataFields.categoryY = "nama";
+                    series.name = name;
+                    series.columns.template.tooltipText = "{name}: [bold]{valueX}[/]";
+                    series.columns.template.height = am4core.percent(100);
+                    series.sequencedInterpolation = true;
 
-                    var series = chart.series.getIndex(0);
+                    var valueLabel = series.bullets.push(new am4charts.LabelBullet());
+                    valueLabel.label.text = "{valueX}";
+                    valueLabel.label.horizontalCenter = "left";
+                    valueLabel.label.dx = 10;
+                    valueLabel.label.hideOversized = false;
+                    valueLabel.label.truncate = false;
 
-                    var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
-                    if (series.dataItems.length > 1) {
-                        var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
-                        var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
-                        var delta = ((x1 - x0) / chart.series.length) * w;
-                        if (am4core.isNumber(delta)) {
-                            var middle = chart.series.length / 2;
-
-                            var newIndex = 0;
-                            chart.series.each(function(series) {
-                                if (!series.isHidden && !series.isHiding) {
-                                    series.dummyData = newIndex;
-                                    newIndex++;
-                                } else {
-                                    series.dummyData = chart.series.indexOf(series);
-                                }
-                            })
-                            var visibleCount = newIndex;
-                            var newMiddle = visibleCount / 2;
-
-                            chart.series.each(function(series) {
-                                var trueIndex = chart.series.indexOf(series);
-                                var newIndex = series.dummyData;
-
-                                var dx = (newIndex - trueIndex + middle - newMiddle) * delta
-
-                                series.animate({
-                                    property: "dx",
-                                    to: dx
-                                }, series.interpolationDuration, series.interpolationEasing);
-                                series.bulletsContainer.animate({
-                                    property: "dx",
-                                    to: dx
-                                }, series.interpolationDuration, series.interpolationEasing);
-                            })
-                        }
-                    }
+                    var categoryLabel = series.bullets.push(new am4charts.LabelBullet());
+                    categoryLabel.label.text = "{name}";
+                    categoryLabel.label.horizontalCenter = "right";
+                    categoryLabel.label.dx = -10;
+                    categoryLabel.label.fill = am4core.color("#fff");
+                    categoryLabel.label.hideOversized = false;
+                    categoryLabel.label.truncate = false;
                 }
+
+                createSeries("total", "Total");
+                createSeries("selesai", "Selesai");
+
+                var cellSize = 100;
+                chart.events.on("datavalidated", function(ev) {
+
+                    // Get objects of interest
+                    var chart = ev.target;
+                    var categoryAxis = chart.yAxes.getIndex(0);
+
+                    // Calculate how we need to adjust chart height
+                    var adjustHeight = chart.data.length * cellSize - categoryAxis.pixelHeight;
+
+                    // get current chart height
+                    var targetHeight = chart.pixelHeight + adjustHeight;
+
+                    // Set it on chart's container
+                    chart.svgContainer.htmlElement.style.height = targetHeight + "px";
+                });
             })
         @endif
     </script>

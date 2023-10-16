@@ -418,7 +418,7 @@ class DashboardController extends Controller
     private function getChartPoldaNew($request, $jenis_pelanggaran = null)
     {
         $data = PelanggaranList::groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
-            ->select(DB::raw('count(*) as total'), 'satuan_poldas.name', 'polda');
+            ->select(DB::raw('count(*) as total'), 'satuan_poldas.name as nama', 'polda');
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
 
@@ -448,8 +448,12 @@ class DashboardController extends Controller
             if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
             if ($request->tanggal_mulai) $query = $query->where('tgllp', '>=', $request->tanggal_mulai);
             if ($request->tanggal_akhir) $query = $query->where('tgllp', '<=', $request->tanggal_akhir);
-            if ($request->polres) {
-                $query = $query->where('polres', $request->polres);
+            if (auth()->user()->getRoleNames()[0] == 'polres') {
+                $query->where('polres', auth()->user()->polres_id);
+            } else {
+                if ($request->polres) {
+                    $query = $query->where('polres', $request->polres);
+                }
             }
             $query = $query->first();
             $value->selesai = is_null($query) ? 0 : $query->total;
@@ -462,7 +466,7 @@ class DashboardController extends Controller
         $data = PelanggaranList::groupBy('polres', 'satuan_polres.name')->leftJoin('satuan_polres', 'satuan_polres.id', 'pelanggaran_lists.polres')
             // ->whereNotNull('polres')
             // ->whereNull('polsek')
-            ->select(DB::raw('count(*) as total'), 'satuan_polres.name', 'polres');
+            ->select(DB::raw('count(*) as total'), 'satuan_polres.name as nama', 'polres');
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
 

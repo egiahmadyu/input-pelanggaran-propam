@@ -215,6 +215,11 @@
             Content body start
         ***********************************-->
         <div class="content-body">
+            <div class="row justify-content-md-center mt-2">
+                <div class="col-lg-5">
+                    <img src="/Tagline-Propam.png" alt="" class="img-fluid">
+                </div>
+            </div>
 
             @yield('content')
             <!-- #/ container -->
