@@ -16,14 +16,14 @@
 
                                             @if (auth()->user()->getRoleNames()[0] == 'polda')
                                                 <select class="form-control" id="polres" name="polres">
-                                                    <option value="">Polres / Satker/ Fungsi</option>
+                                                    <option value="">SEMUA</option>
                                                     @foreach ($list_polres as $value)
                                                         <option value="{{ $value->id }}">{{ $value->name }}</option>
                                                     @endforeach
                                                 </select>
                                             @else
                                                 <select class="form-control" id="polda" name="polda">
-                                                    <option value="">Polda</option>
+                                                    <option value="">Semua</option>
                                                     @foreach ($poldas as $value)
                                                         <option value="{{ $value->id }}">{{ $value->name }}</option>
                                                     @endforeach
@@ -262,7 +262,8 @@
                 <div class="card" style="height: 300px">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
-                            <h4 class="mb-1">Jumlah Pelanggaran Anggota Polri terhadap penyalahgunaan Narkoba</h4>
+                            <h4 class="mb-1">Jumlah Pelanggaran PNPP Terkait
+                                Penyalahgunaan Narkoba</h4>
                         </div>
                     </div>
                     <div class="card-body">
@@ -387,8 +388,8 @@
                 <div class="card">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
-                            <h4 class="mb-1">5 Wujud Perbuatan Pelanggaran Disiplin</h4><a href="/export/disiplin"
-                                class="btn btn-sm btn-info">Export</a>
+                            <h4 class="mb-1">Wujud Perbuatan Palanggaran
+                                Disiplin</h4><a href="/export/disiplin" class="btn btn-sm btn-info">Export</a>
                         </div>
                     </div>
                     <div class="card-body">
@@ -426,8 +427,8 @@
                 <div class="card">
                     <div class="card-body pb-0 d-flex justify-content-between">
                         <div>
-                            <h4 class="mb-1">5 Wujud Perbuatan Pelanggaran KEPP</h4> <a href="/export/kepp"
-                                class="btn btn-sm btn-info">Export</a>
+                            <h4 class="mb-1">wujud Perbuatan Palanggaran
+                                KEPP </h4> <a href="/export/kepp" class="btn btn-sm btn-info">Export</a>
                         </div>
                     </div>
                     <div class="card-body">
@@ -488,7 +489,8 @@
                         <div class="card">
                             <div class="card-body pb-0 d-flex justify-content-between">
                                 <div>
-                                    <h4 class="mb-1">Data Pelanggar Berdasarkan Wilayah</h4>
+                                    <h4 class="mb-1">ata Pelanggaran Berdasarkan
+                                        Satker/ Polres</h4>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -499,7 +501,8 @@
                 </div>
             </div>
         </div>
-        @if (auth()->user()->getRoleNames()[0] != 'admin')
+        @if (auth()->user()->getRoleNames()[0] != 'admin' &&
+                auth()->user()->getRoleNames()[0] != 'mabes')
             <div class="row">
                 <div class="col-lg-12">
                     <div class="row">

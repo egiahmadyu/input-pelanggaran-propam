@@ -169,7 +169,7 @@
                                             @if (auth()->user()->getRoleNames()[0] !== 'admin' &&
                                                     auth()->user()->getRoleNames()[0] !== 'mabes')
                                                 <select class="form-control" id="polda" style="width: 100%"
-                                                    name="polda" required=true onchange="getPolres()">
+                                                    name="polda" required=true>
                                                     <option value="">Pilih </option>
                                                     <option value="{{ auth()->user()->polda_id }}">
                                                         {{ auth()->user()->satuan_poldas->name }}</option>
@@ -187,7 +187,7 @@
                                         <div class="form-group">
                                             <label>Satker Mabes/ Satker Polda/ Polres</label>
                                             @if (auth()->user()->getRoleNames()[0] == 'polres')
-                                                <select class="form-control" id="polress" style="width: 100%"
+                                                <select class="form-control" id="polres" style="width: 100%"
                                                     name="polres">
                                                     <option value="{{ auth()->user()->polres_id }}">
                                                         {{ auth()->user()->satuan_polres->name }}</option>
@@ -589,6 +589,13 @@
 
 @push('script')
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if (auth()->user()->getRoleNames()[0] == 'polres')
+        <script>
+            $(document).ready(function() {
+                getPolsek()
+            })
+        </script>
+    @endif
     <script>
         $(document).ready(async function() {
             $('#nrp_nip').keyup(function() {
