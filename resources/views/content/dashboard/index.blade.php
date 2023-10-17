@@ -458,45 +458,55 @@
                 </div>
             </div>
         </div>
+        @if (auth()->user()->getRoleNames()[0] == 'admin' ||
+                auth()->user()->getRoleNames()[0] == 'mabes')
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body pb-0 d-flex justify-content-between">
+                                    <div>
+                                        <h4 class="mb-1">Data Pelanggaran Berdasarkan Wilayah</h4>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="chart_new"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @else
+            @if (auth()->user()->getRoleNames()[0] == 'polda' &&
+                    !$filter &&
+                    auth()->user()->getRoleNames()[0] != 'polres')
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body pb-0 d-flex justify-content-between">
+                                        <div>
+                                            <h4 class="mb-1">Data Pelanggaran Berdasarkan Wilayah</h4>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="chart_new"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        @endif
 
-        {{-- <div class="row">
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body pb-0 d-flex justify-content-between">
-                                <div>
-                                    <h4 class="mb-1">Data Pelanggar Berdasarkan Wilayah</h4>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div id="bar_chart"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body pb-0 d-flex justify-content-between">
-                                <div>
-                                    <h4 class="mb-1">Data Pelanggaran Berdasarkan Wilayah</h4>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div id="chart_new"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @if (auth()->user()->getRoleNames()[0] != 'admin' &&
-                auth()->user()->getRoleNames()[0] != 'mabes')
+        @if (
+            (auth()->user()->getRoleNames()[0] != 'admin' &&
+                auth()->user()->getRoleNames()[0] != 'mabes') ||
+                $filter)
             <div class="row">
                 <div class="col-lg-12">
                     <div class="row">
@@ -510,6 +520,30 @@
                                 </div>
                                 <div class="card-body">
                                     <div id="chart_new_polres"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        @if (auth()->user()->getRoleNames()[0] == 'polres' ||
+                (auth()->user()->getRoleNames()[0] == 'polda' &&
+                    $filter))
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body pb-0 d-flex justify-content-between">
+                                    <div>
+                                        <h4 class="mb-1">Data Pelanggaran Berdasarkan
+                                            Satker/ Polsek</h4>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="chart_polsek"></div>
                                 </div>
                             </div>
                         </div>
@@ -1059,6 +1093,81 @@
 
                 // Add data
                 var dataChart = {!! json_encode($chart_polres, true) !!}
+                chart.data = dataChart
+
+                // Create axes
+                var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+                categoryAxis.dataFields.category = "nama";
+                categoryAxis.numberFormatter.numberFormat = "#";
+                categoryAxis.renderer.inversed = true;
+                categoryAxis.renderer.grid.template.location = 0;
+                categoryAxis.renderer.cellStartLocation = 0.1;
+                categoryAxis.renderer.cellEndLocation = 0.9;
+
+                var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+                valueAxis.renderer.opposite = true;
+
+                // Create series
+                function createSeries(field, name) {
+                    var series = chart.series.push(new am4charts.ColumnSeries());
+                    series.dataFields.valueX = field;
+                    series.dataFields.categoryY = "nama";
+                    series.name = name;
+                    series.columns.template.tooltipText = "{name}: [bold]{valueX}[/]";
+                    series.columns.template.height = am4core.percent(100);
+                    series.sequencedInterpolation = true;
+
+                    var valueLabel = series.bullets.push(new am4charts.LabelBullet());
+                    valueLabel.label.text = "{valueX}";
+                    valueLabel.label.horizontalCenter = "left";
+                    valueLabel.label.dx = 10;
+                    valueLabel.label.hideOversized = false;
+                    valueLabel.label.truncate = false;
+
+                    var categoryLabel = series.bullets.push(new am4charts.LabelBullet());
+                    categoryLabel.label.text = "{name}";
+                    categoryLabel.label.horizontalCenter = "right";
+                    categoryLabel.label.dx = -10;
+                    categoryLabel.label.fill = am4core.color("#fff");
+                    categoryLabel.label.hideOversized = false;
+                    categoryLabel.label.truncate = false;
+                }
+
+                createSeries("total", "Total");
+                createSeries("selesai", "Selesai");
+
+                var cellSize = 100;
+                chart.events.on("datavalidated", function(ev) {
+
+                    // Get objects of interest
+                    var chart = ev.target;
+                    var categoryAxis = chart.yAxes.getIndex(0);
+
+                    // Calculate how we need to adjust chart height
+                    var adjustHeight = chart.data.length * cellSize - categoryAxis.pixelHeight;
+
+                    // get current chart height
+                    var targetHeight = chart.pixelHeight + adjustHeight;
+
+                    // Set it on chart's container
+                    chart.svgContainer.htmlElement.style.height = targetHeight + "px";
+                });
+            })
+        @endif
+
+        @if (auth()->user()->getRoleNames()[0] == 'polres' ||
+                (auth()->user()->getRoleNames()[0] == 'polda' &&
+                    $filter))
+
+            am4core.ready(function() {
+                am4core.useTheme(am4themes_animated);
+                // Themes end
+
+                // Create chart instance
+                var chart = am4core.create("chart_polsek", am4charts.XYChart);
+
+                // Add data
+                var dataChart = {!! json_encode($chart_polsek, true) !!}
                 chart.data = dataChart
 
                 // Create axes

@@ -69,6 +69,7 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
 
+        $filter = false;
         $data = [
             'pelanggarans' => $this->getAllPelanggaran($request),
             'putusans_disiplin' => $this->get_putusan($request, 1),
@@ -93,18 +94,18 @@ class DashboardController extends Controller
             'kepp_selesai' => $this->kepp_selesai($request)
         ];
 
-        if ($request->submit == 'print') {
-            $pdf = PDF::loadView('content.dashboard.index', $data);
-            return $pdf->stream();
-        }
-
 
         if (auth()->user()->getRoleNames()[0] != 'admin') {
             $data['chart_polres'] = $this->chartPolres($request);
             if (auth()->user()->getRoleNames()[0] == 'polda') {
                 $data['list_polres'] = SatuanPolres::where('polda_id', auth()->user()->polda_id)->get();
+                if ($request->polres) $data['chart_polsek'] = $this->chartPolsek($request);
+            } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+                $data['chart_polsek'] = $this->chartPolsek($request);
             }
         }
+        if ($request->polda || $request->polres) $filter = true;
+        $data['filter'] = $filter;
 
         return view('content.dashboard.index', $data);
     }
@@ -474,8 +475,6 @@ class DashboardController extends Controller
     {
         $data = PelanggaranList::groupBy('polres', 'satuan_polres.name')->leftJoin('satuan_polres', 'satuan_polres.id', 'pelanggaran_lists.polres')
         ->where('is_delete', 0)
-            // ->whereNotNull('polres')
-            // ->whereNull('polsek')
             ->select(DB::raw('count(*) as total'), 'satuan_polres.name as nama', 'polres');
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
@@ -504,6 +503,48 @@ class DashboardController extends Controller
                 ->where('polres', $value->polres)
                 ->whereNotNull('polda')
                 ->select(DB::raw('count(*) as total'), 'satuan_polres.name', 'polres');
+            if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
+            if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
+            if ($request->tanggal_mulai) $query = $query->where('tgllp', '>=', $request->tanggal_mulai);
+            if ($request->tanggal_akhir) $query = $query->where('tgllp', '<=', $request->tanggal_akhir);
+            $query = $query->first();
+            $value->selesai = is_null($query) ? 0 : $query->total;
+        }
+        return $data;
+    }
+
+    public function chartPolsek($request, $jenis_pelanggaran = null)
+    {
+        $data = PelanggaranList::groupBy('polsek', 'satuan_polseks.name')->leftJoin('satuan_polseks', 'satuan_polseks.id', 'pelanggaran_lists.polsek')
+        ->where('is_delete', 0)
+            ->select(DB::raw('count(*) as total'), 'satuan_polseks.name as nama', 'polsek');
+
+        if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
+
+
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
+
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
+        }
+        $data = $data->get();
+        foreach ($data as $key => $value) {
+            $query = PelanggaranList::groupBy('polsek', 'satuan_polseks.name')->join('satuan_polseks', 'satuan_polseks.id', 'pelanggaran_lists.polsek')
+            ->where('is_delete', 0)
+                ->whereNotNull('penyelesaian')
+                ->where('polsek', $value->polsek)
+                ->whereNotNull('polda')
+                ->select(DB::raw('count(*) as total'), 'satuan_polseks.name', 'polsek');
             if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
             if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
             if ($request->tanggal_mulai) $query = $query->where('tgllp', '>=', $request->tanggal_mulai);
