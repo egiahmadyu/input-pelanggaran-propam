@@ -122,6 +122,7 @@ class DashboardController extends Controller
             ->where('putusans.jenis_pelanggaran_id', $jenis)
             ->select('putusans.name', DB::raw('count(putusan_pelanggars.id) as total'))
             ->join('pelanggaran_lists', 'pelanggaran_lists.id', 'putusan_pelanggars.pelanggar_id')
+            ->where('is_delete', 0)
             ->groupBy('putusans.id');
         if ($request->polres) {
             $data = $data
@@ -144,7 +145,7 @@ class DashboardController extends Controller
     public function disiplin_selesai(Request $request)
     {
         $data = PelanggaranList::whereNotNull('penyelesaian')
-            ->where('jenis_pelanggaran', 1);
+            ->where('jenis_pelanggaran', 1)->where('is_delete', 0);
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
@@ -166,7 +167,7 @@ class DashboardController extends Controller
     public function kepp_selesai(Request $request)
     {
         $data = PelanggaranList::whereNotNull('penyelesaian')
-            ->where('jenis_pelanggaran', 2);
+            ->where('jenis_pelanggaran', 2)->where('is_delete', 0);
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
@@ -233,7 +234,7 @@ class DashboardController extends Controller
 
     private function getAllPelanggaran($request)
     {
-        $data = PelanggaranList::orderBy('tgllp', 'asc');
+        $data = PelanggaranList::orderBy('tgllp', 'asc')->where('is_delete', 0);
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
@@ -255,6 +256,7 @@ class DashboardController extends Controller
     private function getDataPungli($request, $jenis_pelanggaran = null)
     {
         $data = PelanggaranList::groupBy('wujud_perbuatan', 'wujud_perbuatans.name')
+        ->where('is_delete', 0)
             // ->join('wujud_perbuatan_pidanas', 'wujud_perbuatan_pidanas.id', 'pelanggaran_lists.wujud_perbuatan_pidana')
             ->join('wujud_perbuatans', 'wujud_perbuatans.id', 'pelanggaran_lists.wujud_perbuatan')
             ->whereIn('wujud_perbuatans.name', ['6w Melakukan pungutan tidak sah dalam bentuk apa pun untuk kepentingan pribadi, golongan, atau pihak lain', '5a Korupsi '])
@@ -281,6 +283,7 @@ class DashboardController extends Controller
     private function getDataJenisNarkoba($request, $jenis_pelanggaran = null)
     {
         $data = PelanggaranList::groupBy('jenis_narkoba', 'jenis_narkobas.name')->join('jenis_narkobas', 'jenis_narkobas.id', 'jenis_narkoba')
+        ->where('is_delete', 0)
             ->select('jenis_narkobas.name', (DB::raw('count(*) as total')));
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
@@ -306,6 +309,7 @@ class DashboardController extends Controller
     private function getDataPenggunaanNarkoba($request, $jenis_pelanggaran = null)
     {
         $data = PelanggaranList::groupBy('peran_narkoba', 'peran_narkobas.name')->join('peran_narkobas', 'peran_narkobas.id', 'peran_narkoba')
+        ->where('is_delete', 0)
             ->select('peran_narkobas.name', (DB::raw('count(*) as total')));
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
@@ -334,6 +338,7 @@ class DashboardController extends Controller
         $data = PelanggaranList::groupBy('wujud_perbuatan', 'wujud_perbuatans.name', 'jenis_pelanggarans.name')->join('wujud_perbuatans', 'wujud_perbuatans.id', 'pelanggaran_lists.wujud_perbuatan')
             ->join('jenis_pelanggarans', 'jenis_pelanggarans.id', 'wujud_perbuatans.jenis_pelanggaran_id')
             ->select(DB::raw('count(*) as total'), 'wujud_perbuatans.name', 'jenis_pelanggarans.name as type')
+            ->where('is_delete', 0)
             ->orderBy(DB::raw('count(*)'), 'desc')
             ->limit(5);
 
@@ -364,6 +369,7 @@ class DashboardController extends Controller
             ->join('wujud_perbuatan_pidanas', 'wujud_perbuatan_pidanas.id', 'pelanggaran_lists.wujud_perbuatan_pidana')
             ->join('jenis_pelanggarans', 'jenis_pelanggarans.id', 'wujud_perbuatan_pidanas.jenis_pelanggaran_id')
             ->select(DB::raw('count(*) as total'), 'wujud_perbuatan_pidanas.name', 'jenis_pelanggarans.name as type')
+            ->where('is_delete', 0)
             ->orderBy(DB::raw('count(*)'), 'desc')
             ->limit(5);
 
@@ -390,6 +396,7 @@ class DashboardController extends Controller
     private function getChartPolda($request, $jenis_pelanggaran = null)
     {
         $data = PelanggaranList::groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
+        ->where('is_delete', 0)
             ->select(DB::raw('count(*) as total'), 'satuan_poldas.name', 'polda');
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
@@ -418,6 +425,7 @@ class DashboardController extends Controller
     private function getChartPoldaNew($request, $jenis_pelanggaran = null)
     {
         $data = PelanggaranList::groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
+        ->where('is_delete', 0)
             ->select(DB::raw('count(*) as total'), 'satuan_poldas.name as nama', 'polda');
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
@@ -441,6 +449,7 @@ class DashboardController extends Controller
         $data = $data->get();
         foreach ($data as $key => $value) {
             $query = PelanggaranList::groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
+            ->where('is_delete', 0)
                 ->whereNotNull('penyelesaian')
                 ->where('polda', $value->polda)
                 ->select(DB::raw('count(*) as total'), 'satuan_poldas.name', 'polda');
@@ -464,6 +473,7 @@ class DashboardController extends Controller
     public function chartPolres($request, $jenis_pelanggaran = null)
     {
         $data = PelanggaranList::groupBy('polres', 'satuan_polres.name')->leftJoin('satuan_polres', 'satuan_polres.id', 'pelanggaran_lists.polres')
+        ->where('is_delete', 0)
             // ->whereNotNull('polres')
             // ->whereNull('polsek')
             ->select(DB::raw('count(*) as total'), 'satuan_polres.name as nama', 'polres');
@@ -489,6 +499,7 @@ class DashboardController extends Controller
         $data = $data->get();
         foreach ($data as $key => $value) {
             $query = PelanggaranList::groupBy('polres', 'satuan_polres.name')->join('satuan_polres', 'satuan_polres.id', 'pelanggaran_lists.polres')
+            ->where('is_delete', 0)
                 ->whereNotNull('penyelesaian')
                 ->where('polres', $value->polres)
                 ->whereNotNull('polda')
@@ -506,6 +517,7 @@ class DashboardController extends Controller
     private function getDataByGender($request, $jenis_pelanggaran = null)
     {
         $data = PelanggaranList::groupBy('jenis_kelamin', 'gender')->join('genders', 'genders.id', 'pelanggaran_lists.jenis_kelamin')
+        ->where('is_delete', 0)
             ->select(DB::raw('count(*) as total'), 'gender');
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
@@ -532,6 +544,7 @@ class DashboardController extends Controller
     private function getDataByWpp($request, $jenis_pelanggaran = null)
     {
         $data = PelanggaranList::groupBy('wujud_perbuatan_pidana', 'name')->join('wujud_perbuatan_pidanas', 'wujud_perbuatan_pidanas.id', 'pelanggaran_lists.wujud_perbuatan_pidana')
+        ->where('is_delete', 0)
             ->select(DB::raw('count(*) as total'), 'name');
 
         if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
@@ -558,6 +571,7 @@ class DashboardController extends Controller
     private function getDataByPangkatPelanggar($request, $jenis_pelanggaran = null)
     {
         $data = PelanggaranList::groupBy('pangkat_pelanggarans.id', 'pangkat_pelanggarans.name', 'pangkat_pelanggarans.id')
+        ->where('is_delete', 0)
             ->join('pangkats', 'pangkats.id', 'pelanggaran_lists.pangkat')
             ->join('pangkat_pelanggarans', 'pangkat_pelanggarans.id', 'pangkats.pangkat_pelanggar_id')
             ->select(DB::raw('count(*) as percent'), 'pangkat_pelanggarans.name as type', 'pangkat_pelanggarans.id');
@@ -582,6 +596,7 @@ class DashboardController extends Controller
         $data = $data->get();
         foreach ($data as $value) {
             $query = PelanggaranList::groupBy('pangkat', 'pangkats.name')->join('pangkats', 'pangkats.id', 'pelanggaran_lists.pangkat')
+            ->where('is_delete', 0)
                 ->select(DB::raw('count(*) as percent'), 'pangkats.name as type')
                 ->where('pangkats.pangkat_pelanggar_id', $value->id);
             if ($jenis_pelanggaran) $query = $query->where('jenis_pelanggaran', $jenis_pelanggaran);
@@ -608,7 +623,7 @@ class DashboardController extends Controller
 
     private function getDataByPelanggarNarkoba($request, $jenis_pelanggaran = null)
     {
-        $data = PelanggaranList::where('wujud_perbuatan_pidana', 1);
+        $data = PelanggaranList::where('wujud_perbuatan_pidana', 1)->where('is_delete', 0);
 
         if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->count();
 
@@ -633,7 +648,7 @@ class DashboardController extends Controller
 
     private function getJenisPelanggaran($request, $jenis_pelanggaran = null)
     {
-        $data = PelanggaranList::where('jenis_pelanggaran', $jenis_pelanggaran);
+        $data = PelanggaranList::where('jenis_pelanggaran', $jenis_pelanggaran)->where('is_delete', 0);
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
@@ -669,6 +684,7 @@ class DashboardController extends Controller
             ->join('jenis_pelanggarans', 'jenis_pelanggarans.id', 'wujud_perbuatans.jenis_pelanggaran_id')
             ->select(DB::raw('count(*) as total'), 'wujud_perbuatans.name', 'jenis_pelanggarans.name as type')
             ->orderBy(DB::raw('count(*)'), 'desc')
+            ->where('is_delete', 0)
             ->where('jenis_pelanggaran', 2);
         if (auth()->user()->getRoleNames()[0] == 'polda') {
             $data->where('polda', auth()->user()->polda_id);
@@ -711,6 +727,7 @@ class DashboardController extends Controller
             ->join('jenis_pelanggarans', 'jenis_pelanggarans.id', 'wujud_perbuatans.jenis_pelanggaran_id')
             ->select(DB::raw('count(*) as total'), 'wujud_perbuatans.name', 'jenis_pelanggarans.name as type')
             ->orderBy(DB::raw('count(*)'), 'desc')
+            ->where('is_delete', 0)
             ->where('jenis_pelanggaran', 1);
         if (auth()->user()->getRoleNames()[0] == 'polda') {
             $data->where('polda', auth()->user()->polda_id);
