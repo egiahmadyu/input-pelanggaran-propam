@@ -32,7 +32,7 @@
                                     @csrf
                                     <div class="f1-steps" style="text-align: center;">
                                         <div class="f1-progress">
-                                            <div class="f1-progress-line" data-now-value="20" data-number-of-steps="5"
+                                            <div class="f1-progress-line" data-now-value="25" data-number-of-steps="4"
                                                 style="width: 20%;"></div>
                                         </div>
                                         <div class="f1-step active">
@@ -51,23 +51,34 @@
                                             <div class="f1-step-icon"><i class="fa fa-key"></i></div>
                                             <p>Pelanggaran</p>
                                         </div>
-                                        <div class="f1-step">
-                                            <div class="f1-step-icon"><i class="fa fa-address-book"></i></div>
-                                            <p>Penyelesaian</p>
-                                        </div>
                                     </div>
 
                                     <fieldset>
                                         <h4>Jenis Pelanggaran</h4>
                                         <div class="form-group">
-                                            <select class="form-control select2" id="jenis_pelanggaran" style="width: 100%"
-                                                name="jenis_pelanggaran" onchange="getWujudPerbuatan()">
-                                                @foreach ($jenis_pelanggarans as $jenis_pelanggaran)
-                                                    <option value="{{ $jenis_pelanggaran->id }}"
-                                                        {{ $data->jenis_pelanggaran == $jenis_pelanggaran->id ? 'selected' : '' }}>
-                                                        {{ $jenis_pelanggaran->name }}</option>
-                                                @endforeach
-                                            </select>
+                                            @if (auth()->user()->getRoleNames()[0] == 'mabes')
+                                                <select class="form-control select2" id="jenis_pelanggaran"
+                                                    style="width: 100%" name="jenis_pelanggaran"
+                                                    onchange="getWujudPerbuatan()" required="true">
+                                                    <option value="">Pilih</option>
+                                                    @if (auth()->user()->mabes == 'provos')
+                                                        <option value="1">Disiplin</option>
+                                                    @elseif(auth()->user()->mabes == 'wabprof')
+                                                        <option value="2">KEPP (Kode Etik Profesi Polri)</option>
+                                                    @endif
+                                                </select>
+                                            @else
+                                                <select class="form-control select2" id="jenis_pelanggaran"
+                                                    style="width: 100%" name="jenis_pelanggaran"
+                                                    onchange="getWujudPerbuatan()">
+                                                    @foreach ($jenis_pelanggarans as $jenis_pelanggaran)
+                                                        <option value="{{ $jenis_pelanggaran->id }}"
+                                                            {{ $data->jenis_pelanggaran == $jenis_pelanggaran->id ? 'selected' : '' }}>
+                                                            {{ $jenis_pelanggaran->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            @endif
+
                                         </div>
                                         <div class="f1-buttons">
                                             <button type="button" class="btn btn-primary btn-next">Selanjutnya <i
@@ -78,9 +89,30 @@
                                     <fieldset>
                                         <h4>Identitas Pelanggar</h4>
                                         <div class="form-group">
+                                            <label>Pelanggar</label>
+                                            <input type="text" value="{{ auth()->user()->id }}" name="edited_by" hidden>
+                                            <select class="form-control" id="pelanggar" style="width: 100%" name="pelanggar"
+                                                onchange="check_pelanggar_orang()" required="true">
+                                                <option value="">Pilih </option>
+                                                <option value="polri" {{ $data->pelanggar == 'polri' ? 'selected' : '' }}>
+                                                    Polri</option>
+                                                <option value="asn" {{ $data->pelanggar == 'asn' ? 'selected' : '' }}>
+                                                    ASN</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
                                             <label>NRP / NIP</label>
-                                            <input type="text" name="nrp_nip" placeholder="" class="form-control"
-                                                required="true" value="{{ $data->nrp_nip }}">
+                                            <div class="row">
+                                                <div class="col-lg-8">
+                                                    <input type="text" name="nrp_nip" placeholder="" class="form-control"
+                                                        id="nrp_nip" required="true" maxlength="8" minlength="8"
+                                                        value="{{ $data->nrp_nip }}">
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <button class="btn btn-info" onclick="check_nrp()"
+                                                        type="button">Check</button>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <label>Nama</label>
@@ -100,7 +132,8 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Pangkat</label>
-                                            <select class="form-control" id="pangkat" style="width: 100%" name="pangkat">
+                                            <select class="form-control" id="pangkat" style="width: 100%"
+                                                name="pangkat">
                                                 @foreach ($pangkats as $pangkat)
                                                     <option value="{{ $pangkat->id }}"
                                                         {{ $data->pangkat == $pangkat->id ? 'selected' : '' }}>
@@ -112,9 +145,10 @@
                                             <label>Jabatan</label>
                                             <textarea name="jabatan" class="form-control" value="{{ $data->jabatan }}">{{ $data->jabatan }}</textarea>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" id="div_diktuk">
                                             <label>Diktuk</label>
-                                            <select class="form-control" id="diktuk" style="width: 100%" name="diktuk">
+                                            <select class="form-control" id="diktuk" style="width: 100%"
+                                                name="diktuk">
                                                 @foreach ($diktuks as $diktuk)
                                                     <option value="{{ $diktuk->id }}"
                                                         {{ $data->diktuk == $diktuk->id ? 'selected' : '' }}>
@@ -133,21 +167,41 @@
                                     <fieldset>
                                         <h4>Kesatuan</h4>
                                         <div class="form-group">
-                                            <label>Polda</label>
-                                            <select class="form-control" id="polda" style="width: 100%"
-                                                name="polda" onchange="getPolres()">
-                                                @foreach ($poldas as $polda)
-                                                    <option value="{{ $polda->id }}"
-                                                        {{ $data->polda == $polda->id ? 'selected' : '' }}>
-                                                        {{ $polda->name }}</option>
-                                                @endforeach
-                                            </select>
+                                            <label>Mabes / Polda</label>
+                                            @if (auth()->user()->getRoleNames()[0] !== 'admin' &&
+                                                    auth()->user()->getRoleNames()[0] !== 'mabes')
+                                                <select class="form-control" id="polda" style="width: 100%"
+                                                    name="polda" required=true
+                                                    onchange="{{ auth()->user()->getRoleNames()[0] !== 'polres'? 'getPolres()': '' }}">>
+                                                    <option value="">Pilih </option>
+                                                    <option value="{{ auth()->user()->polda_id }}"
+                                                        {{ $data->polda == auth()->user()->polda_id ? 'selected' : '' }}>
+                                                        {{ auth()->user()->satuan_poldas->name }}</option>
+                                                </select>
+                                            @else
+                                                <select class="form-control" id="polda" style="width: 100%"
+                                                    name="polda" onchange="getPolres()">
+                                                    @foreach ($poldas as $polda)
+                                                        <option value="{{ $polda->id }}"
+                                                            {{ $data->polda == $polda->id ? 'selected' : '' }}>
+                                                            {{ $polda->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            @endif
                                         </div>
                                         <div class="form-group">
-                                            <label>Satker / Fungsi / Polres</label>
-                                            <select class="form-control" id="polres" style="width: 100%"
-                                                name="polres" onchange="getPolsek()">
-                                            </select>
+                                            <label>Satker Mabes/ Satker Polda/ Polres</label>
+                                            @if (auth()->user()->getRoleNames()[0] == 'polres')
+                                                <select class="form-control" id="polres" style="width: 100%"
+                                                    name="polres">
+                                                    <option value="{{ auth()->user()->polres_id }}">
+                                                        {{ auth()->user()->satuan_polres->name }}</option>
+                                                </select>
+                                            @else
+                                                <select class="form-control" id="polres" style="width: 100%"
+                                                    name="polres" onchange="getPolsek()">
+                                                </select>
+                                            @endif
                                         </div>
                                         <div class="form-group">
                                             <label>Polsek</label>
@@ -170,19 +224,19 @@
                                     <fieldset>
                                         <h4>Pelanggaran</h4>
                                         <div class="form-group">
-                                            <label>No Lp</label>
+                                            <label>Nomor Laporan Polisi</label>
                                             <input type="text" name="nolp" id="nolp" class="form-control"
                                                 value="{{ $data->nolp }}">
                                         </div>
                                         <div class="form-group">
-                                            <label>Tanggal Lp</label>
+                                            <label>Tanggal Laporan Polisi</label>
                                             <input type="date" name="tgllp" id="tgllp" class="form-control"
                                                 value="{{ $data->tgllp }}">
                                         </div>
                                         <div class="form-group">
                                             <label>Wujud Perbuatan</label>
                                             <select class="form-control" id="wujud_perbuatan" style="width: 100%"
-                                                name="wujud_perbuatan">
+                                                name="wujud_perbuatan" onchange="checkWujudPerbuatan()">
                                                 @foreach ($wujud_perbuatans as $wujud_perbuatan)
                                                     <option value="{{ $wujud_perbuatan->id }}"
                                                         {{ $data->wujud_perbuatan == $wujud_perbuatan->id ? 'selected' : '' }}>
@@ -190,55 +244,6 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="form-group">
-                                            <label>Kronologis Singkat</label>
-                                            <textarea name="kronologi_singkat" class="form-control">{{ $data->kronologi_singkat }}</textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>pasal Pelanggaran</label>
-                                            <input type="text" name="pasal_pelanggaran" id="pasal_pelanggaran"
-                                                class="form-control" value="{{ $data->pasal_pelanggaran }}">
-                                        </div>
-                                        <hr>
-                                        <div class="form-group">
-                                            <label><b>Dilakukan Pidana</b></label>
-                                            <select class="form-control" id="dilakukan_pidana" style="width: 100%"
-                                                name="pidana" onchange="checkPidana()">
-                                                <option value="YA" {{ $data->pidana == 'YA' ? 'selected' : '' }}>
-                                                    YA</option>
-                                                <option value="TIDAK" {{ $data->pidana == 'TIDAK' ? 'selected' : '' }}>
-                                                    TIDAK</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group divCheckPidana">
-                                            <label>Wujud Perbuatan Pidana</label>
-                                            <select class="form-control" id="wujud_perbuatan_pidana" style="width: 100%"
-                                                name="wujud_perbuatan_pidana" onchange="checkWPP()">
-                                                <option value="">Pilih</option>
-                                                @foreach ($wujud_perbuatanPidanas as $wujud_perbuatanPidana)
-                                                    <option value="{{ $wujud_perbuatanPidana->id }}"
-                                                        {{ $data->wujud_perbuatan_pidana == $wujud_perbuatanPidana->id ? 'selected' : '' }}>
-                                                        {{ $wujud_perbuatanPidana->name }}</option>
-                                                @endforeach
-                                            </select>
-
-                                        </div>
-                                        <div class="form-group divCheckPidana">
-                                            <label>No Lp Pidana</label>
-                                            <input type="text" name="nolp_pidana" id="nolp_pidana"
-                                                class="form-control" value="{{ $data->nolp_pidana }}">
-                                        </div>
-                                        <div class="form-group divCheckPidana">
-                                            <label>Tanggal LP Pidana</label>
-                                            <input type="date" name="tgllp_pidana" id="tgllp_pidana"
-                                                class="form-control" value="{{ $data->tgllp_pidana }}">
-                                        </div>
-                                        <div class="form-group divCheckPidana">
-                                            <label>Pasal Pidana</label>
-                                            <input type="text" name="pasal_pidana" id="pasal_pidana"
-                                                class="form-control" value="{{ $data->pasal_pidana }}">
-                                        </div>
-                                        <hr>
                                         <div id="narkobaDiv">
                                             <h5>Pelanggaran Narkoba</h5>
                                             <div class="form-group">
@@ -256,26 +261,86 @@
                                             <div class="form-group">
                                                 <label>Jenis Narkoba</label>
                                                 <select class="form-control" id="jenis_narkoba" style="width: 100%"
-                                                    name="jenis_narkoba">
+                                                    name="jenis_narkoba" onchange="check_jenis_narkoba()">
                                                     <option value="">Pilih</option>
                                                     @foreach ($jenis_narkobas as $jenis_narkoba)
                                                         <option value="{{ $jenis_narkoba->id }}"
                                                             {{ $data->jenis_narkoba == $jenis_narkoba->id ? 'selected' : '' }}>
                                                             {{ $jenis_narkoba->name }}</option>
                                                     @endforeach
+                                                    <option value="0">Lain - Lain</option>
                                                 </select>
                                             </div>
+                                            <div class="form-group" id="jenis_narkoba_baru_div" style="display:none">
+                                                <label>Tambah Jenis Narkoba</label>
+                                                <input type="text" name="jenis_narkoba_baru" id="jenis_narkoba_baru"
+                                                    class="form-control">
+                                            </div>
                                         </div>
+                                        <div class="form-group">
+                                            <label>Kronologis Singkat</label>
+                                            <textarea name="kronologi_singkat" class="form-control">{{ $data->kronologi_singkat }}</textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Pasal Pelanggaran</label>
+                                            <input type="text" name="pasal_pelanggaran" id="pasal_pelanggaran"
+                                                class="form-control" value="{{ $data->pasal_pelanggaran }}">
+                                        </div>
+                                        <hr>
+                                        <div class="form-group">
+                                            <label><b>Dilakukan Pidana</b></label>
+                                            <select class="form-control" id="dilakukan_pidana" style="width: 100%"
+                                                name="pidana" onchange="checkPidana()">
+                                                <option value="YA" {{ $data->pidana == 'YA' ? 'selected' : '' }}>
+                                                    YA</option>
+                                                <option value="TIDAK" {{ $data->pidana == 'TIDAK' ? 'selected' : '' }}>
+                                                    TIDAK</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group divCheckPidana">
+                                            <label>Nomor Laporan Polisi Pidana</label>
+                                            <input type="text" name="nolp_pidana" id="nolp_pidana"
+                                                class="form-control" value="{{ $data->nolp_pidana }}">
+                                        </div>
+                                        <div class="form-group divCheckPidana">
+                                            <label>Tanggal Laporan Polisi Pidana</label>
+                                            <input type="date" name="tgllp_pidana" id="tgllp_pidana"
+                                                class="form-control" value="{{ $data->tgllp_pidana }}">
+                                        </div>
+                                        <div class="form-group divCheckPidana">
+                                            <label>Wujud Perbuatan Pidana</label>
+                                            <select class="form-control" id="wujud_perbuatan_pidana" style="width: 100%"
+                                                name="wujud_perbuatan_pidana" onchange="checkWPP()">
+                                                <option value="">Pilih</option>
+                                                @foreach ($wujud_perbuatanPidanas as $wujud_perbuatanPidana)
+                                                    <option value="{{ $wujud_perbuatanPidana->id }}"
+                                                        {{ $data->wujud_perbuatan_pidana == $wujud_perbuatanPidana->id ? 'selected' : '' }}>
+                                                        {{ $wujud_perbuatanPidana->name }}</option>
+                                                @endforeach
+                                            </select>
+
+                                        </div>
+                                        <div class="form-group divCheckPidana">
+                                            <label>Pasal Pidana</label>
+                                            <input type="text" name="pasal_pidana" id="pasal_pidana"
+                                                class="form-control" value="{{ $data->pasal_pidana }}">
+                                        </div>
+                                        <div class="form-group divCheckPidana">
+                                            <label>Putusan Sidang Pidana</label>
+                                            <input type="text" name="putusan_sidang_pidana" id="putusan_sidang_pidana"
+                                                class="form-control" value="{{ $data->putusan_sidang_pidana }}">
+                                        </div>
+                                        <hr>
 
                                         <div class="f1-buttons">
                                             <button type="button" class="btn btn-warning btn-previous"><i
                                                     class="fa fa-arrow-left"></i> Sebelumnya</button>
-                                            <button type="button" class="btn btn-primary btn-next">Selanjutnya <i
-                                                    class="fa fa-arrow-right"></i></button>
+                                            <button type="submit" class="btn btn-primary btn-submit"><i
+                                                    class="fa fa-save"></i> Submit</button>
                                         </div>
                                     </fieldset>
                                     <!-- step 4 -->
-                                    <fieldset>
+                                    {{-- <fieldset>
                                         <h4>Penyelesaian</h4>
                                         <hr>
                                         <h5>Sidang</h5>
@@ -290,19 +355,19 @@
                                                 value="{{ date('Y-m-d', strtotime($data->tgl_kep)) }}">
                                         </div>
                                         @for ($i = 1; $i < 13; $i++)
-                                        <div class="form-group">
-                                            <label>Putusan {{ $i }}</label>
-                                            <select class="form-control" id="putusan_{{ $i }}"
-                                                style="width: 100%" name="putusan_{{ $i }}">
-                                                <option value="">Pilih</option>
-                                                @foreach ($putusans as $index => $putusan)
-                                                    <option value="{{ $putusan->id }}"
-                                                        {{ $putusan->id == $list_petusan["putusan_{$i}"] ? 'selected ' : '' }}>
-                                                        {{ $putusan->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    @endfor
+                                            <div class="form-group">
+                                                <label>Putusan {{ $i }}</label>
+                                                <select class="form-control" id="putusan_{{ $i }}"
+                                                    style="width: 100%" name="putusan_{{ $i }}">
+                                                    <option value="">Pilih</option>
+                                                    @foreach ($putusans as $index => $putusan)
+                                                        <option value="{{ $putusan->id }}"
+                                                            {{ $putusan->id == $list_petusan["putusan_{$i}"] ? 'selected ' : '' }}>
+                                                            {{ $putusan->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        @endfor
                                         <hr>
                                         <h5>Dihentikan</h5>
                                         <div class="form-group">
@@ -321,11 +386,28 @@
                                             <button type="submit" class="btn btn-primary btn-submit"><i
                                                     class="fa fa-save"></i> Submit</button>
                                         </div>
-                                    </fieldset>
+                                    </fieldset> --}}
                                 </form>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" id="modal_check">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Check Pelanggar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="body_detail">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -361,7 +443,7 @@
         .f1-step {
             position: relative;
             float: left;
-            width: 20%;
+            width: 25%;
             padding: 0 5px;
         }
 
@@ -423,75 +505,261 @@
 @endpush
 
 @push('script')
+    <script></script>
     <script>
         $(document).ready(async function() {
             $('select').select2({
                 theme: "bootstrap4"
             });
             await getPolres()
-            getWujudPerbuatan()
+            await getWujudPerbuatan()
             checkWPP()
             checkPidana()
+            checkWujudPerbuatan()
+            // check_pelanggar_orang()
             const dayText = {
                 en: "Su,Mo,Tu,We,Th,Fr,Sa".split(","),
                 id: "Mi,Se,Sl,Ra,Ka,Ju,Sa".split(","),
-                };
+            };
 
-                const monthText = {
-                en: "January,February,March,April,May,June,July,Augustus,September,October,November,December".split(
-                    ","
-                ),
-                id: "Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,September,Oktober,November,Desember".split(
-                    ","
-                ),
-                };
+            const monthText = {
+                en: "January,February,March,April,May,June,July,Augustus,September,October,November,December"
+                    .split(
+                        ","
+                    ),
+                id: "Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,September,Oktober,November,Desember"
+                    .split(
+                        ","
+                    ),
+            };
 
-                const todayText = {
+            const todayText = {
                 en: "Today",
                 id: "Hari ini",
             };
             <?php if($data->tgl_kep) {?>
-                $("#tgl_kep").pDatePicker({
-                    lang: "id",
-                    selected:new Date(<?=date('Y', strtotime($data->tgl_kep))?>, <?=date('m', strtotime($data->tgl_kep))?> - 1, <?=date('d', strtotime($data->tgl_kep))?>)
-                });
+            $("#tgl_kep").pDatePicker({
+                lang: "id",
+                selected: new Date(<?= date('Y', strtotime($data->tgl_kep)) ?>,
+                    <?= date('m', strtotime($data->tgl_kep)) ?> - 1,
+                    <?= date('d', strtotime($data->tgl_kep)) ?>)
+            });
             <?php } else { ?>
-                $("#tgl_kep").pDatePicker({
+            $("#tgl_kep").pDatePicker({
                 lang: "id",
             });
             <?php } ?>
             <?php if($data->tgllp_pidana) {?>
-                $("#tgllp_pidana").pDatePicker({
-                    lang: "id",
-                    selected:new Date(<?=date('Y', strtotime($data->tgllp_pidana))?>, <?=date('m', strtotime($data->tgllp_pidana))?> - 1, <?=date('d', strtotime($data->tgllp_pidana))?>)
-                });
+            $("#tgllp_pidana").pDatePicker({
+                lang: "id",
+                selected: new Date(<?= date('Y', strtotime($data->tgllp_pidana)) ?>,
+                    <?= date('m', strtotime($data->tgllp_pidana)) ?> - 1,
+                    <?= date('d', strtotime($data->tgllp_pidana)) ?>)
+            });
             <?php } else { ?>
-                $("#tgllp_pidana").pDatePicker({
+            $("#tgllp_pidana").pDatePicker({
                 lang: "id",
             });
             <?php } ?>
             <?php if($data->tglkepsp3) {?>
-                $("#tglkepsp3").pDatePicker({
-                    lang: "id",
-                    selected:new Date(<?=date('Y', strtotime($data->tglkepsp3))?>, <?=date('m', strtotime($data->tglkepsp3))?> - 1, <?=date('d', strtotime($data->tglkepsp3))?>)
-                });
+            $("#tglkepsp3").pDatePicker({
+                lang: "id",
+                selected: new Date(<?= date('Y', strtotime($data->tglkepsp3)) ?>,
+                    <?= date('m', strtotime($data->tglkepsp3)) ?> - 1,
+                    <?= date('d', strtotime($data->tglkepsp3)) ?>)
+            });
             <?php } else { ?>
-                $("#tglkepsp3").pDatePicker({
+            $("#tglkepsp3").pDatePicker({
                 lang: "id",
             });
             <?php } ?>
             <?php if($data->tgllp) {?>
-                $("#tgllp").pDatePicker({
-                    lang: "id",
-                    selected:new Date(<?=date('Y', strtotime($data->tgllp))?>, <?=date('m', strtotime($data->tgllp))?> - 1, <?=date('d', strtotime($data->tgllp))?>)
-                });
+            $("#tgllp").pDatePicker({
+                lang: "id",
+                selected: new Date(<?= date('Y', strtotime($data->tgllp)) ?>,
+                    <?= date('m', strtotime($data->tgllp)) ?> - 1,
+                    <?= date('d', strtotime($data->tgllp)) ?>)
+            });
             <?php } else { ?>
-                $("#tgllp").pDatePicker({
+            $("#tgllp").pDatePicker({
                 lang: "id",
             });
             <?php } ?>
 
         });
+
+        function check_jenis_narkoba() {
+            var val = $('#jenis_narkoba').val()
+            if (val == '0') {
+                $('#jenis_narkoba_baru_div').css('display', 'block')
+            } else {
+                $('#jenis_narkoba_baru_div').css('display', 'none')
+            }
+        }
+
+        function check_nrp() {
+            $('.loading').css('display', 'block')
+            var nrp = $('#nrp_nip').val()
+            $.ajax({
+                url: "/pelanggaran-data/detailnrp/" + nrp,
+                error: function(err) {
+                    $('.loading').css('display', 'none')
+                    Swal.fire(
+                        'Data Not Found!',
+                        'Data Tidak Ada.',
+                        'success'
+                    )
+                },
+            }).done(function(data) {
+                $('.loading').css('display', 'none')
+                if (data.status == 500) {
+                    Swal.fire(
+                        'Data Not Found!',
+                        '',
+                        'error'
+                    )
+                } else {
+                    $('#modal_check').modal('show')
+                    $('#body_detail').html(data)
+                }
+            });
+        }
+
+        function checkPidana() {
+            var wpp = $('#dilakukan_pidana').val()
+
+            if (wpp == 'YA') {
+                $('#nolp_pidana').attr('required', 'true')
+                $('#tgllp_pidana').attr('required', 'true')
+                $('#wujud_perbuatan_pidana').attr('required', 'true')
+                $('#pasal_pidana').attr('required', 'true')
+                $('.divCheckPidana').css("display", "block");
+            } else {
+                $('#nolp_pidana').removeAttr('required')
+                $('#tgllp_pidana').removeAttr('required')
+                $('#wujud_perbuatan_pidana').removeAttr('required')
+                $('#pasal_pidana').removeAttr('required')
+                $('.divCheckPidana').css("display", "none");
+            }
+        }
+
+        function getPolres() {
+            var polda = $('#polda').val()
+            $.ajax({
+                url: "/api/polda/" + polda,
+                success: function(data) {
+                    var polres = data.data
+                    var polres_ready = '{{ $data->polres ?? null }}';
+                    var option = '<option value="">Pilih</option>'
+                    for (let index = 0; index < polres.length; index++) {
+                        option +=
+                            `<option value="${polres[index].id}" ${polres_ready == polres[index].id ? 'selected' : ''}>${polres[index].name}</option>`
+
+                    }
+                    $('#polres').html(option)
+                    getPolsek()
+                }
+            });
+        }
+
+        function checkWujudPerbuatan() {
+            var val = $('#wujud_perbuatan').val();
+            $.ajax({
+                url: "/api/wujud_perbuatan/checkNarkoba/" + val,
+                success: function(data) {
+                    if (data.data == true) {
+                        $('#narkobaDiv').css("display", "block");
+                    } else {
+                        $('#narkobaDiv').css("display", "none");
+                        $('#peran_narkoba').val('')
+                        $('#peran_narkoba').trigger('change');
+                        $('#jenis_narkoba').val('')
+                        $('#jenis_narkoba').trigger('change');
+                    }
+                }
+            });
+        }
+
+        function getPolsek() {
+            var polres = $('#polres').val()
+            $.ajax({
+                url: "/api/polres/" + polres,
+                success: function(data) {
+                    var polsek = data.data
+                    var polsek_ready = '{{ $data->polsek ?? null }}';
+                    var option = '<option value="">Pilih</option>'
+                    for (let index = 0; index < polsek.length; index++) {
+                        option +=
+                            `<option value="${polsek[index].id}" ${polsek_ready == polsek[index].id ? 'selected' : ''}>${polsek[index].name}</option>`
+
+                    }
+                    $('#polsek').html(option)
+                }
+            });
+        }
+
+        function getWujudPerbuatan() {
+            var jenis_pelanggaran = $('#jenis_pelanggaran').val()
+            $.ajax({
+                url: "/api/wujud_perbuatan/type/" + jenis_pelanggaran,
+                success: function(data) {
+                    var wp = data.data
+                    var wp_ready = '{{ $data->wujud_perbuatan ?? null }}'
+                    var option = ''
+                    for (let index = 0; index < wp.length; index++) {
+                        option +=
+                            `<option value="${wp[index].id}" ${wp_ready == wp[index].id ? 'selected' : ''}>${wp[index].name}</option>`
+
+                    }
+                    $('#wujud_perbuatan').html(option)
+                }
+            });
+        }
+
+        function checkWPP() {
+            var wpp = $('#wujud_perbuatan_pidana').val()
+
+            if (wpp == 1) {
+                $('#narkobaDiv').css("display", "block");
+            } else {
+                $('#narkobaDiv').css("display", "none");
+            }
+        }
+
+        function getPangkat(type) {
+            $.ajax({
+                url: "/api/pangkat/type/" + type,
+                success: function(data) {
+                    var pangkat = data.data
+                    var option = '<option value="">Pilih</option>'
+                    for (let index = 0; index < pangkat.length; index++) {
+                        option += `<option value="${pangkat[index].id}">${pangkat[index].name}</option>`
+
+                    }
+                    $('#pangkat').html(option)
+                }
+            });
+        }
+
+        function check_pelanggar_orang() {
+            var val = $('#pelanggar').val()
+            getPangkat(val)
+            if (val == 'asn') {
+                $('#div_diktuk').css('display', 'none')
+                $('#nrp_nip').val('')
+                $('#diktuk').val('')
+                $('#diktuk').trigger('change');
+                $('#diktuk').removeAttr('required')
+                $('#nrp_nip').attr('maxlength', 18)
+            } else {
+                $('#div_diktuk').css('display', 'block')
+                $('#nrp_nip').val('')
+                $('#diktuk').val('')
+                $('#diktuk').attr('required', 'true')
+                $('#diktuk').trigger('change');
+                $('#nrp_nip').attr('maxlength', 8)
+            }
+        }
 
         function scroll_to_class(element_class, removed_height) {
             var scroll_to = $(element_class).offset().top - removed_height;
@@ -606,82 +874,5 @@
                 });
             });
         });
-    </script>
-
-    <script>
-        function getPolres() {
-            var polda = $('#polda').val()
-            $.ajax({
-                url: "/api/polda/" + polda,
-                success: function(data) {
-                    var polres = data.data
-                    var polres_ready = {{ $data->polres }};
-                    var option = '<option value="">Pilih</option>'
-                    for (let index = 0; index < polres.length; index++) {
-                        option +=
-                            `<option value="${polres[index].id}" ${polres_ready == polres[index].id ? 'selected' : ''}>${polres[index].name}</option>`
-
-                    }
-                    $('#polres').html(option)
-                    getPolsek()
-                }
-            });
-        }
-
-        function getPolsek() {
-            var polres = $('#polres').val()
-            $.ajax({
-                url: "/api/polres/" + polres,
-                success: function(data) {
-                    var polsek = data.data
-                    var polsek_ready = {{ $data->polsek }};
-                    var option = '<option value="">Pilih</option>'
-                    for (let index = 0; index < polsek.length; index++) {
-                        option +=
-                            `<option value="${polsek[index].id}" ${polsek_ready == polsek[index].id ? 'selected' : ''}>${polsek[index].name}</option>`
-
-                    }
-                    $('#polsek').html(option)
-                }
-            });
-        }
-
-        function getWujudPerbuatan() {
-            var jenis_pelanggaran = $('#jenis_pelanggaran').val()
-            $.ajax({
-                url: "/api/wujud_perbuatan/type/" + jenis_pelanggaran,
-                success: function(data) {
-                    var wp = data.data
-                    var option = ''
-                    for (let index = 0; index < wp.length; index++) {
-                        option += `<option value="${wp[index].id}">${wp[index].name}</option>`
-
-                    }
-                    $('#wujud_perbuatan').html(option)
-                }
-            });
-        }
-
-        function checkWPP() {
-            var wpp = $('#wujud_perbuatan_pidana').val()
-
-            if (wpp == 1) {
-                $('#narkobaDiv').css("display", "block");
-            } else {
-                $('#narkobaDiv').css("display", "none");
-            }
-        }
-
-        function checkPidana() {
-            var wpp = $('#dilakukan_pidana').val()
-
-            if (wpp == 'YA') {
-                $('#narkobaDiv').css("display", "block");
-                $('.divCheckPidana').css("display", "block");
-            } else {
-                $('#narkobaDiv').css("display", "none");
-                $('.divCheckPidana').css("display", "none");
-            }
-        }
     </script>
 @endpush

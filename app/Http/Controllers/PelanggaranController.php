@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Models\WujudPerbuatan;
 use App\Models\WujudPerbuatanPelanggar;
 use App\Models\WujudPerbuatanPidana;
+use App\Models\HistoryEdit;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Support\Facades\DB;
@@ -115,9 +116,14 @@ class PelanggaranController extends Controller
                 $res = base64_encode(json_encode($row));
                 $btn = '<a href="/pelanggaran-data/edit/' . $row->id . '" class="btn btn-secondary btn-sm">Update Penyelesaian</a> | <a href="javascript:void(0)" onclick="openDetail(' . $row->id . ')" class="btn btn-primary btn-sm">View</a>';
                 $user = User::find(auth()->user()->id);
+                if (($row->created_by == $user->id || $user->hasRole('admin')) && !$row->penyelesaian) {
+                    $btn .= ' |  <a href="/pelanggaran-data/edit-data/'.$row->id.'" class="btn btn-warning btn-sm">Edit Data</a>';
+                }
                 if ($user->can('manage-auth')) {
                     $btn .= ' |  <button class="btn btn-danger btn-sm" onclick="deletePelanggaran(' . $row->id . ')">Delete</button>';
                 }
+
+
                 return $btn;
             })->setRowAttr([
                 'style' => function ($data) {
@@ -298,11 +304,38 @@ class PelanggaranController extends Controller
 
     public function saveEdit(Request $request, $id)
     {
-        // dd($id);
         unset($request['_token']);
+        $jenis_narkoba_baru = $request->jenis_narkoba_baru;
+        unset($request['jenis_narkoba_baru']);
         PelanggaranList::where('id', $id)->update($request->all());
-        PutusanPelanggar::where('pelanggar_id', $id)->delete();
-        if ($request->penyelesaian == 'sidang') {
+
+        $data = PelanggaranList::find($id);
+        if ($request->jenis_narkoba == '0') {
+            if (!$narkoba = JenisNarkoba::where('name', 'like', '%' . $request->jenis_narkoba_baru . '%')->first()) {
+                $narkoba = JenisNarkoba::create([
+                    'name' => $request->jenis_narkoba_baru
+                ]);
+            }
+
+            $data->jenis_narkoba = $narkoba->id;
+        }
+
+        if ($request->pidana == 'TIDAK') {
+            $data->wujud_perbuatan_pidana = null;
+            $data->nolp_pidana = null;
+            $data->tgllp_pidana = null;
+        }
+
+        $data->nama = strtoupper($data->nama);
+        $data->nolp = strtoupper($data->nolp);
+        if ($request->edited_by) {
+            HistoryEdit::create([
+                'data_pelanggar_id' => $id,
+                'edited_by' => auth()->user()->id
+            ]);
+        } else {
+            PutusanPelanggar::where('pelanggar_id', $id)->delete();
+            if ($request->penyelesaian == 'sidang') {
             $putusan = PelanggaranList::find($id)->toArray();
             for ($i = 1; $i < 11; $i++) {
                 if ($putusan['putusan_' . $i]) {
@@ -314,8 +347,9 @@ class PelanggaranController extends Controller
                 }
             }
         }
-
-        return redirect()->back();
+        }
+        $data->save();
+        return redirect()->back()->with(['success' => 'Data Berhasil Diedit']);
     }
 
     public function getDetail($id)
@@ -416,7 +450,7 @@ class PelanggaranController extends Controller
         foreach ($data as $key => $value) {
             $sheet->setCellValue("{$startCol}{$startRow}", $value->jenis_pelanggarans->name);
             $startCol++;
-            $sheet->setCellValue("{$startCol}{$startRow}", $value->nrp_nip);
+            $sheet->setCellValueExplicit("{$startCol}{$startRow}", $value->nrp_nip, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->nama);
             $startCol++;

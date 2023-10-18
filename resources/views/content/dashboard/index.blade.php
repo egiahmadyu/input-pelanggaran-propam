@@ -1082,7 +1082,9 @@
             });
         })
 
-        @if (auth()->user()->getRoleNames()[0] != 'admin')
+        @if (auth()->user()->getRoleNames()[0] != 'admin' ||
+                (auth()->user()->getRoleNames()[0] == 'admin' &&
+                    $filter))
 
             am4core.ready(function() {
                 am4core.useTheme(am4themes_animated);

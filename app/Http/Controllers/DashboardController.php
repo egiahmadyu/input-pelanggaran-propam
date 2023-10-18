@@ -103,6 +103,8 @@ class DashboardController extends Controller
             } else if (auth()->user()->getRoleNames()[0] == 'polres') {
                 $data['chart_polsek'] = $this->chartPolsek($request);
             }
+        } else if(auth()->user()->getRoleNames()[0] == 'admin') {
+            $data['chart_polres'] = $this->chartPolres($request);
         }
         if ($request->polda || $request->polres) $filter = true;
         $data['filter'] = $filter;

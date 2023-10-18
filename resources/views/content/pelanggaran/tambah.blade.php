@@ -113,7 +113,6 @@
                                                         type="button">Check</button>
                                                 </div>
                                             </div>
-
                                         </div>
                                         <div class="form-group">
                                             <label>Nama</label>
@@ -169,7 +168,8 @@
                                             @if (auth()->user()->getRoleNames()[0] !== 'admin' &&
                                                     auth()->user()->getRoleNames()[0] !== 'mabes')
                                                 <select class="form-control" id="polda" style="width: 100%"
-                                                    name="polda" required=true>
+                                                    name="polda" required=true
+                                                    onchange="{{ auth()->user()->getRoleNames()[0] !== 'polres'? 'getPolres()': '' }}">
                                                     <option value="">Pilih </option>
                                                     <option value="{{ auth()->user()->polda_id }}">
                                                         {{ auth()->user()->satuan_poldas->name }}</option>
@@ -197,7 +197,6 @@
                                                     name="polres" onchange="getPolsek()">
                                                 </select>
                                             @endif
-
                                         </div>
                                         <div class="form-group">
                                             <label>Satker Polres/ Polsek</label>

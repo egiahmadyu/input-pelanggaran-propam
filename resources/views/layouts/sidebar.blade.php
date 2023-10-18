@@ -33,7 +33,7 @@ $menus = Helper::getMenu();
                     @endif
                 @endcan
             @endforeach
-            <li class="nav-label"> <img src="/maskot-polri.png" alt="" srcset="" width="200">
+            <li class="nav-label"> <img src="/maskot-polri.png" alt="" class="img-fluid">
             </li>
         </ul>
     </div>

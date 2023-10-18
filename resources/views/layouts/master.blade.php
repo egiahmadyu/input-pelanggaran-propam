@@ -18,6 +18,12 @@
 
     @stack('style')
     <style>
+        @media only screen and (max-width: 1000px) {
+            .tulisan_pis {
+                display: none;
+            }
+        }
+
         .loading {
             position: fixed;
             z-index: 999;
