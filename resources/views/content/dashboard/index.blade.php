@@ -643,6 +643,7 @@
             pieSeries.hiddenState.properties.startAngle = -90;
 
             chart.hiddenState.properties.radius = am4core.percent(0);
+            chart.exporting.menu = new am4core.ExportMenu();
 
         })
 
@@ -692,6 +693,7 @@
             pieSeries.hiddenState.properties.startAngle = -90;
 
             chart.hiddenState.properties.radius = am4core.percent(0);
+            chart.exporting.menu = new am4core.ExportMenu();
 
         });
 
@@ -712,7 +714,7 @@
 
             // Add data
             chart.data = dataChart
-
+            chart.exporting.menu = new am4core.ExportMenu();
             // Create axes
             var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
             categoryAxis.dataFields.category = "name";
@@ -755,7 +757,7 @@
 
             // Create chart instance
             var chart = am4core.create("chartPangkatPelanggaran", am4charts.PieChart);
-
+            chart.exporting.menu = new am4core.ExportMenu();
             // Set data
             var dataChart = {!! json_encode($dataPangkatPelanggar, true) !!}
             var selected;
@@ -846,7 +848,7 @@
             chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
             var dataChart = {!! json_encode($dataPungli, true) !!}
             chart.data = dataChart
-
+            chart.exporting.menu = new am4core.ExportMenu();
             chart.radius = am4core.percent(70);
             chart.innerRadius = am4core.percent(40);
             chart.startAngle = 180;
@@ -879,7 +881,7 @@
 
             // Add data
             chart.data = {!! json_encode($jenisNarkoba, true) !!}
-
+            chart.exporting.menu = new am4core.ExportMenu();
             // Add and configure Series
             var pieSeries = chart.series.push(new am4charts.PieSeries());
             pieSeries.dataFields.value = "total";
@@ -1022,7 +1024,7 @@
             // Add data
             var dataChart = {!! json_encode($chartPoldaNew, true) !!}
             chart.data = dataChart
-
+            chart.exporting.menu = new am4core.ExportMenu();
             // Create axes
             var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
             categoryAxis.dataFields.category = "nama";
@@ -1096,7 +1098,7 @@
                 // Add data
                 var dataChart = {!! json_encode($chart_polres, true) !!}
                 chart.data = dataChart
-
+                chart.exporting.menu = new am4core.ExportMenu();
                 // Create axes
                 var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
                 categoryAxis.dataFields.category = "nama";
@@ -1167,7 +1169,7 @@
 
                 // Create chart instance
                 var chart = am4core.create("chart_polsek", am4charts.XYChart);
-
+                chart.exporting.menu = new am4core.ExportMenu();
                 // Add data
                 var dataChart = {!! json_encode($chart_polsek, true) !!}
                 chart.data = dataChart

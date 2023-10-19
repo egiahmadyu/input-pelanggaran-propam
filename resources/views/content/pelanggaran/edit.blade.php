@@ -190,7 +190,7 @@
                                             @endif
                                         </div>
                                         <div class="form-group">
-                                            <label>Satker Mabes/ Satker Polda/ Polres</label>
+                                            <label>Satker</label>
                                             @if (auth()->user()->getRoleNames()[0] == 'polres')
                                                 <select class="form-control" id="polres" style="width: 100%"
                                                     name="polres">
@@ -204,7 +204,7 @@
                                             @endif
                                         </div>
                                         <div class="form-group">
-                                            <label>Polsek</label>
+                                            <label>Satker Polda/ Satker Polres/ Polsek</label>
                                             <select class="form-control" id="polsek" style="width: 100%"
                                                 name="polsek">
                                                 {{-- <option value="001">Polres Aceh Barat Daya</option> --}}
