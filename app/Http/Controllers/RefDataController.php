@@ -301,7 +301,7 @@ class RefDataController extends Controller
         foreach ($row_range as $row) {
             $polda_name = $sheet->getCell('A' . $row)->getValue();
             if ($polda_name) {
-                if (!$polda = SatuanPolda::where(DB::raw('upper(name)'), 'like', '%' . strtoupper($polda_name) . '%')->first()) {
+                if (!$polda = SatuanPolda::where(DB::raw('upper(name)'), strtoupper($polda_name))->first()) {
                     echo $polda_name . '<br>';
                     $polda = SatuanPolda::create([
                         'name' => strtoupper($polda_name)
@@ -309,8 +309,9 @@ class RefDataController extends Controller
                 }
             }
             $polres_name = $sheet->getCell('B' . $row)->getValue();
+            echo $polda_name;
             if ($polres_name) {
-                if (!$polres = SatuanPolres::where(DB::raw('upper(name)'), 'like', '%' . strtoupper($polres_name) . '%')->where('polda_id', $polda->id)->first()) {
+                if (!$polres = SatuanPolres::where(DB::raw('upper(name)'), strtoupper($polres_name))->where('polda_id', $polda->id)->first()) {
                     echo $polres_name . '<br>';
                     $polres = SatuanPolres::create([
                         'polda_id' => $polda->id,
@@ -338,7 +339,7 @@ class RefDataController extends Controller
         foreach ($row_range as $row) {
             $polda_name = $sheet->getCell('A' . $row)->getValue();
             if ($polda_name) {
-                if (!$polda = SatuanPolda::where(DB::raw('upper(name)'), 'like', '%' . strtoupper($polda_name) . '%')->first()) {
+                if (!$polda = SatuanPolda::where(DB::raw('upper(name)'), strtoupper($polda_name))->first()) {
                     echo $polda_name . '<br>';
                     $polda = SatuanPolda::create([
                         'name' => strtoupper($polda_name)
@@ -347,7 +348,7 @@ class RefDataController extends Controller
             }
             $polres_name = $sheet->getCell('B' . $row)->getValue();
             if ($polres_name) {
-                if (!$polres = SatuanPolres::where(DB::raw('upper(name)'), 'like', '%' . strtoupper($polres_name) . '%')->where('polda_id', $polda->id)->first()) {
+                if (!$polres = SatuanPolres::where(DB::raw('upper(name)'), strtoupper($polres_name))->where('polda_id', $polda->id)->first()) {
                     echo $polres_name . '<br>';
                     $polres = SatuanPolres::create([
                         'polda_id' => $polda->id,
