@@ -310,7 +310,7 @@ class RefDataController extends Controller
             }
             $polres_name = $sheet->getCell('B' . $row)->getValue();
             if ($polres_name) {
-                if (!$polres = SatuanPolres::where(DB::raw('upper(name)'), 'like', '%' . strtoupper($polres_name) . '%')->first()) {
+                if (!$polres = SatuanPolres::where(DB::raw('upper(name)'), 'like', '%' . strtoupper($polres_name) . '%')->where('polda_id', $polda->id)->first()) {
                     echo $polres_name . '<br>';
                     $polres = SatuanPolres::create([
                         'polda_id' => $polda->id,
