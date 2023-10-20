@@ -75,6 +75,18 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                        @elseif (auth()->user()->hasRole('polda'))
+                                            <div class="col-lg-3">
+                                                <div class="form-group">
+                                                    <label for="exampleFormControlInput1">Kesatuan / Polres</label>
+                                                    <select class="form-control" id="polres" name="polres">
+                                                        <option value="">Semua</option>
+                                                        @foreach ($polres as $value)
+                                                            <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
                                         @endif
 
                                         <div class="col-lg-3">
@@ -120,7 +132,8 @@
                                     <div class="row">
                                         <div class="col-lg-3">
                                             <div class="form-group">
-                                                <label for="exampleFormControlInput1">Tanggal Laporan Polisi (Awal) </label>
+                                                <label for="exampleFormControlInput1">Tanggal Laporan Polisi (Awal)
+                                                </label>
                                                 <input type="date" class="form-control" id="tanggal_mulai"
                                                     name="tanggal_mulai">
                                             </div>
@@ -376,6 +389,7 @@
                             data.tanggal_mulai_sp = $('#tanggal_mulai_sp').val(),
                             data.tanggal_akhir_sp = $('#tanggal_akhir_sp').val(),
                             data.jabatan = $('#jabatan').val()
+                        data.polres = $('#polres').val()
                     }
                 },
                 columns: [{

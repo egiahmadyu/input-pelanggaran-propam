@@ -19,6 +19,7 @@ use App\Models\WujudPerbuatan;
 use App\Models\WujudPerbuatanPelanggar;
 use App\Models\WujudPerbuatanPidana;
 use App\Models\HistoryEdit;
+use App\Models\SatuanPolres;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Support\Facades\DB;
@@ -96,6 +97,9 @@ class PelanggaranController extends Controller
             'jabatans' => PelanggaranList::groupBy('jabatan')->select('jabatan')->get()
         ];
 
+        if (auth()->user()->hasRole('polda')) {
+            $data['polres'] = SatuanPolres::where('polda_id', auth()->user()->polda_id)->get();
+        }
         return view('content.pelanggaran.index', $data);
     }
 
@@ -117,7 +121,7 @@ class PelanggaranController extends Controller
                 $btn = '<a href="/pelanggaran-data/edit/' . $row->id . '" class="btn btn-secondary btn-sm">Update Penyelesaian</a> | <a href="javascript:void(0)" onclick="openDetail(' . $row->id . ')" class="btn btn-primary btn-sm">View</a>';
                 $user = User::find(auth()->user()->id);
                 if (($row->created_by == $user->id || $user->hasRole('admin')) && !$row->penyelesaian) {
-                    $btn .= ' |  <a href="/pelanggaran-data/edit-data/'.$row->id.'" class="btn btn-warning btn-sm">Edit Data</a>';
+                    $btn .= ' |  <a href="/pelanggaran-data/edit-data/' . $row->id . '" class="btn btn-warning btn-sm">Edit Data</a>';
                 }
                 if ($user->can('manage-auth')) {
                     $btn .= ' |  <button class="btn btn-danger btn-sm" onclick="deletePelanggaran(' . $row->id . ')">Delete</button>';
@@ -336,17 +340,17 @@ class PelanggaranController extends Controller
         } else {
             PutusanPelanggar::where('pelanggar_id', $id)->delete();
             if ($request->penyelesaian == 'sidang') {
-            $putusan = PelanggaranList::find($id)->toArray();
-            for ($i = 1; $i < 11; $i++) {
-                if ($putusan['putusan_' . $i]) {
-                    PutusanPelanggar::create([
-                        'pelanggar_id' => $putusan['id'],
-                        'putusan' => 'putusan_' . $i,
-                        'putusan_id' => $putusan['putusan_' . $i]
-                    ]);
+                $putusan = PelanggaranList::find($id)->toArray();
+                for ($i = 1; $i < 11; $i++) {
+                    if ($putusan['putusan_' . $i]) {
+                        PutusanPelanggar::create([
+                            'pelanggar_id' => $putusan['id'],
+                            'putusan' => 'putusan_' . $i,
+                            'putusan_id' => $putusan['putusan_' . $i]
+                        ]);
+                    }
                 }
             }
-        }
         }
         $data->save();
         return redirect()->back()->with(['success' => 'Data Berhasil Diedit']);
@@ -408,9 +412,9 @@ class PelanggaranController extends Controller
         $sheet->setCellValue('E1', 'Pangkat');
         $sheet->setCellValue('F1', 'Jabatan');
         $sheet->setCellValue('G1', 'Diktuk');
-        $sheet->setCellValue('H1', 'Polda / Sederajat');
-        $sheet->setCellValue('I1', 'Polres / Sederajat');
-        $sheet->setCellValue('J1', 'Polsek / Sederajat');
+        $sheet->setCellValue('H1', 'Mabes / Polda');
+        $sheet->setCellValue('I1', 'Satker');
+        $sheet->setCellValue('J1', 'Satker Polda / Satker Polres / Polsek');
         $sheet->setCellValue('K1', 'NO. LP');
         $sheet->setCellValue('L1', 'Tgl LP');
         $sheet->setCellValue('M1', 'Wujud Perbuatan');
