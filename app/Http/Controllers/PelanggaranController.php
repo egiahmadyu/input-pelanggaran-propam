@@ -234,7 +234,6 @@ class PelanggaranController extends Controller
 
     public function save(Request $request)
     {
-
         $request_data = $request->all();
         if ($request->jenis_narkoba == '0') {
             if (!$narkoba = JenisNarkoba::where('name', 'like', '%' . $request->jenis_narkoba_baru . '%')->first()) {

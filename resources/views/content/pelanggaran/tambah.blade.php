@@ -27,7 +27,7 @@
                                         </button>
                                     </div>
                                 @endif
-                                <form action="{{ route('pelanggaran.save') }}" method="post" class="f1">
+                                <form action="{{ route('pelanggaran.save') }}" method="post" class="f1" novalidate>
                                     @csrf
                                     <div class="f1-steps" style="text-align: center;">
                                         <div class="f1-progress">
@@ -636,21 +636,62 @@
             if (val == 'sidang') {
                 $('#sidang_div').css('display', 'block')
                 $('#dihentikan_div').css('display', 'none')
+
+                $('#alasan_dihentikan').removeAttr('required')
+                $('#tglkepsp3').removeAttr('required')
+                $('#nokepsp3').removeAttr('required')
+
+                $('#no_kep').attr('required', 'true')
+                $('#tgl_kep').attr('required', 'true')
+                $('#putusan_1').attr('required', 'true')
+
             } else if (val == 'dihentikan') {
                 $('.putusan').val('')
-                // $('.putusan').trigger('change');
                 $('#sidang_div').css('display', 'none')
+                $('#alasan_dihentikan').attr('required', 'true')
+                $('#nokepsp3').attr('required', 'true')
+                $('#tglkepsp3').attr('required', 'true')
+
+                $('#no_kep').removeAttr('required')
+                $('#tgl_kep').removeAttr('required')
+                $('#putusan_1').removeAttr('required')
+
                 $('#dihentikan_div').css('display', 'block')
             } else {
+                $('#alasan_dihentikan').removeAttr('required')
+                $('#tglkepsp3').removeAttr('required')
+                $('#nokepsp3').removeAttr('required')
+
+                $('#no_kep').removeAttr('required')
+                $('#tgl_kep').removeAttr('required')
+                $('#putusan_1').removeAttr('required')
+
                 $('#dihentikan_div').css('display', 'none')
                 $('.putusan').val('')
-                // $('.putusan').trigger('change');
                 $('#sidang_div').css('display', 'none')
             }
         }
 
         function checkWujudPerbuatan() {
             var val = $('#wujud_perbuatan').val();
+            $.ajax({
+                url: "/api/wujud_perbuatan/checkNarkoba/" + val,
+                success: function(data) {
+                    if (data.data == true) {
+                        $('#narkobaDiv').css("display", "block");
+                    } else {
+                        $('#narkobaDiv').css("display", "none");
+                        $('#peran_narkoba').val('')
+                        $('#peran_narkoba').trigger('change');
+                        $('#jenis_narkoba').val('')
+                        $('#jenis_narkoba').trigger('change');
+                    }
+                }
+            });
+        }
+
+        function checkWujudPerbuatan_no(no) {
+            var val = $('#wujud_perbuatan_' + no).val();
             $.ajax({
                 url: "/api/wujud_perbuatan/checkNarkoba/" + val,
                 success: function(data) {
@@ -867,18 +908,31 @@
 
             // submit (ketika klik tombol submit diakhir wizard)
             $('.f1').on('submit', function(e) {
+                var next_step = true;
                 // validasi form
-                $(this).find('input[required="true"], textarea[required="true"]').each(function() {
+                $(this).find(
+                    'input[required="true"], textarea[required="true"], select[required="true"], input[required="required"], textarea[required="required"], select[required="required"]'
+                ).each(function() {
                     console.log($(this).val())
                     if ($(this).val() == "") {
                         e.preventDefault();
+                        next_step = false
+                        if ($(this).hasClass('select2-hidden-accessible')) {
+                            $(this).siblings(".select2-container").css('border', '1px solid red');
+                        } else if ($(this).attr('type') == 'date') {
+                            $(this).siblings(".date-picker-input").css('border',
+                                '1px solid red');
+                        } else {
+                            $(this).addClass('input-error');
+                            $(this).addClass('was-validated');
+                        }
                         $(this).addClass('was-validated');
                         $(this).addClass('input-error');
-                    } else {
-                        $('.loading').css('display', 'block')
-                        $(this).removeClass('input-error');
                     }
                 });
+                if (next_step === true) {
+                    $('.loading').css('display', 'block')
+                }
             });
         });
     </script>
@@ -892,7 +946,7 @@
             var html = `<div class="form-group" id="div_wujud_perbuatan_${wp_number}">
                             <div class="row">
                                 <div class="col-lg-11">
-                                    <select class="form-control" id="wujud_perbuatan_${wp_number}" style="width: 100%"
+                                    <select class="form-control" id="wujud_perbuatan_${wp_number}" style="width: 100%" onchange="checkWujudPerbuatan_no(${wp_number})"
                                     name="wp[]">${option_wp}</select>
                             </div>
                             <div class="col-lg-1">
