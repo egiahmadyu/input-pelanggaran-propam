@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Models\AlasanBerhenti;
 use App\Models\Diktuk;
 use App\Models\Gender;
@@ -446,7 +447,8 @@ class PelanggaranController extends Controller
         $sheet->setCellValue('AN1', 'Alasan Dihentikan');
         $sheet->setCellValue('AO1', 'Dibuat oleh');
         $sheet->setCellValue('AP1', 'Diupdate oleh');
-        $spreadsheet->getActiveSheet()->getStyle('A1:AP1')->applyFromArray($this->headerStyle);
+        $sheet->setCellValue('AQ1', 'Diedit oleh');
+        $spreadsheet->getActiveSheet()->getStyle('A1:AQ1')->applyFromArray($this->headerStyle);
         $startRow = 2;
         $startCol = 'A';
 
@@ -512,9 +514,16 @@ class PelanggaranController extends Controller
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->alasan_dihentikan ? $value->alasan_berhentis->name : '');
             $startCol++;
-            $sheet->setCellValue("{$startCol}{$startRow}", $value->created_by ? $value->pembuat->name : '');
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->created_by ? $value->pembuat->name . ' : ' . Helper::tanggal($value->created_at) : '');
             $startCol++;
-            $sheet->setCellValue("{$startCol}{$startRow}", $value->updated_by ? $value->pengupdate->name : '');
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->updated_by ? $value->pengupdate->name . ' : ' . Helper::tanggal($value->updated_at) : '');
+            $startCol++;
+            if ($value->edited_by) {
+                $history = HistoryEdit::where('data_pelanggar_id', $value->id)
+                    ->orderBy('id', 'desc')
+                    ->first();
+                $sheet->setCellValue("{$startCol}{$startRow}", $value->edited_by ? $value->pengedit->name . ' : ' . Helper::tanggal($history->updated_at) : '');
+            }
             $startCol++;
             $startRow++;
             $startCol = 'A';
@@ -523,7 +532,7 @@ class PelanggaranController extends Controller
         // $row++;
         // $row++;
         // dd($row);
-        for ($i = 1; $i < 42; $i++) {
+        for ($i = 1; $i < 44; $i++) {
             $spreadsheet->getActiveSheet()->getColumnDimension($row)->setAutoSize(true);
             $row++;
         }

@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Models\Putusan;
 use App\Models\SideMenu;
+use Carbon\Carbon;
 
 class Helper
 {
@@ -22,5 +23,10 @@ class Helper
     public static function getPutusan($type)
     {
         return Putusan::where('jenis_pelanggaran_id', $type)->get();
+    }
+
+    public static function tanggal($tanggal)
+    {
+        return Carbon::parse($tanggal)->translatedFormat('d F Y H:i');
     }
 }

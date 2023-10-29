@@ -150,4 +150,9 @@ class PelanggaranList extends Model
     {
         return $this->hasOne(User::class, 'id', 'updated_by');
     }
+
+    public function pengedit()
+    {
+        return $this->hasOne(User::class, 'id', 'edited_by');
+    }
 }
