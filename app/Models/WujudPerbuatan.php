@@ -8,9 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class WujudPerbuatan extends Model
 {
     use HasFactory;
-    protected $fillable = [ 'name', 'jenis_pelanggaran_id' ];
+    protected $fillable = ['name', 'jenis_pelanggaran_id'];
 
     public function jenisPelanggaran()
+    {
+        return $this->hasOne(JenisPelanggaran::class, 'id', 'jenis_pelanggaran_id');
+    }
+
+    public function jenis_pelanggarans()
     {
         return $this->hasOne(JenisPelanggaran::class, 'id', 'jenis_pelanggaran_id');
     }

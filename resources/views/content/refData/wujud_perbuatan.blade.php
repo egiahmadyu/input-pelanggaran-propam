@@ -230,8 +230,8 @@
                         name: 'name'
                     },
                     {
-                        data: 'jenis_pelanggaran.name',
-                        name: 'jenis_pelanggaran.name'
+                        data: 'jenis_pelanggarans.name',
+                        name: 'jenis_pelanggarans.name'
                     },
                     {
                         data: 'action',

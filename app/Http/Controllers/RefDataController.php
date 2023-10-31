@@ -37,7 +37,7 @@ class RefDataController extends Controller
     public function wujudPerbuatan(Request $request)
     {
         if ($request->isMethod('post')) {
-            $data = WujudPerbuatan::with('jenisPelanggaran');
+            $data = WujudPerbuatan::with('jenis_pelanggarans');
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $res = base64_encode(json_encode($row));
