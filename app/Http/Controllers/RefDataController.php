@@ -21,7 +21,7 @@ class RefDataController extends Controller
     public function wujudPerbuatanPidana(Request $request)
     {
         if ($request->isMethod('post')) {
-            $data = WujudPerbuatanPidana::orderBy('id', 'desc');
+            $data = WujudPerbuatanPidana::select('*');
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $res = base64_encode(json_encode($row));
@@ -37,7 +37,7 @@ class RefDataController extends Controller
     public function wujudPerbuatan(Request $request)
     {
         if ($request->isMethod('post')) {
-            $data = WujudPerbuatan::orderBy('id', 'desc')->with('jenisPelanggaran');
+            $data = WujudPerbuatan::with('jenisPelanggaran');
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $res = base64_encode(json_encode($row));

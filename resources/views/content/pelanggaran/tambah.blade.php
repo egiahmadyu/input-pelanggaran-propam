@@ -677,16 +677,14 @@
             $.ajax({
                 url: "/api/wujud_perbuatan/checkNarkoba/" + val,
                 success: function(data) {
-                    if ($('#narkobaDiv').css("display") == 'none') {
-                        if (data.data == true) {
-                            $('#narkobaDiv').css("display", "block");
-                        } else {
-                            $('#narkobaDiv').css("display", "none");
-                            $('#peran_narkoba').val('')
-                            $('#peran_narkoba').trigger('change');
-                            $('#jenis_narkoba').val('')
-                            $('#jenis_narkoba').trigger('change');
-                        }
+                    if (data.data == true) {
+                        $('#narkobaDiv').css("display", "block");
+                    } else {
+                        $('#narkobaDiv').css("display", "none");
+                        $('#peran_narkoba').val('')
+                        $('#peran_narkoba').trigger('change');
+                        $('#jenis_narkoba').val('')
+                        $('#jenis_narkoba').trigger('change');
                     }
 
                 }
@@ -698,18 +696,15 @@
             $.ajax({
                 url: "/api/wujud_perbuatan/checkNarkoba/" + val,
                 success: function(data) {
-                    if ($('#narkobaDiv').css("display") == 'none') {
-                        if (data.data == true) {
-                            $('#narkobaDiv').css("display", "block");
-                        } else {
-                            $('#narkobaDiv').css("display", "none");
-                            $('#peran_narkoba').val('')
-                            $('#peran_narkoba').trigger('change');
-                            $('#jenis_narkoba').val('')
-                            $('#jenis_narkoba').trigger('change');
-                        }
+                    if (data.data == true) {
+                        $('#narkobaDiv').css("display", "block");
+                    } else {
+                        $('#narkobaDiv').css("display", "none");
+                        $('#peran_narkoba').val('')
+                        $('#peran_narkoba').trigger('change');
+                        $('#jenis_narkoba').val('')
+                        $('#jenis_narkoba').trigger('change');
                     }
-
                 }
             });
         }
