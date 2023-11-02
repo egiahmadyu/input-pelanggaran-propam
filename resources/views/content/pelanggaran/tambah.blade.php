@@ -944,17 +944,28 @@
         var wp_number = 1;
 
         function tambah_wp() {
+            // var html = `<div class="form-group" id="div_wujud_perbuatan_${wp_number}">
+        //                 <div class="row">
+        //                     <div class="col-lg-11">
+        //                         <select class="form-control" id="wujud_perbuatan_${wp_number}" style="width: 100%" onchange="checkWujudPerbuatan_no(${wp_number})"
+        //                         name="wp[]">${option_wp}</select>
+        //                 </div>
+        //                 <div class="col-lg-1">
+        //                     <button class="btn btn-info" onclick="kurang_wp('div_wujud_perbuatan_${wp_number}')" type="button">-</button>
+        //                 </div>
+        //             </div>
+        //         </div>`;
             var html = `<div class="form-group" id="div_wujud_perbuatan_${wp_number}">
                             <div class="row">
                                 <div class="col-lg-11">
-                                    <select class="form-control" id="wujud_perbuatan_${wp_number}" style="width: 100%" onchange="checkWujudPerbuatan_no(${wp_number})"
+                                    <select class="form-control" id="wujud_perbuatan_${wp_number}" style="width: 100%"
                                     name="wp[]">${option_wp}</select>
                             </div>
                             <div class="col-lg-1">
                                 <button class="btn btn-info" onclick="kurang_wp('div_wujud_perbuatan_${wp_number}')" type="button">-</button>
                             </div>
                         </div>
-                    </div>`
+                    </div>`;
             wp_number++;
             $('#div_wp_tambah').append(html)
             $('select').select2({
