@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('wujud_perbuatans', function (Blueprint $table) {
-            $table->text('name')->change();
-        });
+        // Schema::table('wujud_perbuatans', function (Blueprint $table) {
+        //     $table->text('name')->change();
+        // });
     }
 
     /**

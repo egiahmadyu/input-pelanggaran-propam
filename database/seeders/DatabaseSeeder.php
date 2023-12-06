@@ -17,16 +17,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
-            PermissionPageSeeder::class,
-            UserSeeder::class,
-            SideBarSeeder::class,
-            ViolationSeeder::class,
-            GenderSeeder::class,
-            DiktukSeeder::class,
-            WujudPerbuatanSeeder::class,
-            Narkoba::class,
-        ]);
+        // $this->call([
+        //     PermissionPageSeeder::class,
+        //     UserSeeder::class,
+        //     SideBarSeeder::class,
+        //     ViolationSeeder::class,
+        //     GenderSeeder::class,
+        //     DiktukSeeder::class,
+        //     WujudPerbuatanSeeder::class,
+        //     Narkoba::class,
+        // ]);
 
         JenisPelanggaran::create([
             'name' => 'Disiplin'

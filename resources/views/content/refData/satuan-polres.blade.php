@@ -192,7 +192,6 @@
                 theme: "bootstrap4"
             });
             getData()
-            getPolres()
             $('#form_import').submit(function() {
                 $('#modalimportpolres').modal('hide')
                 $('.loading').css('display', 'block')
@@ -220,46 +219,8 @@
                     },
                     {
                         data: 'satuan_poldas.name',
-                        name: 'satuan_poldas.name'
-                    },
-                    {
-                        data: 'name',
-                        name: 'name'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
+                        name: 'satuan_poldas.name',
                         orderable: false,
-                        searchable: false
-                    },
-                ]
-
-
-            });
-            $('#kt_search').on('click', function(e) {
-                e.preventDefault();
-                table.table().draw();
-            });
-        }
-
-        function getPolres() {
-
-            var table = $('#list-polres').DataTable({
-                processing: true,
-                serverSide: true,
-                searching: false,
-                ajax: {
-                    url: "{{ route('refData.get-polres') }}",
-                    method: "post",
-                    data: function(data) {
-                        data._token = '{{ csrf_token() }}'
-                    }
-                },
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false
                     },
                     {
                         data: 'name',

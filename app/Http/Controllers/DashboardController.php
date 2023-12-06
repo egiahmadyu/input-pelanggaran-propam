@@ -123,10 +123,10 @@ class DashboardController extends Controller
     {
         $data = Putusan::leftJoin('putusan_pelanggars', 'putusan_pelanggars.putusan_id', 'putusans.id')
             ->where('putusans.jenis_pelanggaran_id', $jenis)
-            ->select('putusans.name', DB::raw('count(putusan_pelanggars.id) as total'))
+            ->select('putusans.name', DB::raw('count(putusan_pelanggars.id) as total'), 'putusans.id')
             ->join('pelanggaran_lists', 'pelanggaran_lists.id', 'putusan_pelanggars.pelanggar_id')
             ->where('is_delete', 0)
-            ->groupBy('putusans.id')
+            ->groupBy('putusans.id', 'putusans.name')
             ->orderBy(DB::raw('count(putusan_pelanggars.id)'), 'desc');
         if ($request->polres) {
             $data = $data
@@ -259,13 +259,13 @@ class DashboardController extends Controller
 
     private function getDataPungli($request, $jenis_pelanggaran = null)
     {
-        $data = PelanggaranList::groupBy('wujud_perbuatan', 'wujud_perbuatans.name')
+        $data = PelanggaranList::groupBy('wujud_perbuatan', DB::raw('to_char(wujud_perbuatans.name)'))
             ->where('is_delete', 0)
             // ->join('wujud_perbuatan_pidanas', 'wujud_perbuatan_pidanas.id', 'pelanggaran_lists.wujud_perbuatan_pidana')
             ->join('wujud_perbuatans', 'wujud_perbuatans.id', 'pelanggaran_lists.wujud_perbuatan')
-            ->whereIn('wujud_perbuatans.name', ['6w Melakukan pungutan tidak sah dalam bentuk apa pun untuk kepentingan pribadi, golongan, atau pihak lain', '5a Korupsi '])
+            ->whereIn(DB::raw('to_char(wujud_perbuatans.name)'), ['6w Melakukan pungutan tidak sah dalam bentuk apa pun untuk kepentingan pribadi, golongan, atau pihak lain', '5a Korupsi '])
             // ->orWhereIn('wujud_perbuatan_pidanas.name', ['Pungli', 'Gratifikasi', 'Penyimpangan Anggaran', 'Korupsi'])
-            ->select('wujud_perbuatans.name', 'wujud_perbuatan', (DB::raw('count(*) as total')));
+            ->select(DB::raw('to_char(wujud_perbuatans.name) as name'), 'pelanggaran_lists.wujud_perbuatan', (DB::raw('count(*) as total')));
         if ($jenis_pelanggaran) return $data->where('jenis_pelanggaran', $jenis_pelanggaran)->get();
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
@@ -339,9 +339,9 @@ class DashboardController extends Controller
 
     private function getWujudPerbuatan($request, $jenis_pelanggaran = null)
     {
-        $data = PelanggaranList::groupBy('wujud_perbuatan', 'wujud_perbuatans.name', 'jenis_pelanggarans.name')->join('wujud_perbuatans', 'wujud_perbuatans.id', 'pelanggaran_lists.wujud_perbuatan')
+        $data = PelanggaranList::groupBy('wujud_perbuatan', DB::raw('to_char(wujud_perbuatans.name)'), 'jenis_pelanggarans.name')->join('wujud_perbuatans', 'wujud_perbuatans.id', 'pelanggaran_lists.wujud_perbuatan')
             ->join('jenis_pelanggarans', 'jenis_pelanggarans.id', 'wujud_perbuatans.jenis_pelanggaran_id')
-            ->select(DB::raw('count(*) as total'), 'wujud_perbuatans.name', 'jenis_pelanggarans.name as type')
+            ->select(DB::raw('count(*) as total'), DB::raw('to_char(wujud_perbuatans.name) as name'), 'jenis_pelanggarans.name as type')
             ->where('is_delete', 0)
             ->orderBy(DB::raw('count(*)'), 'desc')
             ->limit(5);

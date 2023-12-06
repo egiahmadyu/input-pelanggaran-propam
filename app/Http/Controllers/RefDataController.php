@@ -162,9 +162,6 @@ class RefDataController extends Controller
                 $btn = '<button onclick="deletePolres(' . $row->id . ')" class="btn btn-danger btn-sm">Delete</button>';
                 return $btn;
             })
-            ->orderColumn('satuan_poldas.name', function ($query, $order) {
-                $query->orderBy('satuan_poldas.name', $order);
-            })
             ->rawColumns(['action'])
             ->make(true);
     }

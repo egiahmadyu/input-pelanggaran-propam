@@ -95,7 +95,7 @@ class PelanggaranController extends Controller
             'wujud_perbuatans' => WujudPerbuatan::all(),
             'poldas' => SatuanPolda::all(),
             'alasan_berhentis' => AlasanBerhenti::all(),
-            'jabatans' => PelanggaranList::groupBy('jabatan')->select('jabatan')->get()
+            'jabatans' => PelanggaranList::groupBy(DB::raw('to_char(jabatan)'))->select(DB::raw('to_char(jabatan)'))->get()
         ];
 
         if (auth()->user()->hasRole('polda')) {
@@ -127,8 +127,6 @@ class PelanggaranController extends Controller
                 if ($user->can('manage-auth')) {
                     $btn .= ' |  <button class="btn btn-danger btn-sm" onclick="deletePelanggaran(' . $row->id . ')">Delete</button>';
                 }
-
-
                 return $btn;
             })->setRowAttr([
                 'style' => function ($data) {
@@ -140,6 +138,9 @@ class PelanggaranController extends Controller
             })
             ->addColumn('updated', function ($data) {
                 return $data->updated_by ? $data->pengupdate->name : '-';
+            })
+            ->editColumn('tgllp', function($data) {
+                return $data->tgllp ? date('d-m-Y', strtotime($data->tgllp)) : '-';
             })
             ->rawColumns(['action'])
             ->make(true);
@@ -245,7 +246,7 @@ class PelanggaranController extends Controller
 
             $request_data['jenis_narkoba'] = $narkoba->id;
         }
-
+        // dd($request_data);
         $data = PelanggaranList::create($request_data);
         $putusan = $data->toArray();
         if ($putusan['penyelesaian'] == 'sidang') {

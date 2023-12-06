@@ -38,13 +38,15 @@
     34 => 'Yajra\\DataTables\\FractalServiceProvider',
     35 => 'Yajra\\DataTables\\HtmlServiceProvider',
     36 => 'Yajra\\DataTables\\DataTablesServiceProvider',
-    37 => 'App\\Providers\\AppServiceProvider',
-    38 => 'App\\Providers\\AuthServiceProvider',
-    39 => 'App\\Providers\\EventServiceProvider',
-    40 => 'App\\Providers\\RouteServiceProvider',
-    41 => 'Spatie\\Permission\\PermissionServiceProvider',
-    42 => 'Yajra\\DataTables\\DataTablesServiceProvider',
-    43 => 'Barryvdh\\DomPDF\\ServiceProvider',
+    37 => 'Yajra\\Oci8\\Oci8ServiceProvider',
+    38 => 'Yajra\\Oci8\\Oci8ValidationServiceProvider',
+    39 => 'App\\Providers\\AppServiceProvider',
+    40 => 'App\\Providers\\AuthServiceProvider',
+    41 => 'App\\Providers\\EventServiceProvider',
+    42 => 'App\\Providers\\RouteServiceProvider',
+    43 => 'Spatie\\Permission\\PermissionServiceProvider',
+    44 => 'Yajra\\DataTables\\DataTablesServiceProvider',
+    45 => 'Barryvdh\\DomPDF\\ServiceProvider',
   ),
   'eager' => 
   array (
@@ -70,13 +72,14 @@
     19 => 'Yajra\\DataTables\\FractalServiceProvider',
     20 => 'Yajra\\DataTables\\HtmlServiceProvider',
     21 => 'Yajra\\DataTables\\DataTablesServiceProvider',
-    22 => 'App\\Providers\\AppServiceProvider',
-    23 => 'App\\Providers\\AuthServiceProvider',
-    24 => 'App\\Providers\\EventServiceProvider',
-    25 => 'App\\Providers\\RouteServiceProvider',
-    26 => 'Spatie\\Permission\\PermissionServiceProvider',
-    27 => 'Yajra\\DataTables\\DataTablesServiceProvider',
-    28 => 'Barryvdh\\DomPDF\\ServiceProvider',
+    22 => 'Yajra\\Oci8\\Oci8ServiceProvider',
+    23 => 'App\\Providers\\AppServiceProvider',
+    24 => 'App\\Providers\\AuthServiceProvider',
+    25 => 'App\\Providers\\EventServiceProvider',
+    26 => 'App\\Providers\\RouteServiceProvider',
+    27 => 'Spatie\\Permission\\PermissionServiceProvider',
+    28 => 'Yajra\\DataTables\\DataTablesServiceProvider',
+    29 => 'Barryvdh\\DomPDF\\ServiceProvider',
   ),
   'deferred' => 
   array (
@@ -208,8 +211,8 @@
     'auth.password.broker' => 'Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider',
     'translator' => 'Illuminate\\Translation\\TranslationServiceProvider',
     'translation.loader' => 'Illuminate\\Translation\\TranslationServiceProvider',
-    'validator' => 'Illuminate\\Validation\\ValidationServiceProvider',
-    'validation.presence' => 'Illuminate\\Validation\\ValidationServiceProvider',
+    'validator' => 'Yajra\\Oci8\\Oci8ValidationServiceProvider',
+    'validation.presence' => 'Yajra\\Oci8\\Oci8ValidationServiceProvider',
     'Laravel\\Sail\\Console\\InstallCommand' => 'Laravel\\Sail\\SailServiceProvider',
     'Laravel\\Sail\\Console\\PublishCommand' => 'Laravel\\Sail\\SailServiceProvider',
     'command.tinker' => 'Laravel\\Tinker\\TinkerServiceProvider',
@@ -263,6 +266,9 @@
     array (
     ),
     'Collective\\Html\\HtmlServiceProvider' => 
+    array (
+    ),
+    'Yajra\\Oci8\\Oci8ValidationServiceProvider' => 
     array (
     ),
   ),
