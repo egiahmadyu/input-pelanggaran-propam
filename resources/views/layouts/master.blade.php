@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Pelanggaran - Propam</title>
     <!-- Favicon icon -->
-    {{-- <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon.png"> --}}
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
@@ -26,7 +26,7 @@
 
         .loading {
             position: fixed;
-            z-index: 999;
+            z-index: 999999;
             height: 2em;
             width: 2em;
             overflow: show;

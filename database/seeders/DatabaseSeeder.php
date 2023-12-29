@@ -26,6 +26,11 @@ class DatabaseSeeder extends Seeder
         //     DiktukSeeder::class,
         //     WujudPerbuatanSeeder::class,
         //     Narkoba::class,
+        //     PangkatSeeder::class,
+        //     PoldaSeeder::class,
+        //     PolresSeeder::class,
+        //     PolsekSeeder::class,
+        //     PutusanSeeder::class,
         // ]);
 
         JenisPelanggaran::create([

@@ -116,10 +116,17 @@ class PelanggaranController extends Controller
     public function show(Request $request)
     {
         $data  = $this->getData($request);
+        // dd($data->get());
         return Datatables::eloquent($data)->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $res = base64_encode(json_encode($row));
                 $btn = '<a href="/pelanggaran-data/edit/' . $row->id . '" class="btn btn-secondary btn-sm">Update Penyelesaian</a> | <a href="javascript:void(0)" onclick="openDetail(' . $row->id . ')" class="btn btn-primary btn-sm">View</a>';
+                $btn .= ' | <button class="btn btn-info btn-sm" onclick="showModalDokumen('.$row->id.', `'.$row->nama.'`)">Upload Dokumen</button>';
+                $btn .= ' | <button class="btn btn-info btn-sm" onclick="openModalLimpah('.$row->id.')">Limpah</button>';
+                if ($row->jenis_pelanggaran == 2) {
+                    if($row->penyelesaian == 'sidang') $btn .= ' | <a href="/pelanggaran-data/sidang_banding/' . $row->id . '"><button class="btn btn-primary btn-sm">Put Sidang Banding</button></a>';
+                    if ($row->sidang_banding) $btn .= ' | <a href="/pelanggaran-data/sidang_pk/' . $row->id . '"><button class="btn btn-primary btn-sm">Put Sidang PK</button></a>';
+                }
                 $user = User::find(auth()->user()->id);
                 if (($row->created_by == $user->id || $user->hasRole('admin')) && !$row->penyelesaian) {
                     $btn .= ' |  <a href="/pelanggaran-data/edit-data/' . $row->id . '" class="btn btn-warning btn-sm">Edit Data</a>';
@@ -133,6 +140,20 @@ class PelanggaranController extends Controller
                     return $data->penyelesaian ? 'background-color: #2f13bd;color:white' : '';
                 }
             ])
+            ->addColumn('kesatuan_satker', function ($row) {
+                $result = '';
+                if ($row->polda) $result .= $row->satuan_poldas->name;
+                if ($row->polres) $result .= '<br>'.$row->satuan_polres->name;
+                if ($row->polsek) $result .= '<br>'.$row->satuan_polseks->name;
+                return $result;
+            })
+            ->addColumn('kesatuan_terduga', function ($row) {
+                $result = '';
+                if ($row->polda_terduga) $result .= $row->terduga_polda->name;
+                if ($row->polres_terduga) $result .= '<br>'.$row->terduga_polres->name;
+                if ($row->polsek_terduga) $result .= '<br>'.$row->terduga_polsek->name;
+                return $result;
+            })
             ->addColumn('created', function ($data) {
                 return $data->created_by ? $data->pembuat->name : '-';
             })
@@ -142,7 +163,7 @@ class PelanggaranController extends Controller
             ->editColumn('tgllp', function($data) {
                 return $data->tgllp ? date('d-m-Y', strtotime($data->tgllp)) : '-';
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'kesatuan_terduga', 'kesatuan_satker'])
             ->make(true);
     }
 
@@ -354,7 +375,7 @@ class PelanggaranController extends Controller
             }
         }
         $data->save();
-        return redirect()->back()->with(['success' => 'Data Berhasil Diedit']);
+        return redirect('/pelanggaran-data')->with(['success' => 'Data Berhasil Diedit']);
     }
 
     public function getDetail($id)
@@ -370,7 +391,9 @@ class PelanggaranController extends Controller
     {
         $data['data'] = PelanggaranList::with('jenis_pelanggarans')->with('satuan_poldas')->with('pangkats')
             ->with('getDiktuk')
-            ->where('nrp_nip', $nrp)->first();
+            ->where('nrp_nip', $nrp)
+            ->where('is_delete', 0)
+            ->first();
 
         return view('content.pelanggaran.detail', $data);
     }
@@ -413,42 +436,47 @@ class PelanggaranController extends Controller
         $sheet->setCellValue('E1', 'Pangkat');
         $sheet->setCellValue('F1', 'Jabatan');
         $sheet->setCellValue('G1', 'Diktuk');
-        $sheet->setCellValue('H1', 'Mabes / Polda');
-        $sheet->setCellValue('I1', 'Satker');
-        $sheet->setCellValue('J1', 'Satker Polda / Satker Polres / Polsek');
-        $sheet->setCellValue('K1', 'NO. LP');
-        $sheet->setCellValue('L1', 'Tgl LP');
-        $sheet->setCellValue('M1', 'Wujud Perbuatan');
-        $sheet->setCellValue('N1', 'Kronologi Singkat');
-        $sheet->setCellValue('O1', 'Pasal Pelanggaran');
-        $sheet->setCellValue('P1', 'PIDANA');
-        $sheet->setCellValue('Q1', 'Wujud Perbuatan Pidana');
-        $sheet->setCellValue('R1', 'No. LP Pidana');
-        $sheet->setCellValue('S1', 'Tgl LP Pidana');
-        $sheet->setCellValue('T1', 'Pasal Pidana');
-        $sheet->setCellValue('U1', 'Putusan Pidana');
-        $sheet->setCellValue('V1', 'Peran Narkoba');
-        $sheet->setCellValue('W1', 'Jenis Narkoba');
-        $sheet->setCellValue('X1', 'NO. Kep');
-        $sheet->setCellValue('Y1', 'Tgl. Kep');
-        $sheet->setCellValue('Z1', 'Putusan 1');
-        $sheet->setCellValue('AA1', 'Putusan 2');
-        $sheet->setCellValue('AB1', 'Putusan 3');
-        $sheet->setCellValue('AC1', 'Putusan 4');
-        $sheet->setCellValue('AD1', 'Putusan 5');
-        $sheet->setCellValue('AE1', 'Putusan 6');
-        $sheet->setCellValue('AF1', 'Putusan 7');
-        $sheet->setCellValue('AG1', 'Putusan 8');
-        $sheet->setCellValue('AH1', 'Putusan 9');
-        $sheet->setCellValue('AI1', 'Putusan 10');
-        $sheet->setCellValue('AJ1', 'Putusan 11');
-        $sheet->setCellValue('AK1', 'Putusan 12');
-        $sheet->setCellValue('AL1', 'No Kep Penghentian');
-        $sheet->setCellValue('AM1', 'Tgl Kep Penghentian');
-        $sheet->setCellValue('AN1', 'Alasan Dihentikan');
-        $sheet->setCellValue('AO1', 'Dibuat oleh');
-        $sheet->setCellValue('AP1', 'Diupdate oleh');
-        $sheet->setCellValue('AQ1', 'Diedit oleh');
+        $sheet->setCellValue('H1', 'Mabes / Polda Yang Menangani');
+        $sheet->setCellValue('I1', 'Satker Yang Menangani');
+        $sheet->setCellValue('J1', 'Satker Polda / Satker Polres / Polsek Yang Menangani');
+        $sheet->setCellValue('K1', 'Mabes / Polda Terduga');
+        $sheet->setCellValue('L1', 'Satker Terduga');
+        $sheet->setCellValue('M1', 'Satker Polda / Satker Polres / Polsek Terduga');
+        $sheet->setCellValue('N1', 'NO. LP');
+        $sheet->setCellValue('O1', 'Tgl LP');
+        $sheet->setCellValue('P1', 'Wujud Perbuatan');
+        $sheet->setCellValue('Q1', 'Kronologi Singkat');
+        $sheet->setCellValue('R1', 'Pasal Pelanggaran');
+        $sheet->setCellValue('S1', 'PIDANA');
+        $sheet->setCellValue('T1', 'Wujud Perbuatan Pidana');
+        $sheet->setCellValue('U1', 'No. LP Pidana');
+        $sheet->setCellValue('V1', 'Tgl LP Pidana');
+        $sheet->setCellValue('W1', 'Pasal Pidana');
+        $sheet->setCellValue('X1', 'Putusan Pidana');
+        $sheet->setCellValue('Y1', 'Peran Narkoba');
+        $sheet->setCellValue('Z1', 'Jenis Narkoba');
+        $sheet->setCellValue('AA1', 'NO. Kep');
+        $sheet->setCellValue('AB1', 'Tgl. Kep');
+        $sheet->setCellValue('AC1', 'NO. DP3D / BP3KEPP');
+        $sheet->setCellValue('AD1', 'Tanggal DP3D / BP3KEPP'); $position = 'AE';
+        $sheet->setCellValue($position.'1', 'Putusan 1'); $position++;
+        $sheet->setCellValue($position.'1', 'Putusan 2'); $position++;
+        $sheet->setCellValue($position.'1', 'Putusan 3'); $position++;
+        $sheet->setCellValue($position.'1', 'Putusan 4'); $position++;
+        $sheet->setCellValue($position.'1', 'Putusan 5'); $position++;
+        $sheet->setCellValue($position.'1', 'Putusan 6'); $position++;
+        $sheet->setCellValue($position.'1', 'Putusan 7'); $position++;
+        $sheet->setCellValue($position.'1', 'Putusan 8'); $position++;
+        $sheet->setCellValue($position.'1', 'Putusan 9'); $position++;
+        $sheet->setCellValue($position.'1', 'Putusan 10'); $position++;
+        $sheet->setCellValue($position.'1', 'Putusan 11'); $position++;
+        $sheet->setCellValue($position.'1', 'Putusan 12'); $position++;
+        $sheet->setCellValue($position.'1', 'No Kep Penghentian'); $position++;
+        $sheet->setCellValue($position.'1', 'Tgl Kep Penghentian'); $position++;
+        $sheet->setCellValue($position.'1', 'Alasan Dihentikan'); $position++;
+        $sheet->setCellValue($position.'1', 'Dibuat oleh'); $position++;
+        $sheet->setCellValue($position.'1', 'Diupdate oleh'); $position++;
+        $sheet->setCellValue($position.'1', 'Diedit oleh');
         $spreadsheet->getActiveSheet()->getStyle('A1:AQ1')->applyFromArray($this->headerStyle);
         $startRow = 2;
         $startCol = 'A';
@@ -473,6 +501,12 @@ class PelanggaranController extends Controller
             $sheet->setCellValue("{$startCol}{$startRow}", $value->satuan_polres->name ?? '');
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->satuan_polseks->name ?? '');
+            $startCol++;
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->terduga_polda->name ?? '');
+            $startCol++;
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->terduga_polres->name ?? '');
+            $startCol++;
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->terduga_polsek->name ?? '');
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->nolp);
             $startCol++;
@@ -504,6 +538,10 @@ class PelanggaranController extends Controller
             $startCol++;
             $sheet->setCellValue("{$startCol}{$startRow}", $value->tgl_kep);
             $startCol++;
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->dp3d_bp3kkepp);
+            $startCol++;
+            $sheet->setCellValue("{$startCol}{$startRow}", $value->tanggal_dp3d_bp3kkepp);
+            $startCol++;
             for ($i = 1; $i < 13; $i++) {
                 $putusan = 'getPutusan' . $i;
                 $sheet->setCellValue("{$startCol}{$startRow}", $value->$putusan->name ?? '');
@@ -533,7 +571,7 @@ class PelanggaranController extends Controller
         // $row++;
         // $row++;
         // dd($row);
-        for ($i = 1; $i < 44; $i++) {
+        for ($i = 1; $i < 47; $i++) {
             $spreadsheet->getActiveSheet()->getColumnDimension($row)->setAutoSize(true);
             $row++;
         }

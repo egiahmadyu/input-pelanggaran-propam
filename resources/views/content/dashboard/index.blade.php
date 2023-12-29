@@ -89,115 +89,196 @@
             </div>
         @endif
         <div class="row">
-            <div class="col-lg-4 col-sm-6">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card gradient-1">
-                            <div class="card-body">
-                                <h3 class="card-title text-white">Total Pelanggaran</h3>
-                                <div class="d-inline-block">
-                                    <h2 class="text-white">{{ count($pelanggarans) }}</h2>
-                                    {{-- <p class="text-white mb-0">{{ date('Y') }}</p> --}}
-                                </div>
-                                <span class="float-right display-5 opacity-5"><img src="/propam.png" alt=""
-                                        width="60">
-                                </span>
-                            </div>
+            <div class="col-lg-3 col-sm-12">
+                <div class="card gradient-1">
+                    <div class="card-body">
+                        <h3 class="card-title text-white">Total Pelanggaran</h3>
+                        <div class="d-inline-block">
+                            <h2 class="text-white">{{ count($pelanggarans) }}</h2>
+                            {{-- <p class="text-white mb-0">{{ date('Y') }}</p> --}}
                         </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="card gradient-1">
-                            <div class="card-body">
-                                <h3 class="card-title text-white">Penyelesaian Pelanggaran
-                                    {{ count($disiplin_selesai) + count($kepp_selesai) }}</h3>
-                                <div class="d-inline-block">
-                                    <h2 class="text-white">
-                                        {{ count($disiplin_selesai) + count($kepp_selesai) == 0 ? 0 : number_format(((count($disiplin_selesai) + count($kepp_selesai)) / count($pelanggarans)) * 100, 1) }}%
-                                    </h2>
-                                    {{-- <p class="text-white mb-0">{{ date('Y') }}</p> --}}
-                                </div>
-                                <span class="float-right display-5 opacity-5"><img src="/propam.png" alt=""
-                                        width="60">
-                                </span>
-                            </div>
-                        </div>
+                        <span class="float-right display-5 opacity-3"><img src="/propam.png" alt="" width="60">
+                        </span>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-sm-6">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card gradient-3">
-                            <div class="card-body">
-                                <h3 class="card-title text-white">Pelanggaran Disiplin {{ $disiplin }}</h3>
-                                <div class="d-inline-block">
-                                    <h2 class="text-white">
-                                        {{ $disiplin == 0 ? 0 : number_format(($disiplin / count($pelanggarans)) * 100) }}%
-                                    </h2>
-                                    {{-- <p class="text-white mb-0">
-
-                                    </p> --}}
-                                </div>
-                                <span class="float-right display-5 opacity-5"><img src="/Provos.png" alt=""
-                                        width="60"></span>
-                            </div>
+            <div class="col-lg-3 col-sm-12">
+                <div class="card gradient-1">
+                    <div class="card-body">
+                        <h3 class="card-title text-white">Total Penyelesaian :
+                            {{ count($disiplin_selesai) + count($kepp_selesai) }}</h3>
+                        <div class="d-inline-block">
+                            <h2 class="text-white">
+                                {{ count($disiplin_selesai) + count($kepp_selesai) == 0 ? 0 : number_format(((count($disiplin_selesai) + count($kepp_selesai)) / count($pelanggarans)) * 100, 1) }}%
+                            </h2>
+                            {{-- <p class="text-white mb-0">{{ date('Y') }}</p> --}}
                         </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="card gradient-3">
-                            <div class="card-body">
-                                <h3 class="card-title text-white">Penyelesaian Disiplin {{ count($disiplin_selesai) }}
-                                </h3>
-                                <div class="d-inline-block">
-                                    <h2 class="text-white">
-                                        {{ $disiplin == 0 ? 0 : number_format(count($disiplin_selesai) / $disiplin, 2) * 100 }}%
-                                    </h2>
-                                </div>
-                                <span class="float-right display-5 opacity-5"><img src="/Provos.png" alt=""
-                                        width="60"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="col-lg-4 col-sm-6">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card gradient-4">
-                            <div class="card-body">
-                                <h3 class="card-title text-white">Pelanggaran Kode Etik {{ $kodeEtik }}</h3>
-                                <div class="d-inline-block">
-                                    <h2 class="text-white">
-                                        {{ $kodeEtik == 0 ? 0 : number_format(($kodeEtik / count($pelanggarans)) * 100, 2) }}%
-                                    </h2>
-                                    {{-- <p class="text-white mb-0">
-
-                                    </p> --}}
-                                </div>
-                                <span class="float-right display-5 opacity-5"><img src="/wabprof.png" alt=""
-                                        width="60"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="card gradient-4">
-                            <div class="card-body">
-                                <h3 class="card-title text-white">Penyelesaian Kode Etik {{ count($kepp_selesai) }}</h3>
-                                <div class="d-inline-block">
-                                    <h2 class="text-white">
-                                        {{ count($kepp_selesai) == 0 ? 0 : number_format((count($kepp_selesai) / $kodeEtik) * 100, 2) }}%
-                                    </h2>
-                                </div>
-                                <span class="float-right display-5 opacity-5"><img src="/wabprof.png" alt=""
-                                        width="60"></span>
-                            </div>
-                        </div>
+                        <span class="float-right display-5 opacity-3"><img src="/propam.png" alt="" width="60">
+                        </span>
                     </div>
                 </div>
             </div>
-
+            <div class="col-lg-3 col-sm-12">
+                <div class="card gradient-1">
+                    <div class="card-body">
+                        <h3 class="card-title text-white">Penyelesaian Disiplin :
+                            {{ count($disiplin_selesai) }}</h3>
+                        <div class="d-inline-block">
+                            <h2 class="text-white">
+                                {{ count($disiplin_selesai) == 0 ? 0 : number_format((count($disiplin_selesai) / $disiplin) * 100, 1) }}%
+                            </h2>
+                            {{-- <p class="text-white mb-0">{{ date('Y') }}</p> --}}
+                        </div>
+                        <span class="float-right display-5 opacity-3"><img src="/propam.png" alt="" width="60">
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-12">
+                <div class="card gradient-1">
+                    <div class="card-body">
+                        <h3 class="card-title text-white">Penyelesaian KEPP :
+                            {{ count($kepp_selesai) }}</h3>
+                        <div class="d-inline-block">
+                            <h2 class="text-white">
+                                {{ count($kepp_selesai) == 0 ? 0 : number_format((count($kepp_selesai) / $kodeEtik) * 100, 1) }}%
+                            </h2>
+                            {{-- <p class="text-white mb-0">{{ date('Y') }}</p> --}}
+                        </div>
+                        <span class="float-right display-5 opacity-3"><img src="/propam.png" alt="" width="60">
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
+        <div class="row">
+            <div class="col-lg-3 col-sm-12">
+                <div class="card gradient-3">
+                    <div class="card-body">
+                        <h3 class="card-title text-white">Pelanggaran Disiplin : {{ $disiplin }}</h3>
+                        <div class="d-inline-block">
+                            <h2 class="text-white">
+                                {{ $disiplin == 0 ? 0 : number_format(($disiplin / count($pelanggarans)) * 100) }}%
+                            </h2>
+                            {{-- <p class="text-white mb-0">
+
+                            </p> --}}
+                        </div>
+                        <span class="float-right display-5 opacity-3"><img src="/Provos.png" alt=""
+                                width="60"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-12">
+                <div class="card gradient-3">
+                    <div class="card-body">
+                        <h3 class="card-title text-white">Selesai DP3D : {{ count($dp3d) }}
+                        </h3>
+                        <div class="d-inline-block">
+                            <h2 class="text-white">
+                                {{ $disiplin == 0 ? 0 : number_format(count($dp3d) / $disiplin, 2) * 100 }}%
+                            </h2>
+                        </div>
+                        <span class="float-right display-5 opacity-3"><img src="/Provos.png" alt=""
+                                width="60"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-12">
+                <div class="card gradient-3">
+                    <div class="card-body">
+                        <h3 class="card-title text-white">Penghentian / RJ :
+                            {{ count($disiplin_dihentikan) }}
+                        </h3>
+                        <div class="d-inline-block">
+                            <h2 class="text-white">
+                                {{ $disiplin == 0 ? 0 : number_format(count($disiplin_dihentikan) / $disiplin, 2) * 100 }}%
+                            </h2>
+                        </div>
+                        <span class="float-right display-5 opacity-3"><img src="/Provos.png" alt=""
+                                width="60"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-12">
+                <div class="card gradient-3">
+                    <div class="card-body">
+                        <h3 class="card-title text-white">Selesai Sidang : {{ count($disiplin_sidang) }}
+                        </h3>
+                        <div class="d-inline-block">
+                            <h2 class="text-white">
+                                {{ $disiplin == 0 ? 0 : number_format(count($disiplin_sidang) / $disiplin, 2) * 100 }}%
+                            </h2>
+                        </div>
+                        <span class="float-right display-5 opacity-3"><img src="/Provos.png" alt=""
+                                width="60"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-sm-12">
+                <div class="card gradient-4">
+                    <div class="card-body">
+                        <h3 class="card-title text-white">Pelanggaran Kode Etik : {{ $kodeEtik }}</h3>
+                        <div class="d-inline-block">
+                            <h2 class="text-white">
+                                {{ $kodeEtik == 0 ? 0 : number_format(($kodeEtik / count($pelanggarans)) * 100, 2) }}%
+                            </h2>
+                            {{-- <p class="text-white mb-0">
+
+                            </p> --}}
+                        </div>
+                        <span class="float-right display-5 opacity-3"><img src="/wabprof.png" alt=""
+                                width="60"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-12">
+                <div class="card gradient-4">
+                    <div class="card-body">
+                        <h3 class="card-title text-white">Selesai BP3KEPP : {{ count($bp3kepp) }}</h3>
+                        <div class="d-inline-block">
+                            <h2 class="text-white">
+                                {{ count($bp3kepp) == 0 ? 0 : number_format((count($bp3kepp) / $kodeEtik) * 100, 2) }}%
+                            </h2>
+                        </div>
+                        <span class="float-right display-5 opacity-3"><img src="/wabprof.png" alt=""
+                                width="60"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-12">
+                <div class="card gradient-4">
+                    <div class="card-body">
+                        <h3 class="card-title text-white">Penghentian / RJ : {{ count($kepp_dihentikan) }}
+                        </h3>
+                        <div class="d-inline-block">
+                            <h2 class="text-white">
+                                {{ count($kepp_selesai) == 0 ? 0 : number_format((count($kepp_dihentikan) / $kodeEtik) * 100, 2) }}%
+                            </h2>
+                        </div>
+                        <span class="float-right display-5 opacity-3"><img src="/wabprof.png" alt=""
+                                width="60"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-12">
+                <div class="card gradient-4">
+                    <div class="card-body">
+                        <h3 class="card-title text-white">Selesai Sidang : {{ count($kepp_sidang) }}</h3>
+                        <div class="d-inline-block">
+                            <h2 class="text-white">
+                                {{ count($kepp_sidang) == 0 ? 0 : number_format((count($kepp_sidang) / $kodeEtik) * 100, 2) }}%
+                            </h2>
+                        </div>
+                        <span class="float-right display-5 opacity-3"><img src="/wabprof.png" alt=""
+                                width="60"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- lama --}}
 
         <div class="row">
             <div class="col-lg-6">
@@ -212,20 +293,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-body pb-0 d-flex justify-content-between">
-                        <div>
-                            <h4 class="mb-1">Data Pelanggaran Pidana</h4>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div id="chartWpp"></div>
-                    </div>
-                </div>
-            </div>
-
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body pb-0 d-flex justify-content-between">
@@ -235,6 +302,18 @@
                     </div>
                     <div class="card-body">
                         <div id="chartPangkatPelanggaran"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body pb-0 d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-1">Data Pelanggaran Pidana</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="chartWpp"></div>
                     </div>
                 </div>
             </div>
@@ -458,6 +537,50 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body pb-0 d-flex justify-content-between">
+                                <div>
+                                    <h4 class="mb-1">Grafik Pelanggaran Berdasarkan Kesatuan Asal Pelanggar</h4>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="chart_terduga"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (
+            (auth()->user()->getRoleNames()[0] != 'admin' &&
+                auth()->user()->getRoleNames()[0] != 'mabes') ||
+                $filter)
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body pb-0 d-flex justify-content-between">
+                                    <div>
+                                        <h4 class="mb-1">Data Pelanggaran Berdasarkan
+                                            Satker/ Polres Asal Pelanggar</h4>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="chart_new_polres_asal"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         @if (auth()->user()->getRoleNames()[0] == 'admin' ||
                 auth()->user()->getRoleNames()[0] == 'mabes')
             <div class="row">
@@ -467,7 +590,7 @@
                             <div class="card">
                                 <div class="card-body pb-0 d-flex justify-content-between">
                                     <div>
-                                        <h4 class="mb-1">Data Pelanggaran Berdasarkan Wilayah</h4>
+                                        <h4 class="mb-1">Grafik Penanganan Pelanggar</h4>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -489,7 +612,7 @@
                                 <div class="card">
                                     <div class="card-body pb-0 d-flex justify-content-between">
                                         <div>
-                                            <h4 class="mb-1">Data Pelanggaran Berdasarkan Wilayah</h4>
+                                            <h4 class="mb-1">Grafik Penanganan Pelanggar</h4>
                                         </div>
                                     </div>
                                     <div class="card-body">
@@ -515,7 +638,7 @@
                                 <div class="card-body pb-0 d-flex justify-content-between">
                                     <div>
                                         <h4 class="mb-1">Data Pelanggaran Berdasarkan
-                                            Satker/ Polres</h4>
+                                            Satker/ Polres Yang Menangani</h4>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -698,56 +821,6 @@
         });
 
 
-        am4core.ready(function() {
-
-
-            var dataChart = {!! json_encode($dataWujudPerbuatan, true) !!}
-            // chart.data = dataChart
-
-            am4core.useTheme(am4themes_animated);
-            // Themes end
-
-            // Create chart instance
-            var chart = am4core.create("chartWujudPerbuatan", am4charts.XYChart3D);
-            chart.paddingBottom = 30;
-            chart.angle = 35;
-
-            // Add data
-            chart.data = dataChart
-            chart.exporting.menu = new am4core.ExportMenu();
-            // Create axes
-            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-            categoryAxis.dataFields.category = "name";
-            categoryAxis.renderer.grid.template.location = 0;
-            categoryAxis.renderer.minGridDistance = 20;
-            categoryAxis.renderer.inside = true;
-            categoryAxis.renderer.grid.template.disabled = true;
-
-            let labelTemplate = categoryAxis.renderer.labels.template;
-            labelTemplate.rotation = -90;
-            labelTemplate.horizontalCenter = "left";
-            labelTemplate.verticalCenter = "middle";
-            labelTemplate.dy = 10; // moves it a bit down;
-            labelTemplate.inside =
-                false; // this is done to avoid settings which are not suitable when label is rotated
-
-            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-            valueAxis.renderer.grid.template.disabled = true;
-
-            // Create series
-            var series = chart.series.push(new am4charts.ConeSeries());
-            series.dataFields.valueY = "total";
-            series.dataFields.categoryX = "name";
-
-            var columnTemplate = series.columns.template;
-            columnTemplate.adapter.add("fill", function(fill, target) {
-                return chart.colors.getIndex(target.dataItem.index);
-            })
-
-            columnTemplate.adapter.add("stroke", function(stroke, target) {
-                return chart.colors.getIndex(target.dataItem.index);
-            })
-        })
 
         am4core.ready(function() {
 
@@ -838,38 +911,7 @@
 
         });
 
-        am4core.ready(function() {
 
-            // Themes begin
-            am4core.useTheme(am4themes_animated);
-            // Themes end
-
-            var chart = am4core.create("chartPungli", am4charts.PieChart);
-            chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
-            var dataChart = {!! json_encode($dataPungli, true) !!}
-            chart.data = dataChart
-            chart.exporting.menu = new am4core.ExportMenu();
-            chart.radius = am4core.percent(70);
-            chart.innerRadius = am4core.percent(40);
-            chart.startAngle = 180;
-            chart.endAngle = 360;
-
-            var series = chart.series.push(new am4charts.PieSeries());
-            series.dataFields.value = "total";
-            series.dataFields.category = "name";
-
-            series.slices.template.cornerRadius = 10;
-            series.slices.template.innerCornerRadius = 2;
-            series.slices.template.draggable = true;
-            series.slices.template.inert = true;
-            series.alignLabels = false;
-
-            series.hiddenState.properties.startAngle = 90;
-            series.hiddenState.properties.endAngle = 90;
-
-            // chart.legend = new am4charts.Legend();
-
-        });
 
         am4core.ready(function() {
 
@@ -1036,6 +1078,14 @@
 
             var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
             valueAxis.renderer.opposite = true;
+            chart.colors.list = [
+                am4core.color("#2f0bb3"),
+                am4core.color("#FFC75F"),
+                am4core.color("#0c7feb"),
+                am4core.color("#FF9671"),
+                am4core.color("#FFC75F"),
+                am4core.color("#F9F871")
+            ];
 
             // Create series
             function createSeries(field, name) {
@@ -1064,9 +1114,89 @@
             }
 
             createSeries("total", "Total");
+            createSeries("proses", "DP3D / BP3KEPP");
             createSeries("selesai", "Selesai");
 
-            var cellSize = 100;
+            var cellSize = 150;
+            chart.events.on("datavalidated", function(ev) {
+
+                // Get objects of interest
+                var chart = ev.target;
+                var categoryAxis = chart.yAxes.getIndex(0);
+
+                // Calculate how we need to adjust chart height
+                var adjustHeight = chart.data.length * cellSize - categoryAxis.pixelHeight;
+
+                // get current chart height
+                var targetHeight = chart.pixelHeight + adjustHeight;
+
+                // Set it on chart's container
+                chart.svgContainer.htmlElement.style.height = targetHeight + "px";
+            });
+        })
+
+        am4core.ready(function() {
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+
+            // Create chart instance
+            var chart = am4core.create("chart_terduga", am4charts.XYChart);
+
+            // Add data
+            var dataChart = {!! json_encode($polda_terduga, true) !!}
+            chart.data = dataChart
+            chart.exporting.menu = new am4core.ExportMenu();
+            // Create axes
+            var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.dataFields.category = "nama";
+            categoryAxis.numberFormatter.numberFormat = "#";
+            categoryAxis.renderer.inversed = true;
+            categoryAxis.renderer.grid.template.location = 0;
+            categoryAxis.renderer.cellStartLocation = 0.1;
+            categoryAxis.renderer.cellEndLocation = 0.9;
+
+            var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+            valueAxis.renderer.opposite = true;
+            chart.colors.list = [
+                am4core.color("#2f0bb3"),
+                am4core.color("#FFC75F"),
+                am4core.color("#0c7feb"),
+                am4core.color("#FF9671"),
+                am4core.color("#FFC75F"),
+                am4core.color("#F9F871")
+            ];
+
+            // Create series
+            function createSeries(field, name) {
+                var series = chart.series.push(new am4charts.ColumnSeries());
+                series.dataFields.valueX = field;
+                series.dataFields.categoryY = "nama";
+                series.name = name;
+                series.columns.template.tooltipText = "{name}: [bold]{valueX}[/]";
+                series.columns.template.height = am4core.percent(100);
+                series.sequencedInterpolation = true;
+
+                var valueLabel = series.bullets.push(new am4charts.LabelBullet());
+                valueLabel.label.text = "{valueX}";
+                valueLabel.label.horizontalCenter = "left";
+                valueLabel.label.dx = 10;
+                valueLabel.label.hideOversized = false;
+                valueLabel.label.truncate = false;
+
+                var categoryLabel = series.bullets.push(new am4charts.LabelBullet());
+                categoryLabel.label.text = "{name}";
+                categoryLabel.label.horizontalCenter = "right";
+                categoryLabel.label.dx = -10;
+                categoryLabel.label.fill = am4core.color("#fff");
+                categoryLabel.label.hideOversized = false;
+                categoryLabel.label.truncate = false;
+            }
+
+            createSeries("total", "Total");
+            createSeries("kode_etik", "KEPP");
+            createSeries("disiplin", "Disiplin");
+
+            var cellSize = 150;
             chart.events.on("datavalidated", function(ev) {
 
                 // Get objects of interest
@@ -1138,7 +1268,81 @@
                 }
 
                 createSeries("total", "Total");
-                createSeries("selesai", "Selesai");
+                createSeries("disiplin", "Disiplin");
+                createSeries("kepp", "KEPP");
+                // createSeries("selesai", "Selesai");
+
+                var cellSize = 100;
+                chart.events.on("datavalidated", function(ev) {
+
+                    // Get objects of interest
+                    var chart = ev.target;
+                    var categoryAxis = chart.yAxes.getIndex(0);
+
+                    // Calculate how we need to adjust chart height
+                    var adjustHeight = chart.data.length * cellSize - categoryAxis.pixelHeight;
+
+                    // get current chart height
+                    var targetHeight = chart.pixelHeight + adjustHeight;
+
+                    // Set it on chart's container
+                    chart.svgContainer.htmlElement.style.height = targetHeight + "px";
+                });
+            })
+
+            am4core.ready(function() {
+                am4core.useTheme(am4themes_animated);
+                // Themes end
+
+                // Create chart instance
+                var chart = am4core.create("chart_new_polres_asal", am4charts.XYChart);
+
+                // Add data
+                var dataChart = {!! json_encode($chartPolresAsal, true) !!}
+                chart.data = dataChart
+                chart.exporting.menu = new am4core.ExportMenu();
+                // Create axes
+                var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+                categoryAxis.dataFields.category = "nama";
+                categoryAxis.numberFormatter.numberFormat = "#";
+                categoryAxis.renderer.inversed = true;
+                categoryAxis.renderer.grid.template.location = 0;
+                categoryAxis.renderer.cellStartLocation = 0.1;
+                categoryAxis.renderer.cellEndLocation = 0.9;
+
+                var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+                valueAxis.renderer.opposite = true;
+
+                // Create series
+                function createSeries(field, name) {
+                    var series = chart.series.push(new am4charts.ColumnSeries());
+                    series.dataFields.valueX = field;
+                    series.dataFields.categoryY = "nama";
+                    series.name = name;
+                    series.columns.template.tooltipText = "{name}: [bold]{valueX}[/]";
+                    series.columns.template.height = am4core.percent(100);
+                    series.sequencedInterpolation = true;
+
+                    var valueLabel = series.bullets.push(new am4charts.LabelBullet());
+                    valueLabel.label.text = "{valueX}";
+                    valueLabel.label.horizontalCenter = "left";
+                    valueLabel.label.dx = 10;
+                    valueLabel.label.hideOversized = false;
+                    valueLabel.label.truncate = false;
+
+                    var categoryLabel = series.bullets.push(new am4charts.LabelBullet());
+                    categoryLabel.label.text = "{name}";
+                    categoryLabel.label.horizontalCenter = "right";
+                    categoryLabel.label.dx = -10;
+                    categoryLabel.label.fill = am4core.color("#fff");
+                    categoryLabel.label.hideOversized = false;
+                    categoryLabel.label.truncate = false;
+                }
+
+                createSeries("total", "Total");
+                createSeries("disiplin", "Disiplin");
+                createSeries("kepp", "KEPP");
+                // createSeries("selesai", "Selesai");
 
                 var cellSize = 100;
                 chart.events.on("datavalidated", function(ev) {

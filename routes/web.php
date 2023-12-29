@@ -10,6 +10,11 @@ use App\Http\Controllers\RefDataController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SideMenuController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DokumenPelanggaranController;
+use App\Http\Controllers\SidangBandingController;
+use App\Http\Controllers\SidangPkController;
+use App\Http\Controllers\LimpahController;
+use App\Http\Controllers\DataKesatuanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -55,6 +60,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/tambah-data/save', [PelanggaranController::class, 'save'])->name('pelanggaran.save');
     Route::post('/pelanggaran-data/delete', [PelanggaranController::class, 'deleteData'])->name('pelanggaran.delete');
 
+    Route::get('/monitoring-pelanggar', [DataKesatuanController::class, 'index'])->name('monitor-pelanggar.index');
+    Route::post('/monitoring-data/show', [DataKesatuanController::class, 'show'])->name('monitoring.show');
+    Route::post('/monitoring-data/export', [DataKesatuanController::class, 'exportData'])->name('pelanggaran.export');
+
 
     Route::get('data-master/wujud-perbuatan-pidana', [RefDataController::class, 'wujudPerbuatanPidana'])->name('refData.wujud_perbuatan_pidana');
     Route::post('data-master/wujud-perbuatan-pidana', [RefDataController::class, 'wujudPerbuatanPidana'])->name('refData.wujud_perbuatan_pidana.view');
@@ -90,7 +99,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('narkoba/delete/{id}', [RefDataController::class, 'deleteNarkoba']);
 
 
+    Route::get('dokumen/modal/{id}', [DokumenPelanggaranController::class, 'modal_dokumen']);
+    Route::post('dokumen/upload', [DokumenPelanggaranController::class, 'upload_dokumen']);
 
+    Route::get('limpah/modal/{id}', [LimpahController::class, 'modal_limpah_view']);
+    Route::post('limpah/save', [LimpahController::class, 'save']);
+
+    Route::get('pelanggaran-data/sidang_banding/{id}', [SidangBandingController::class, 'sidang_banding_view']);
+    Route::post('/pelanggaran-data/sidang_banding/{id}/save', [SidangBandingController::class, 'save'])->name('pelanggaran.sidang-banding.save');
+
+    Route::get('pelanggaran-data/sidang_pk/{id}', [SidangPkController::class, 'sidang_banding_view']);
+    Route::post('/pelanggaran-data/sidang_pk/{id}/save', [SidangPkController::class, 'save'])->name('pelanggaran.sidang-pk.save');
 
     Route::group(['middleware' => ['role:admin']], function () {
         // Menu Side

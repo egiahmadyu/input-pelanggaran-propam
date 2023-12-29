@@ -6,6 +6,8 @@ use App\Models\PelanggaranList;
 use App\Models\SatuanPolda;
 use App\Models\SatuanPolres;
 use App\Models\SatuanPolsek;
+use App\Models\PolresTerduga;
+use App\Models\PolsekTerduga;
 use Illuminate\Http\Request;
 
 class SatuanController extends Controller
@@ -21,6 +23,22 @@ class SatuanController extends Controller
     public function getPolseByPolres($polres_id)
     {
         $data = SatuanPolsek::where('polres_id', $polres_id)->get();
+        return response()->json([
+            'data' => $data
+        ]);
+    }
+
+    public function getPolresByPoldaTerduga($polda_id)
+    {
+        $data = PolresTerduga::where('polda_terduga_id', $polda_id)->get();
+        return response()->json([
+            'data' => $data
+        ]);
+    }
+
+    public function getPolseByPolresTerduga($polres_id)
+    {
+        $data = PolsekTerduga::where('polres_terduga_id', $polres_id)->get();
         return response()->json([
             'data' => $data
         ]);

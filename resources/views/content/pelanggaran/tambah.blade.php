@@ -162,7 +162,57 @@
                                     </fieldset>
                                     <!-- step 2 -->
                                     <fieldset>
-                                        <h4>Kesatuan</h4>
+                                        <h4>Kesatuan Asal Pelanggar</h4>
+                                        <div class="form-group">
+                                            <label>Mabes / Polda</label>
+                                            @if (auth()->user()->getRoleNames()[0] !== 'admin' &&
+                                                    auth()->user()->getRoleNames()[0] !== 'mabes')
+                                                <select class="form-control" id="polda_terduga" style="width: 100%"
+                                                    name="polda_terduga" required=true
+                                                    onchange="{{ auth()->user()->getRoleNames()[0] !== 'polres'? 'getPolresPelanggar()': '' }}">
+                                                    <option value="">Pilih </option>
+                                                    <option value="{{ auth()->user()->polda_id }}">
+                                                        {{ auth()->user()->satuan_poldas->name }}</option>
+                                                </select>
+                                            @else
+                                                <select class="form-control" id="polda_terduga" style="width: 100%"
+                                                    name="polda_terduga" onchange="getPolresPelanggar()" required=true>
+                                                    <option value="">Pilih </option>
+                                                    @foreach ($poldas as $polda)
+                                                        <option value="{{ $polda->id }}">{{ $polda->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            @endif
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Satker
+                                            </label>
+                                            @if (auth()->user()->getRoleNames()[0] == 'polres')
+                                                <select class="form-control" id="polres_terduga" style="width: 100%"
+                                                    name="polres_terduga" onchange="getPolsekPelanggar()">
+                                                    <option value="">Pilih </option>
+                                                    <option value="{{ auth()->user()->polres_id }}">
+                                                        {{ auth()->user()->satuan_polres->name }}</option>
+                                                </select>
+                                            @else
+                                                <select class="form-control" id="polres_terduga" style="width: 100%"
+                                                    name="polres_terduga" onchange="getPolsekPelanggar()">
+                                                </select>
+                                            @endif
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Satker Polda/ Satker Polres/ Polsek</label>
+                                            <select class="form-control" id="polsek_terduga" style="width: 100%"
+                                                name="polsek_terduga">
+                                                {{-- <option value="001">Polres Aceh Barat Daya</option> --}}
+                                                {{-- @foreach ($diktuks as $diktuk)
+                                                    <option value="{{ $diktuk->id }}">{{ $diktuk->name }}</option>
+                                                @endforeach --}}
+                                            </select>
+                                        </div>
+
+                                        <hr>
+                                        <h4>Kesatuan Yang Menangani</h4>
                                         <div class="form-group">
                                             <label>Mabes/ Polda</label>
                                             @if (auth()->user()->getRoleNames()[0] !== 'admin' &&
@@ -188,7 +238,8 @@
                                             <label>Satker</label>
                                             @if (auth()->user()->getRoleNames()[0] == 'polres')
                                                 <select class="form-control" id="polres" style="width: 100%"
-                                                    name="polres">
+                                                    name="polres" onchange="getPolsek()">
+                                                    <option value="">Pilih </option>
                                                     <option value="{{ auth()->user()->polres_id }}">
                                                         {{ auth()->user()->satuan_polres->name }}</option>
                                                 </select>
@@ -199,7 +250,7 @@
                                             @endif
                                         </div>
                                         <div class="form-group">
-                                            <label>Satker Polda/ Satker Polres/ Polsek</label>
+                                            <label>BIRO/ BIDPROPAM / SIPROPAM</label>
                                             <select class="form-control" id="polsek" style="width: 100%"
                                                 name="polsek">
                                                 {{-- <option value="001">Polres Aceh Barat Daya</option> --}}
@@ -347,6 +398,7 @@
                                     <fieldset>
                                         <h4>Penyelesaian</h4>
                                         <div class="form-group">
+                                            <label for="">Jenis Penyelesaian</label>
                                             <select class="form-control" id="penyelesaian" style="width: 100%"
                                                 name="penyelesaian" onchange="check_penyelesaian()">
                                                 <option value="">Pilih</option>
@@ -358,12 +410,22 @@
                                         <div id="sidang_div">
                                             <h5>Sidang</h5>
                                             <div class="form-group">
-                                                <label>Nomor KEP </label>
-                                                <input type="text" name="no_kep" id="no_kep"
+                                                <label id="label_dp3d">Nomor Surat Ketetapan Penghentian</label>
+                                                <input type="text" name="dp3d_bp3kkepp" id="dp3d_bp3kkepp"
                                                     class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label>Tanggal KEP </label>
+                                                <label id="tgl_label_dp3d">Tanggal Surat Ketetapan Penghentian </label>
+                                                <input type="date" name="tanggal_dp3d_bp3kkepp"
+                                                    id="tanggal_dp3d_bp3kkepp" class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label id="label_kep">Nomor Surat Ketetapan Penghentian</label>
+                                                <input type="text" name="no_kep" id="no_kep"
+                                                    oninput="input_no_kep()" class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label id="tgl_label_kep">Tanggal Surat Ketetapan Penghentian </label>
                                                 <input type="date" name="tgl_kep" id="tgl_kep"
                                                     class="form-control">
                                             </div>
@@ -417,13 +479,13 @@
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label>Nomor KEP Penghentian
+                                                <label>Nomor Surat Ketetapan Penghentian
                                                 </label>
                                                 <input type="text" name="nokepsp3" id="nokepsp3"
                                                     class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label>Tanggal KEP Penghentian </label>
+                                                <label>Tanggal Surat Ketetapan Penghentian </label>
                                                 <input type="date" name="tglkepsp3" id="tglkepsp3"
                                                     class="form-control">
                                             </div>
@@ -605,6 +667,7 @@
             });
             $('#narkobaDiv').css("display", "none");
             getPolres()
+            getPolresPelanggar()
             getWujudPerbuatan()
             checkWPP()
             check_penyelesaian()
@@ -641,9 +704,10 @@
                 $('#tglkepsp3').removeAttr('required')
                 $('#nokepsp3').removeAttr('required')
 
-                $('#no_kep').attr('required', 'true')
-                $('#tgl_kep').attr('required', 'true')
-                $('#putusan_1').attr('required', 'true')
+
+                $('#dp3d_bp3kkepp').attr('required', 'true')
+                $('#tanggal_dp3d_bp3kkepp').attr('required', 'true')
+
 
             } else if (val == 'dihentikan') {
                 $('.putusan').val('')
@@ -651,6 +715,9 @@
                 $('#alasan_dihentikan').attr('required', 'true')
                 $('#nokepsp3').attr('required', 'true')
                 $('#tglkepsp3').attr('required', 'true')
+
+                $('#dp3d_bp3kkepp').removeAttr('required')
+                $('#tanggal_dp3d_bp3kkepp').removeAttr('required')
 
                 $('#no_kep').removeAttr('required')
                 $('#tgl_kep').removeAttr('required')
@@ -669,6 +736,23 @@
                 $('#dihentikan_div').css('display', 'none')
                 $('.putusan').val('')
                 $('#sidang_div').css('display', 'none')
+
+                $('#dp3d_bp3kkepp').removeAttr('required')
+                $('#tanggal_dp3d_bp3kkepp').removeAttr('required')
+            }
+        }
+
+        function input_no_kep() {
+            if ($('#no_kep').val() != '') {
+                $('#no_kep').attr('required', 'true')
+                $('#tgl_kep').attr('required', 'true')
+                $('#putusan_1').attr('required', 'true')
+            } else {
+                $('#tgl_kep').siblings(".date-picker-input").css('border', '')
+                $('#putusan_1').siblings(".select2-container").css('border', '')
+                $('#no_kep').removeAttr('required')
+                $('#tgl_kep').removeAttr('required')
+                $('#putusan_1').removeAttr('required')
             }
         }
 
@@ -809,6 +893,13 @@
                     endDate: new Date(), // Dec 31, 2024
                 }
             });
+            $("#tanggal_dp3d_bp3kkepp").pDatePicker({
+                lang: "id",
+                range: {
+                    endDate: new Date(), // Dec 31, 2024
+                }
+            });
+
             $("#tgllp").pDatePicker({
                 lang: "id",
                 range: {
@@ -977,6 +1068,39 @@
             $("#" + id).remove();
         }
 
+        function getPolresPelanggar() {
+            var polda = $('#polda_terduga').val()
+            $.ajax({
+                url: "/api/polda_terduga/" + polda,
+                success: function(data) {
+                    var polres = data.data
+                    var option = '<option value="">Pilih</option>'
+                    for (let index = 0; index < polres.length; index++) {
+                        option += `<option value="${polres[index].id}">${polres[index].name}</option>`
+
+                    }
+                    $('#polres_terduga').html(option)
+                    getPolsek()
+                }
+            });
+        }
+
+        function getPolsekPelanggar() {
+            var polres = $('#polres_terduga').val()
+            $.ajax({
+                url: "/api/polres_terduga/" + polres,
+                success: function(data) {
+                    var polsek = data.data
+                    var option = '<option value="">Pilih</option>'
+                    for (let index = 0; index < polsek.length; index++) {
+                        option += `<option value="${polsek[index].id}">${polsek[index].name}</option>`
+
+                    }
+                    $('#polsek_terduga').html(option)
+                }
+            });
+        }
+
         function getPolres() {
             var polda = $('#polda').val()
             $.ajax({
@@ -1033,10 +1157,19 @@
             var jenis_pelanggaran = $('#jenis_pelanggaran').val()
             var html
             if (jenis_pelanggaran == 1) {
+
+                $('#label_kep').html('Nomor KHD')
+                $('#label_dp3d').html('Nomor DP3D')
+                $('#tgl_label_kep').html('Tanggal KHD')
+                $('#tgl_label_dp3d').html('Tanggal DP3D')
                 html = `<option value="">Pilih </option>
                                                 <option value="polri">Polri</option>
                                                 <option value="asn">ASN</option>`
             } else if (jenis_pelanggaran == 2) {
+                $('#label_kep').html('Nomor PUT')
+                $('#label_dp3d').html('Nomor BP3KEPP')
+                $('#tgl_label_kep').html('Tanggal PUT')
+                $('#tgl_label_dp3d').html('Tanggal BP3KEPP')
                 html = `<option value="">Pilih </option>
                                                 <option value="polri">Polri</option>`
             }

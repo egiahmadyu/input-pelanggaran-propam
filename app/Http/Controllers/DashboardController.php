@@ -77,7 +77,6 @@ class DashboardController extends Controller
             'chartPoldaNew' => $this->getChartPoldaNew($request),
             'dataByGender' => $this->getDataByGender($request),
             'dataByWpp' => $this->getDataByWpp($request),
-            'dataWujudPerbuatan' => $this->getWujudPerbuatan($request),
             'dataWujudPerbuatanDisiplin' => $this->getWujudPerbuatan($request, 1),
             'dataWujudPerbuatanKepp' => $this->getWujudPerbuatan($request, 2),
             'dataWujudPerbuatanPidana' => $this->getWujudPerbuatanPidana($request, 1),
@@ -87,16 +86,23 @@ class DashboardController extends Controller
             'kodeEtik' => $this->getJenisPelanggaran($request, 2),
             'penyalahGunaanNarkoba' => $this->getDataPenggunaanNarkoba($request),
             'jenisNarkoba' => $this->getDataJenisNarkoba($request),
-            'dataPungli' => $this->getDataPungli($request),
             'poldas' => SatuanPolda::all(),
             'pangkats' => Pangkat::all(),
             'disiplin_selesai' => $this->disiplin_selesai($request),
-            'kepp_selesai' => $this->kepp_selesai($request)
+            'kepp_selesai' => $this->kepp_selesai($request),
+            'dp3d' => $this->disiplin_dp3d($request),
+            'bp3kepp' => $this->kepp_bp3kepp($request),
+            'disiplin_dihentikan' => $this->disiplin_dihentikan($request),
+            'kepp_dihentikan' => $this->kepp_dihentikan($request),
+            'disiplin_sidang' => $this->disiplin_sidang($request),
+            'kepp_sidang' => $this->kepp_sidang($request),
+            'polda_terduga' => $this->polda_terduga($request)
         ];
 
 
         if (auth()->user()->getRoleNames()[0] != 'admin') {
             $data['chart_polres'] = $this->chartPolres($request);
+            $data['chartPolresAsal'] =$this->chartPolresAsal($request);
             if (auth()->user()->getRoleNames()[0] == 'polda') {
                 $data['list_polres'] = SatuanPolres::where('polda_id', auth()->user()->polda_id)->get();
                 if ($request->polres) $data['chart_polsek'] = $this->chartPolsek($request);
@@ -105,11 +111,71 @@ class DashboardController extends Controller
             }
         } else if (auth()->user()->getRoleNames()[0] == 'admin') {
             $data['chart_polres'] = $this->chartPolres($request);
+            $data['chartPolresAsal'] =$this->chartPolresAsal($request);
         }
         if ($request->polda || $request->polres) $filter = true;
         $data['filter'] = $filter;
 
         return view('content.dashboard.index', $data);
+    }
+
+    private function polda_terduga($request)
+    {
+        $data = PelanggaranList::groupBy('polda_terduga', 'polda_terdugas.name')->join('polda_terdugas', 'polda_terdugas.id', 'pelanggaran_lists.polda_terduga')
+            ->where('is_delete', 0)
+            ->orderBy('polda_terduga', 'asc')
+            ->select(DB::raw('count(*) as total'), 'polda_terdugas.name as nama', 'polda_terduga');
+
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
+
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda_terduga', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres_terduga', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda_terduga', $request->polda);
+        }
+        if ($request->polres) {
+            $data = $data->where('polres_terduga', $request->polres);
+        }
+
+        $data = $data->get();
+        foreach ($data as $key => $value) {
+            $query = PelanggaranList::groupBy('polda_terduga', 'polda_terdugas.name')->join('polda_terdugas', 'polda_terdugas.id', 'pelanggaran_lists.polda_terduga')
+            ->where('is_delete', 0)
+            ->where('jenis_pelanggaran', 1)
+            ->where('polda_terduga', $value->polda_terduga)
+            ->orderBy('polda_terduga', 'asc')
+            ->select(DB::raw('count(*) as total'), 'polda_terdugas.name', 'polda_terduga');
+
+            $query = $query->first();
+            $value->disiplin = is_null($query) ? '0' : $query->total;
+
+            $query = PelanggaranList::groupBy('polda_terduga', 'polda_terdugas.name')->join('polda_terdugas', 'polda_terdugas.id', 'pelanggaran_lists.polda_terduga')
+            ->where('is_delete', 0)
+            ->where('jenis_pelanggaran', 2)
+            ->where('polda_terduga', $value->polda_terduga)
+            ->orderBy('polda_terduga', 'asc')
+            ->select(DB::raw('count(*) as total'), 'polda_terdugas.name', 'polda_terduga');
+            if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
+            if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
+            if ($request->tanggal_mulai) $query = $query->where('tgllp', '>=', $request->tanggal_mulai);
+            if ($request->tanggal_akhir) $query = $query->where('tgllp', '<=', $request->tanggal_akhir);
+            if (auth()->user()->getRoleNames()[0] == 'polres') {
+                $query->where('polres', auth()->user()->polres_id);
+            } else {
+                if ($request->polres) {
+                    $query = $query->where('polres', $request->polres);
+                }
+            }
+            $query = $query->first();
+            $value->kode_etik = is_null($query) ? '0' : $query->total;
+        }
+        // dd($data);
+        return $data;
     }
 
     public function print_dashboard($data)
@@ -148,8 +214,98 @@ class DashboardController extends Controller
 
     public function disiplin_selesai(Request $request)
     {
-        $data = PelanggaranList::whereNotNull('penyelesaian')
+        $data = PelanggaranList::where(function ($query) {
+            $query->whereNotNull('dp3d_bp3kkepp')->orWhere('penyelesaian', 'dihentikan');
+        })
             ->where('jenis_pelanggaran', 1)->where('is_delete', 0);
+
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
+        }
+        return $data->get();
+    }
+
+    public function disiplin_dihentikan(Request $request)
+    {
+        $data = PelanggaranList::where('penyelesaian', 'dihentikan')
+            ->where('jenis_pelanggaran', 1)->where('is_delete', 0);
+
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
+        }
+        return $data->get();
+    }
+
+    public function kepp_dihentikan(Request $request)
+    {
+        $data = PelanggaranList::where('penyelesaian', 'dihentikan')
+            ->where('jenis_pelanggaran', 2)->where('is_delete', 0);
+
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
+        }
+        return $data->get();
+    }
+
+    public function disiplin_sidang(Request $request)
+    {
+        $data = PelanggaranList::whereNotNull('no_kep')
+            ->where('jenis_pelanggaran', 1)->where('is_delete', 0);
+
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
+        }
+        return $data->get();
+    }
+
+    public function kepp_sidang(Request $request)
+    {
+        $data = PelanggaranList::whereNotNull('no_kep')
+            ->where('jenis_pelanggaran', 2)->where('is_delete', 0);
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
         if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
@@ -170,7 +326,10 @@ class DashboardController extends Controller
 
     public function kepp_selesai(Request $request)
     {
-        $data = PelanggaranList::whereNotNull('penyelesaian')
+        $data = PelanggaranList::
+        where(function ($query) {
+            $query->whereNotNull('no_kep')->orWhere('penyelesaian', 'dihentikan');
+        })
             ->where('jenis_pelanggaran', 2)->where('is_delete', 0);
 
         if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
@@ -212,6 +371,52 @@ class DashboardController extends Controller
 
         return view('content.dashboard.index', $data);
     }
+
+    public function disiplin_dp3d(Request $request)
+    {
+        $data = PelanggaranList::whereNotNull('dp3d_bp3kkepp')
+            ->where('jenis_pelanggaran', 1)->where('is_delete', 0);
+
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
+        }
+        return $data->get();
+    }
+
+    public function kepp_bp3kepp(Request $request)
+    {
+        $data = PelanggaranList::whereNotNull('dp3d_bp3kkepp')
+            ->where('jenis_pelanggaran', 2)->where('is_delete', 0);
+
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda', $request->polda);
+        }
+        if ($request->polres) {
+            $data = $data->where('polres', $request->polres);
+        }
+        return $data->get();
+    }
+
+
 
     public function kodeEtik(Request $request)
     {
@@ -471,6 +676,95 @@ class DashboardController extends Controller
             }
             $query = $query->first();
             $value->selesai = is_null($query) ? 0 : $query->total;
+            $query = PelanggaranList::groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
+                ->where('is_delete', 0)
+                ->whereNotNull('dp3d_bp3kkepp')
+                ->where('polda', $value->polda)
+                ->select(DB::raw('count(*) as proses'), 'satuan_poldas.name', 'polda');
+            if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
+            if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
+            if ($request->tanggal_mulai) $query = $query->where('tgllp', '>=', $request->tanggal_mulai);
+            if ($request->tanggal_akhir) $query = $query->where('tgllp', '<=', $request->tanggal_akhir);
+            if (auth()->user()->getRoleNames()[0] == 'polres') {
+                $query->where('polres', auth()->user()->polres_id);
+            } else {
+                if ($request->polres) {
+                    $query = $query->where('polres', $request->polres);
+                }
+            }
+            $query = $query->first();
+            $value->proses = is_null($query) ? 0 : $query->proses;
+        }
+        return $data;
+    }
+
+    public function chartPolresAsal($request, $jenis_pelanggaran = null)
+    {
+        $data = PelanggaranList::groupBy('polres_terduga', 'polres_terdugas.name')->leftJoin('polres_terdugas', 'polres_terdugas.id', 'pelanggaran_lists.polres_terduga')
+            ->where('is_delete', 0)
+            ->orderBy('polres_terduga', 'asc')
+            ->select(DB::raw('count(*) as total'), 'polres_terdugas.name as nama', 'polres_terduga');
+
+        if ($jenis_pelanggaran) $data = $data->where('jenis_pelanggaran', $jenis_pelanggaran);
+
+
+        if ($request->pangkat) $data = $data->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $data = $data->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $data = $data->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $data = $data->where('tgllp', '<=', $request->tanggal_akhir);
+
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $data->where('polda_terduga', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $data->where('polres_terduga', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $data = $data->where('polda_terduga', $request->polda);
+        }
+        if ($request->polres) {
+            $data = $data->where('polres_terduga', $request->polres);
+        }
+        $data = $data->get();
+        foreach ($data as $key => $value) {
+            $query = PelanggaranList::groupBy('polres_terduga', 'polres_terdugas.name')->join('polres_terdugas', 'polres_terdugas.id', 'pelanggaran_lists.polres_terduga')
+                ->where('is_delete', 0)
+                ->whereNotNull('penyelesaian')
+                ->where('polres_terduga', $value->polres)
+                ->whereNotNull('polda')
+                ->select(DB::raw('count(*) as total'), 'polres_terdugas.name', 'polres_terduga');
+            if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
+            if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
+            if ($request->tanggal_mulai) $query = $query->where('tgllp', '>=', $request->tanggal_mulai);
+            if ($request->tanggal_akhir) $query = $query->where('tgllp', '<=', $request->tanggal_akhir);
+            $query = $query->first();
+            $value->selesai = is_null($query) ? 0 : $query->total;
+
+            $query = PelanggaranList::groupBy('polres_terduga', 'polres_terdugas.name')->join('polres_terdugas', 'polres_terdugas.id', 'pelanggaran_lists.polres_terduga')
+                ->where('is_delete', 0)
+                // ->whereNotNull('penyelesaian')
+                ->where('polres_terduga', $value->polres_terduga)
+                ->where('jenis_pelanggaran', 1)
+                ->whereNotNull('polda')
+                ->select(DB::raw('count(*) as total'), 'polres_terdugas.name', 'polres_terduga');
+            if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
+            if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
+            if ($request->tanggal_mulai) $query = $query->where('tgllp', '>=', $request->tanggal_mulai);
+            if ($request->tanggal_akhir) $query = $query->where('tgllp', '<=', $request->tanggal_akhir);
+            $query = $query->first();
+            $value->disiplin = is_null($query) ? 0 : $query->total;
+
+            $query = PelanggaranList::groupBy('polres_terduga', 'polres_terdugas.name')->join('polres_terdugas', 'polres_terdugas.id', 'pelanggaran_lists.polres_terduga')
+                ->where('is_delete', 0)
+                // ->whereNotNull('penyelesaian')
+                ->where('polres_terduga', $value->polres_terduga)
+                ->where('jenis_pelanggaran', 2)
+                ->whereNotNull('polda')
+                ->select(DB::raw('count(*) as total'), 'polres_terdugas.name', 'polres_terduga');
+            if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
+            if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
+            if ($request->tanggal_mulai) $query = $query->where('tgllp', '>=', $request->tanggal_mulai);
+            if ($request->tanggal_akhir) $query = $query->where('tgllp', '<=', $request->tanggal_akhir);
+            $query = $query->first();
+            $value->kepp = is_null($query) ? 0 : $query->total;
         }
         return $data;
     }
@@ -514,6 +808,34 @@ class DashboardController extends Controller
             if ($request->tanggal_akhir) $query = $query->where('tgllp', '<=', $request->tanggal_akhir);
             $query = $query->first();
             $value->selesai = is_null($query) ? 0 : $query->total;
+
+            $query = PelanggaranList::groupBy('polres', 'satuan_polres.name')->join('satuan_polres', 'satuan_polres.id', 'pelanggaran_lists.polres')
+                ->where('is_delete', 0)
+                // ->whereNotNull('penyelesaian')
+                ->where('polres', $value->polres)
+                ->where('jenis_pelanggaran', 1)
+                ->whereNotNull('polda')
+                ->select(DB::raw('count(*) as total'), 'satuan_polres.name', 'polres');
+            if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
+            if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
+            if ($request->tanggal_mulai) $query = $query->where('tgllp', '>=', $request->tanggal_mulai);
+            if ($request->tanggal_akhir) $query = $query->where('tgllp', '<=', $request->tanggal_akhir);
+            $query = $query->first();
+            $value->disiplin = is_null($query) ? 0 : $query->total;
+
+            $query = PelanggaranList::groupBy('polres', 'satuan_polres.name')->join('satuan_polres', 'satuan_polres.id', 'pelanggaran_lists.polres')
+                ->where('is_delete', 0)
+                // ->whereNotNull('penyelesaian')
+                ->where('polres', $value->polres)
+                ->where('jenis_pelanggaran', 2)
+                ->whereNotNull('polda')
+                ->select(DB::raw('count(*) as total'), 'satuan_polres.name', 'polres');
+            if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
+            if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
+            if ($request->tanggal_mulai) $query = $query->where('tgllp', '>=', $request->tanggal_mulai);
+            if ($request->tanggal_akhir) $query = $query->where('tgllp', '<=', $request->tanggal_akhir);
+            $query = $query->first();
+            $value->kepp = is_null($query) ? 0 : $query->total;
         }
         return $data;
     }
