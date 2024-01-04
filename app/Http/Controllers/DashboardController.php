@@ -658,42 +658,100 @@ class DashboardController extends Controller
         }
         $data = $data->get();
         foreach ($data as $key => $value) {
-            $query = PelanggaranList::groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
-                ->where('is_delete', 0)
-                ->whereNotNull('penyelesaian')
+            // $query = PelanggaranList::groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
+            //     ->where('is_delete', 0)
+            //     ->whereNotNull('penyelesaian')
+            //     ->where('polda', $value->polda)
+            //     ->select(DB::raw('count(*) as total'), 'satuan_poldas.name', 'polda');
+            // if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
+            // if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
+            // if ($request->tanggal_mulai) $query = $query->where('tgllp', '>=', $request->tanggal_mulai);
+            // if ($request->tanggal_akhir) $query = $query->where('tgllp', '<=', $request->tanggal_akhir);
+            // if (auth()->user()->getRoleNames()[0] == 'polres') {
+            //     $query->where('polres', auth()->user()->polres_id);
+            // } else {
+            //     if ($request->polres) {
+            //         $query = $query->where('polres', $request->polres);
+            //     }
+            // }
+            // $query->where
+            // $query = $query->first();
+            // $value->selesai = is_null($query) ? 0 : $query->total;
+
+            // Selesai Disiplin
+            $query = PelanggaranList::where('jenis_pelanggaran', 1)
                 ->where('polda', $value->polda)
-                ->select(DB::raw('count(*) as total'), 'satuan_poldas.name', 'polda');
+                ->where('is_delete', 0);
+
             if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
             if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
             if ($request->tanggal_mulai) $query = $query->where('tgllp', '>=', $request->tanggal_mulai);
             if ($request->tanggal_akhir) $query = $query->where('tgllp', '<=', $request->tanggal_akhir);
-            if (auth()->user()->getRoleNames()[0] == 'polres') {
+            if (auth()->user()->getRoleNames()[0] == 'polda') {
+                $query->where('polda', auth()->user()->polda_id);
+            } else if (auth()->user()->getRoleNames()[0] == 'polres') {
                 $query->where('polres', auth()->user()->polres_id);
             } else {
-                if ($request->polres) {
-                    $query = $query->where('polres', $request->polres);
-                }
+                if ($request->polda) $query = $query->where('polda', $request->polda);
             }
-            $query = $query->first();
-            $value->selesai = is_null($query) ? 0 : $query->total;
-            $query = PelanggaranList::groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
-                ->where('is_delete', 0)
-                ->whereNotNull('dp3d_bp3kkepp')
-                ->where('polda', $value->polda)
-                ->select(DB::raw('count(*) as proses'), 'satuan_poldas.name', 'polda');
-            if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
-            if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
-            if ($request->tanggal_mulai) $query = $query->where('tgllp', '>=', $request->tanggal_mulai);
-            if ($request->tanggal_akhir) $query = $query->where('tgllp', '<=', $request->tanggal_akhir);
-            if (auth()->user()->getRoleNames()[0] == 'polres') {
-                $query->where('polres', auth()->user()->polres_id);
-            } else {
-                if ($request->polres) {
-                    $query = $query->where('polres', $request->polres);
-                }
+            if ($request->polres) {
+                $query = $query->where('polres', $request->polres);
             }
-            $query = $query->first();
-            $value->proses = is_null($query) ? 0 : $query->proses;
+            $value->disiplin = $query->count();
+            $query = $query->where(function ($query) {
+                $query->whereNotNull('dp3d_bp3kkepp')->orWhere('penyelesaian', 'dihentikan');
+            });
+            $query = $query->count();
+            $value->disiplin_selesai = $query;
+
+            // KEPP Selesai
+            $query = PelanggaranList::where('jenis_pelanggaran', 2)
+            ->where('polda', $value->polda)
+            ->where('is_delete', 0);
+
+        if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
+        if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
+        if ($request->tanggal_mulai) $query = $query->where('tgllp', '>=', $request->tanggal_mulai);
+        if ($request->tanggal_akhir) $query = $query->where('tgllp', '<=', $request->tanggal_akhir);
+        if (auth()->user()->getRoleNames()[0] == 'polda') {
+            $query->where('polda', auth()->user()->polda_id);
+        } else if (auth()->user()->getRoleNames()[0] == 'polres') {
+            $query->where('polres', auth()->user()->polres_id);
+        } else {
+            if ($request->polda) $query = $query->where('polda', $request->polda);
+        }
+        if ($request->polres) {
+            $query = $query->where('polres', $request->polres);
+        }
+        $value->kepp = $query->count();
+        $query = $query->where(function ($query) {
+            $query->whereNotNull('no_kep')->orWhere('penyelesaian', 'dihentikan');
+        });
+        $value->kepp_selesai = $query->count();
+
+
+
+        $value->selesai = $value->kepp_selesai + $value->disiplin_selesai;
+
+
+            // $query = PelanggaranList::groupBy('polda', 'satuan_poldas.name')->join('satuan_poldas', 'satuan_poldas.id', 'pelanggaran_lists.polda')
+            //     ->where('is_delete', 0)
+            //     ->whereNotNull('dp3d_bp3kkepp')
+            //     ->where('polda', $value->polda)
+            //     ->select(DB::raw('count(*) as proses'), 'satuan_poldas.name', 'polda');
+            // if ($request->pangkat) $query = $query->where('pangkat', $request->pangkat);
+            // if ($request->jenis_kelamin) $query = $query->where('jenis_kelamin', $request->jenis_kelamin);
+            // if ($request->tanggal_mulai) $query = $query->where('tgllp', '>=', $request->tanggal_mulai);
+            // if ($request->tanggal_akhir) $query = $query->where('tgllp', '<=', $request->tanggal_akhir);
+            // if (auth()->user()->getRoleNames()[0] == 'polres') {
+            //     $query->where('polres', auth()->user()->polres_id);
+            // } else {
+            //     if ($request->polres) {
+            //         $query = $query->where('polres', $request->polres);
+            //     }
+            // }
+            // $query = $query->first();
+            // $value->proses = is_null($query) ? 0 : $query->proses;
         }
         return $data;
     }

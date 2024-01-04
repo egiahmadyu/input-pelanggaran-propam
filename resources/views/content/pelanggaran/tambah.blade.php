@@ -217,9 +217,15 @@
                                             <label>Mabes/ Polda</label>
                                             @if (auth()->user()->getRoleNames()[0] !== 'admin' &&
                                                     auth()->user()->getRoleNames()[0] !== 'mabes')
-                                                <select class="form-control" id="polda" style="width: 100%"
+                                                {{-- <select class="form-control" id="polda" style="width: 100%"
                                                     name="polda" required=true
                                                     onchange="{{ auth()->user()->getRoleNames()[0] !== 'polres'? 'getPolres()': '' }}">
+                                                    <option value="">Pilih </option>
+                                                    <option value="{{ auth()->user()->polda_id }}">
+                                                        {{ auth()->user()->satuan_poldas->name }}</option>
+                                                </select> --}}
+                                                <select class="form-control" id="polda" style="width: 100%"
+                                                    name="polda" required=true>
                                                     <option value="">Pilih </option>
                                                     <option value="{{ auth()->user()->polda_id }}">
                                                         {{ auth()->user()->satuan_poldas->name }}</option>
@@ -242,6 +248,16 @@
                                                     <option value="">Pilih </option>
                                                     <option value="{{ auth()->user()->polres_id }}">
                                                         {{ auth()->user()->satuan_polres->name }}</option>
+                                                </select>
+                                            @elseif (auth()->user()->getRoleNames()[0] == 'polda')
+                                                <?php
+                                                $satker = Helper::satker_polda(auth()->user()->polda_id);
+                                                ?>
+                                                <select class="form-control" id="polres" style="width: 100%"
+                                                    name="polres" onchange="getPolsek()">
+                                                    <option value="">Pilih </option>
+                                                    <option value="{{ $satker->id }}">
+                                                        {{ $satker->name }}</option>
                                                 </select>
                                             @else
                                                 <select class="form-control" id="polres" style="width: 100%"

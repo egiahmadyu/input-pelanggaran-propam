@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Models\Putusan;
 use App\Models\SideMenu;
+use App\Models\SatuanPolres;
 use Carbon\Carbon;
 
 class Helper
@@ -28,5 +29,13 @@ class Helper
     public static function tanggal($tanggal)
     {
         return Carbon::parse($tanggal)->translatedFormat('d F Y H:i');
+    }
+
+    public static function satker_polda($polda_id)
+    {
+        $res = SatuanPolres::where('polda_id', $polda_id)
+        ->where('name', 'POLDA')
+        ->first();
+        return $res;
     }
 }

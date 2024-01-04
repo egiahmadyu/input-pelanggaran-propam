@@ -1114,8 +1114,12 @@
             }
 
             createSeries("total", "Total");
-            createSeries("proses", "DP3D / BP3KEPP");
+            createSeries("kepp", "KEPP");
+            createSeries("disiplin", "Disiplin");
             createSeries("selesai", "Selesai");
+            createSeries("disiplin_selesai", "Disiplin Selesai");
+            createSeries("kepp_selesai", "KEPP Selesai");
+
 
             var cellSize = 150;
             chart.events.on("datavalidated", function(ev) {
@@ -1157,6 +1161,9 @@
 
             var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
             valueAxis.renderer.opposite = true;
+            valueAxis.renderer.inside = true;
+            valueAxis.renderer.labels.template.disabled = true;
+            valueAxis.min = 0;
             chart.colors.list = [
                 am4core.color("#2f0bb3"),
                 am4core.color("#FFC75F"),

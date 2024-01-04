@@ -46,6 +46,13 @@ class User extends Authenticatable
         return $this->hasOne(SatuanPolda::class, 'id', 'polda_id');
     }
 
+    public function satker_polda()
+    {
+        $res = SatuanPolres::where('polda_id', $this->polda)->first();
+        return $res;
+    }
+
+
     public function satuan_poldas()
     {
         return $this->hasOne(SatuanPolda::class, 'id', 'polda_id');
