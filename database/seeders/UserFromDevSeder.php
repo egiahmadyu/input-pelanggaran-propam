@@ -16,6 +16,7 @@ class UserFromDevSeder extends Seeder
      */
     public function run()
     {
+        // Role::create(['name' => 'mabes']);
         $arrayVar = [
             "data" => [
                 [

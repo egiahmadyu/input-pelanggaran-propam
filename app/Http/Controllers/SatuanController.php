@@ -8,6 +8,7 @@ use App\Models\SatuanPolres;
 use App\Models\SatuanPolsek;
 use App\Models\PolresTerduga;
 use App\Models\PolsekTerduga;
+use App\Models\PoldaTerduga;
 use Illuminate\Http\Request;
 
 class SatuanController extends Controller
@@ -46,7 +47,7 @@ class SatuanController extends Controller
 
     public function deletePolres($polres_id)
     {
-        $pelanggar = PelanggaranList::where('polres', $polres_id)->exists();
+        $pelanggar = PelanggaranList::where('polres_terduga', $polres_id)->exists();
         if ($pelanggar) {
             return response()->json([
                 'status' => 400,
@@ -55,7 +56,7 @@ class SatuanController extends Controller
             ]);
         }
 
-        SatuanPolres::where('id', $polres_id)->delete();
+        PolresTerduga::where('id', $polres_id)->delete();
         return response()->json([
             'status' => 200,
             'message' => 'Data Berhasil Dihapus'
@@ -64,7 +65,7 @@ class SatuanController extends Controller
 
     public function deletePolda($polda_id)
     {
-        $pelanggar = PelanggaranList::where('polda', $polda_id)->exists();
+        $pelanggar = PelanggaranList::where('polda_terduga', $polda_id)->exists();
         if ($pelanggar) {
             return response()->json([
                 'status' => 400,
@@ -73,7 +74,7 @@ class SatuanController extends Controller
             ]);
         }
 
-        SatuanPolda::where('id', $polda_id)->delete();
+        PoldaTerduga::where('id', $polda_id)->delete();
         return response()->json([
             'status' => 200,
             'message' => 'Data Berhasil Dihapus'

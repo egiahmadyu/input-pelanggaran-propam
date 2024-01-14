@@ -10,6 +10,9 @@ use App\Models\SatuanPolres;
 use App\Models\SatuanPolsek;
 use App\Models\WujudPerbuatan;
 use App\Models\WujudPerbuatanPidana;
+use App\Models\PoldaTerduga;
+use App\Models\PolsekTerduga;
+use App\Models\PolresTerduga;
 use Database\Seeders\Narkoba;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -37,7 +40,8 @@ class RefDataController extends Controller
     public function wujudPerbuatan(Request $request)
     {
         if ($request->isMethod('post')) {
-            $data = WujudPerbuatan::with('jenis_pelanggarans');
+            $data = WujudPerbuatan::join('jenis_pelanggarans','jenis_pelanggarans.id', 'wujud_perbuatans.jenis_pelanggaran_id')
+            ->select('jenis_pelanggarans.name as jenis_pelanggaran', 'wujud_perbuatans.name as nama_wp');
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $res = base64_encode(json_encode($row));
@@ -118,7 +122,7 @@ class RefDataController extends Controller
 
     public function getPolda()
     {
-        $data = SatuanPolda::select('*');
+        $data = PoldaTerduga::select('*');
         return DataTables::of($data)->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $res = base64_encode(json_encode($row));
@@ -134,7 +138,7 @@ class RefDataController extends Controller
         $data = [
             'url_data' => 'satuan-data/polres',
             'modal_id' => 'modalPolres',
-            'poldas' => SatuanPolda::all(),
+            'poldas' => PoldaTerduga::all(),
             'polres' => array()
 
         ];
@@ -146,8 +150,8 @@ class RefDataController extends Controller
         $data = [
             'url_data' => 'satuan-data/polsek',
             'modal_id' => 'modalPolsek',
-            'polres' => SatuanPolres::all(),
-            'poldas' => array()
+            'polres' => PolresTerduga::all(),
+            'poldas' => PoldaTerduga::all()
 
         ];
         return view('content.refData.satuan-polsek', $data);
@@ -155,7 +159,7 @@ class RefDataController extends Controller
 
     public function getPolres()
     {
-        $data = SatuanPolres::with('satuan_poldas');
+        $data = PolresTerduga::with('satuan_poldas');
         return DataTables::of($data)->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $res = base64_encode(json_encode($row));
@@ -168,7 +172,7 @@ class RefDataController extends Controller
 
     public function getPolsek()
     {
-        $data = SatuanPolsek::with('satuan_polreses', 'satuan_polreses.satuan_poldas');
+        $data = PolsekTerduga::with('satuan_polreses', 'satuan_polreses.satuan_poldas');
         return DataTables::of($data)->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $res = base64_encode(json_encode($row));
@@ -181,7 +185,7 @@ class RefDataController extends Controller
 
     public function savePolda(Request $request)
     {
-        $data = SatuanPolda::create([
+        $data = PoldaTerduga::create([
             'name' => $request->name
         ]);
 
@@ -191,9 +195,9 @@ class RefDataController extends Controller
     public function savePolres(Request $request)
     {
 
-        $data = SatuanPolres::create([
+        $data = PolresTerduga::create([
             'name' => $request->name,
-            'polda_id' => $request->polda_id
+            'polda_terduga_id' => $request->polda_id
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Menambahkan Data');
@@ -201,9 +205,9 @@ class RefDataController extends Controller
 
     public function savePolsek(Request $request)
     {
-        $data = SatuanPolsek::create([
+        $data = PolsekTerduga::create([
             'name' => $request->name,
-            'polres_id' => $request->polres_id
+            'polres_terduga_id' => $request->polres_id
         ]);
 
         return redirect()->back()->with('success', 'Berhasil Menambahkan Data');
@@ -211,31 +215,32 @@ class RefDataController extends Controller
 
     public function deletePolsek($id)
     {
-        $data = SatuanPolsek::where('id', $id)->delete();
+        $data = PolsekTerduga::where('id', $id)->delete();
 
         return redirect()->back()->with('success', 'Berhasil Menghapus Data');
     }
 
     public function deletePolres($id)
     {
-        $polsek = SatuanPolsek::where('polres_id', $id)->delete();
-        $polres = SatuanPolres::where('id', $id)->delete();
+        $polsek = PolsekTerduga::where('polres_id', $id)->delete();
+        $polres = PolresTerduga::where('id', $id)->delete();
 
         return redirect()->back()->with('success', 'Berhasil Menghapus Data');
     }
 
     public function deletePolda($id)
     {
+        dd($id);
         // $polsek = SatuanPolsek::where('polres_id', $id)->delete();
-        $polres = SatuanPolres::where('polda_id', $id)->get();
+        $polres = PolresTerduga::where('polda_id', $id)->get();
         // dd($id);
 
         foreach ($polres as $key => $value) {
-            $polsek = SatuanPolsek::where('polres_id', $value->id)->delete();
+            $polsek = PolsekTerduga::where('polres_id', $value->id)->delete();
         }
 
-        SatuanPolres::where('polda_id', $id)->delete();
-        $polda = SatuanPolda::where('id', $id)->delete();
+        PolresTerduga::where('polda_id', $id)->delete();
+        $polda = PoldaTerduga::where('id', $id)->delete();
 
 
         return redirect()->back()->with('success', 'Berhasil Menghapus Data');

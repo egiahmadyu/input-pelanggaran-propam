@@ -21,6 +21,8 @@ use App\Models\WujudPerbuatanPelanggar;
 use App\Models\WujudPerbuatanPidana;
 use App\Models\HistoryEdit;
 use App\Models\SatuanPolres;
+use App\Models\DokumenPelanggaran;
+
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Support\Facades\DB;
@@ -109,7 +111,9 @@ class PelanggaranController extends Controller
         $data['list_petusan'] = PelanggaranList::find($id)->toArray();
         $data['putusans'] = Putusan::where('jenis_pelanggaran_id', $data['list_petusan']['jenis_pelanggaran'])->get();
         $data['alasan_berhentis'] = AlasanBerhenti::all();
+        $data['dokumen'] = DokumenPelanggaran::where('data_pelanggar_id', $id)->get();
         $data['id'] = $id;
+        // dd( $data['dokumen']);
         return view('content.pelanggaran.edit_putusan', $data);
     }
 
@@ -121,7 +125,7 @@ class PelanggaranController extends Controller
             ->addColumn('action', function ($row) {
                 $res = base64_encode(json_encode($row));
                 $btn = '<a href="/pelanggaran-data/edit/' . $row->id . '" class="btn btn-secondary btn-sm">Update Penyelesaian</a> | <a href="javascript:void(0)" onclick="openDetail(' . $row->id . ')" class="btn btn-primary btn-sm">View</a>';
-                $btn .= ' | <button class="btn btn-info btn-sm" onclick="showModalDokumen('.$row->id.', `'.$row->nama.'`)">Upload Dokumen</button>';
+                $btn .= ' | <button class="btn btn-info btn-sm" onclick="showModalDokumen('.$row->id.', `'.$row->nama.'`)">Lihat Dokumen</button>';
                 $btn .= ' | <button class="btn btn-info btn-sm" onclick="openModalLimpah('.$row->id.')">Limpah</button>';
                 if ($row->jenis_pelanggaran == 2) {
                     if($row->penyelesaian == 'sidang') $btn .= ' | <a href="/pelanggaran-data/sidang_banding/' . $row->id . '"><button class="btn btn-primary btn-sm">Put Sidang Banding</button></a>';
@@ -258,6 +262,7 @@ class PelanggaranController extends Controller
     public function save(Request $request)
     {
         $request_data = $request->all();
+
         if ($request->jenis_narkoba == '0') {
             if (!$narkoba = JenisNarkoba::where('name', 'like', '%' . $request->jenis_narkoba_baru . '%')->first()) {
                 $narkoba = JenisNarkoba::create([
@@ -288,7 +293,60 @@ class PelanggaranController extends Controller
         }
         $data->nama = strtoupper($data->nama);
         $data->nolp = strtoupper($data->nolp);
+
+        if ($request->file('dokumen_lp')) {
+            $file = $request->file('dokumen_lp');
+            $file_name = time().$file->getClientOriginalName();
+            // $tujuan_upload = 'data_file';
+            $request->dokumen_lp->move(public_path('dokumen_pelanggar'), $file_name);
+            $data->dokumen_lp = 'dokumen_pelanggar/' . $file_name;
+
+        } else  $data->dokumen_lp = null;
         $data->save();
+
+        if ($request->file('dokumen_label_dp3d')) {
+            $file = $request->file('dokumen_label_dp3d');
+            $file_name = time().$file->getClientOriginalName();
+            // $tujuan_upload = 'data_file';
+            $request->dokumen_label_dp3d->move(public_path('dokumen_pelanggar'), $file_name);
+            DokumenPelanggaran::create([
+                'data_pelanggar_id' => $data->id,
+                'title' => $data->jenis_pelanggaran == 1 ? 'Dokumen DP3D' : 'Dokumen BP3KEPP',
+                'dokumen_keputusan_sidang' => 'dokumen_pelanggar/' . $file_name
+
+            ]);
+
+        }
+
+        if ($request->file('dokumen_penghentian')) {
+            $file = $request->file('dokumen_penghentian');
+            $file_name = time().$file->getClientOriginalName();
+            // $tujuan_upload = 'data_file';
+            $request->dokumen_penghentian->move(public_path('dokumen_pelanggar'), $file_name);
+            DokumenPelanggaran::create([
+                'data_pelanggar_id' => $data->id,
+                'title' => 'Dokumen Penghentian',
+                'dokumen_keputusan_sidang' => 'dokumen_pelanggar/' . $file_name
+
+            ]);
+
+        }
+
+
+
+        if ($request->file('dokumen_kep')) {
+            $file = $request->file('dokumen_kep');
+            $file_name = time().$file->getClientOriginalName();
+            // $tujuan_upload = 'data_file';
+            $request->dokumen_kep->move(public_path('dokumen_pelanggar'), $file_name);
+            DokumenPelanggaran::create([
+                'data_pelanggar_id' => $data->id,
+                'title' => $data->jenis_pelanggaran == 1 ? 'Dokumen KHD' : 'Dokumen PUT',
+                'dokumen_keputusan_sidang' => 'dokumen_pelanggar/' . $file_name
+
+            ]);
+
+        }
 
         WujudPerbuatanPelanggar::create([
             'pelanggar_id' => $data->id,
@@ -333,7 +391,11 @@ class PelanggaranController extends Controller
         unset($request['_token']);
         $jenis_narkoba_baru = $request->jenis_narkoba_baru;
         unset($request['jenis_narkoba_baru']);
-        PelanggaranList::where('id', $id)->update($request->all());
+        $dokumen_kep = $request->dokumen_kep;
+        $dokumen_label_dp3d = $request->dokumen_label_dp3d;
+        $dokumen_penghentian = $request->dokumen_penghentian;
+        // dd($request->all());
+        PelanggaranList::where('id', $id)->update($request->except('dokumen_kep', 'dokumen_label_dp3d', 'dokumen_penghentian'));
 
         $data = PelanggaranList::find($id);
         if ($request->jenis_narkoba == '0') {
@@ -372,6 +434,66 @@ class PelanggaranController extends Controller
                         ]);
                     }
                 }
+            }
+        }
+        if ($request->file('dokumen_label_dp3d')) {
+            $file = $request->file('dokumen_label_dp3d');
+            $file_name = time().$file->getClientOriginalName();
+            // $tujuan_upload = 'data_file';
+            $request->dokumen_label_dp3d->move(public_path('dokumen_pelanggar'), $file_name);
+            $dokumen_dp3d = DokumenPelanggaran::where('data_pelanggar_id',$id)->where('title',  $data->jenis_pelanggaran == 1 ? 'Dokumen DP3D' : 'Dokumen BP3KEPP')->first();
+            if ($dokumen_dp3d) {
+                $dokumen_dp3d->dokumen_keputusan_sidang = 'dokumen_pelanggar/' . $file_name;
+                $dokumen_dp3d->save();
+            } else {
+                DokumenPelanggaran::create([
+                    'data_pelanggar_id' => $data->id,
+                    'title' => $data->jenis_pelanggaran == 1 ? 'Dokumen DP3D' : 'Dokumen BP3KEPP',
+                    'dokumen_keputusan_sidang' => 'dokumen_pelanggar/' . $file_name
+
+                ]);
+            }
+
+        }
+
+        if ($request->file('dokumen_penghentian')) {
+            $file = $request->file('dokumen_penghentian');
+            $file_name = time().$file->getClientOriginalName();
+            // $tujuan_upload = 'data_file';
+            $request->dokumen_penghentian->move(public_path('dokumen_pelanggar'), $file_name);
+            $dokumen_penghentian = DokumenPelanggaran::where('data_pelanggar_id',$id)->where('title', 'Dokumen Penghentian')->first();
+            if ($dokumen_penghentian) {
+                $dokumen_penghentian->dokumen_keputusan_sidang = 'dokumen_pelanggar/' . $file_name;
+                $dokumen_penghentian->save();
+            } else {
+                DokumenPelanggaran::create([
+                    'data_pelanggar_id' => $data->id,
+                    'title' => 'Dokumen Penghentian',
+                    'dokumen_keputusan_sidang' => 'dokumen_pelanggar/' . $file_name
+
+                ]);
+            }
+
+        }
+
+
+
+        if ($request->file('dokumen_kep')) {
+            $file = $request->file('dokumen_kep');
+            $file_name = time().$file->getClientOriginalName();
+            // $tujuan_upload = 'data_file';
+            $request->dokumen_kep->move(public_path('dokumen_pelanggar'), $file_name);
+            $dokumen_kep = DokumenPelanggaran::where('data_pelanggar_id',$id)->where('title',  $data->jenis_pelanggaran == 1 ? 'Dokumen KHD' : 'Dokumen PUT')->first();
+            if ($dokumen_kep) {
+                $dokumen_kep->dokumen_keputusan_sidang = 'dokumen_pelanggar/' . $file_name;
+                $dokumen_kep->save();
+            } else {
+                DokumenPelanggaran::create([
+                    'data_pelanggar_id' => $data->id,
+                    'title' => $data->jenis_pelanggaran == 1 ? 'Dokumen DP3D' : 'Dokumen BP3KEPP',
+                    'dokumen_keputusan_sidang' => 'dokumen_pelanggar/' . $file_name
+
+                ]);
             }
         }
         $data->save();
@@ -477,7 +599,7 @@ class PelanggaranController extends Controller
         $sheet->setCellValue($position.'1', 'Dibuat oleh'); $position++;
         $sheet->setCellValue($position.'1', 'Diupdate oleh'); $position++;
         $sheet->setCellValue($position.'1', 'Diedit oleh');
-        $spreadsheet->getActiveSheet()->getStyle('A1:AQ1')->applyFromArray($this->headerStyle);
+        $spreadsheet->getActiveSheet()->getStyle('A1:AV1')->applyFromArray($this->headerStyle);
         $startRow = 2;
         $startCol = 'A';
 
@@ -571,7 +693,7 @@ class PelanggaranController extends Controller
         // $row++;
         // $row++;
         // dd($row);
-        for ($i = 1; $i < 47; $i++) {
+        for ($i = 1; $i < 49; $i++) {
             $spreadsheet->getActiveSheet()->getColumnDimension($row)->setAutoSize(true);
             $row++;
         }

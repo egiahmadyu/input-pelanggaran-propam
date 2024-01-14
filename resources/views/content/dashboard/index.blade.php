@@ -537,24 +537,26 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body pb-0 d-flex justify-content-between">
-                                <div>
-                                    <h4 class="mb-1">Grafik Pelanggaran Berdasarkan Kesatuan Asal Pelanggar</h4>
+        @if (auth()->user()->getRoleNames()[0] != 'polres')
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body pb-0 d-flex justify-content-between">
+                                    <div>
+                                        <h4 class="mb-1">Grafik Pelanggaran Berdasarkan Kesatuan Asal Pelanggar</h4>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="card-body">
-                                <div id="chart_terduga"></div>
+                                <div class="card-body">
+                                    <div id="chart_terduga"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endif
 
         @if (
             (auth()->user()->getRoleNames()[0] != 'admin' &&
@@ -581,8 +583,33 @@
             </div>
         @endif
 
+        @if (auth()->user()->getRoleNames()[0] == 'polres' ||
+                (auth()->user()->getRoleNames()[0] == 'polda' &&
+                    $filter))
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body pb-0 d-flex justify-content-between">
+                                    <div>
+                                        <h4 class="mb-1">Data Pelanggaran Berdasarkan
+                                            Satker/ Polsek</h4>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="chart_new_polsek_asal"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         @if (auth()->user()->getRoleNames()[0] == 'admin' ||
-                auth()->user()->getRoleNames()[0] == 'mabes')
+                auth()->user()->getRoleNames()[0] == 'mabes' ||
+                auth()->user()->getRoleNames()[0] == 'monitoring')
             <div class="row">
                 <div class="col-lg-12">
                     <div class="row">
@@ -637,8 +664,7 @@
                             <div class="card">
                                 <div class="card-body pb-0 d-flex justify-content-between">
                                     <div>
-                                        <h4 class="mb-1">Data Pelanggaran Berdasarkan
-                                            Satker/ Polres Yang Menangani</h4>
+                                        <h4 class="mb-1">Grafik Penanganan Pelanggar</h4>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -661,8 +687,7 @@
                             <div class="card">
                                 <div class="card-body pb-0 d-flex justify-content-between">
                                     <div>
-                                        <h4 class="mb-1">Data Pelanggaran Berdasarkan
-                                            Satker/ Polsek</h4>
+                                        <h4 class="mb-1">Grafik Penanganan Pelanggar</h4>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -940,122 +965,6 @@
 
         });
 
-        /**
-         * ---------------------------------------
-         * This demo was created using amCharts 4.
-         *
-         * For more information visit:
-         * https://www.amcharts.com/
-         *
-         * Documentation is available at:
-         * https://www.amcharts.com/docs/v4/
-         * ---------------------------------------
-         */
-
-        // am4core.ready(function() {
-        //     /**
-        //      * ---------------------------------------
-        //      * This demo was created using amCharts 4.
-        //      *
-        //      * For more information visit:
-        //      * https://www.amcharts.com/
-        //      *
-        //      * Documentation is available at:
-        //      * https://www.amcharts.com/docs/v4/
-        //      * ---------------------------------------
-        //      */
-
-        //     // Themes begin
-        //     am4core.useTheme(am4themes_animated);
-        //     // Themes end
-
-
-        //     var chart = am4core.create('chart_new', am4charts.XYChart)
-        //     chart.colors.step = 2;
-
-        //     chart.legend = new am4charts.Legend()
-        //     chart.legend.position = 'top'
-        //     chart.legend.paddingBottom = 20
-        //     chart.legend.labels.template.maxWidth = 95
-
-        //     var xAxis = chart.xAxes.push(new am4charts.CategoryAxis())
-        //     xAxis.dataFields.category = 'name'
-        //     xAxis.renderer.cellStartLocation = 0.1
-        //     xAxis.renderer.cellEndLocation = 0.9
-        //     xAxis.renderer.grid.template.location = 0;
-
-        //     var yAxis = chart.yAxes.push(new am4charts.ValueAxis());
-        //     yAxis.min = 0;
-
-        //     function createSeries(value, name) {
-        //         var series = chart.series.push(new am4charts.ColumnSeries())
-        //         series.dataFields.valueY = value
-        //         series.dataFields.categoryX = 'name'
-        //         series.name = name
-
-        //         series.events.on("hidden", arrangeColumns);
-        //         series.events.on("shown", arrangeColumns);
-
-        //         var bullet = series.bullets.push(new am4charts.LabelBullet())
-        //         bullet.interactionsEnabled = false
-        //         bullet.dy = 30;
-        //         bullet.label.text = '{valueY}'
-        //         bullet.label.fill = am4core.color('#ffffff')
-
-        //         return series;
-        //     }
-        //     var dataChart = {!! json_encode($chartPoldaNew, true) !!}
-
-        //     chart.data = dataChart
-
-
-        //     createSeries('total', 'Total Pelanggaran');
-        //     createSeries('selesai', 'Total Pelanggaran Selesai');
-
-        //     function arrangeColumns() {
-
-        //         var series = chart.series.getIndex(0);
-
-        //         var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
-        //         if (series.dataItems.length > 1) {
-        //             var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
-        //             var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
-        //             var delta = ((x1 - x0) / chart.series.length) * w;
-        //             if (am4core.isNumber(delta)) {
-        //                 var middle = chart.series.length / 2;
-
-        //                 var newIndex = 0;
-        //                 chart.series.each(function(series) {
-        //                     if (!series.isHidden && !series.isHiding) {
-        //                         series.dummyData = newIndex;
-        //                         newIndex++;
-        //                     } else {
-        //                         series.dummyData = chart.series.indexOf(series);
-        //                     }
-        //                 })
-        //                 var visibleCount = newIndex;
-        //                 var newMiddle = visibleCount / 2;
-
-        //                 chart.series.each(function(series) {
-        //                     var trueIndex = chart.series.indexOf(series);
-        //                     var newIndex = series.dummyData;
-
-        //                     var dx = (newIndex - trueIndex + middle - newMiddle) * delta
-
-        //                     series.animate({
-        //                         property: "dx",
-        //                         to: dx
-        //                     }, series.interpolationDuration, series.interpolationEasing);
-        //                     series.bulletsContainer.animate({
-        //                         property: "dx",
-        //                         to: dx
-        //                     }, series.interpolationDuration, series.interpolationEasing);
-        //                 })
-        //             }
-        //         }
-        //     }
-        // })
-
         am4core.ready(function() {
             am4core.useTheme(am4themes_animated);
             // Themes end
@@ -1079,12 +988,12 @@
             var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
             valueAxis.renderer.opposite = true;
             chart.colors.list = [
-                am4core.color("#2f0bb3"),
-                am4core.color("#FFC75F"),
+                am4core.color("#0455f7"),
+                am4core.color("#0344c5"),
+                am4core.color("#f1c232"),
+                am4core.color("#d8ae2d"),
                 am4core.color("#0c7feb"),
-                am4core.color("#FF9671"),
-                am4core.color("#FFC75F"),
-                am4core.color("#F9F871")
+                am4core.color("#0965bc")
             ];
 
             // Create series
@@ -1096,6 +1005,7 @@
                 series.columns.template.tooltipText = "{name}: [bold]{valueX}[/]";
                 series.columns.template.height = am4core.percent(100);
                 series.sequencedInterpolation = true;
+                series.paddingTop = 1;
 
                 var valueLabel = series.bullets.push(new am4charts.LabelBullet());
                 valueLabel.label.text = "{valueX}";
@@ -1113,15 +1023,15 @@
                 categoryLabel.label.truncate = false;
             }
 
-            createSeries("total", "Total");
-            createSeries("kepp", "KEPP");
-            createSeries("disiplin", "Disiplin");
-            createSeries("selesai", "Selesai");
-            createSeries("disiplin_selesai", "Disiplin Selesai");
+            createSeries("total", "Total Pelanggaran");
+            createSeries("selesai", "Total Selesai");
+            createSeries("kepp", "Pelanggaran KEPP");
             createSeries("kepp_selesai", "KEPP Selesai");
+            createSeries("disiplin", "Pelanggaran Disiplin");
+            createSeries("disiplin_selesai", "Disiplin Selesai");
 
 
-            var cellSize = 150;
+            var cellSize = 180;
             chart.events.on("datavalidated", function(ev) {
 
                 // Get objects of interest
@@ -1165,12 +1075,9 @@
             valueAxis.renderer.labels.template.disabled = true;
             valueAxis.min = 0;
             chart.colors.list = [
-                am4core.color("#2f0bb3"),
-                am4core.color("#FFC75F"),
-                am4core.color("#0c7feb"),
-                am4core.color("#FF9671"),
-                am4core.color("#FFC75F"),
-                am4core.color("#F9F871")
+                am4core.color("#0455f7"),
+                am4core.color("#f1c232"),
+                am4core.color("#0965bc")
             ];
 
             // Create series
@@ -1223,6 +1130,8 @@
 
         @if (auth()->user()->getRoleNames()[0] != 'admin' ||
                 (auth()->user()->getRoleNames()[0] == 'admin' &&
+                    $filter) ||
+                (auth()->user()->getRoleNames()[0] == 'monitoring' &&
                     $filter))
 
             am4core.ready(function() {
@@ -1247,7 +1156,14 @@
 
                 var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
                 valueAxis.renderer.opposite = true;
-
+                chart.colors.list = [
+                    am4core.color("#0455f7"),
+                    am4core.color("#0344c5"),
+                    am4core.color("#f1c232"),
+                    am4core.color("#d8ae2d"),
+                    am4core.color("#0c7feb"),
+                    am4core.color("#0965bc")
+                ];
                 // Create series
                 function createSeries(field, name) {
                     var series = chart.series.push(new am4charts.ColumnSeries());
@@ -1274,12 +1190,15 @@
                     categoryLabel.label.truncate = false;
                 }
 
-                createSeries("total", "Total");
-                createSeries("disiplin", "Disiplin");
-                createSeries("kepp", "KEPP");
+                createSeries("total", "Total Pelanggaran");
+                createSeries("selesai", "Total Selesai");
+                createSeries("kepp", "Pelanggaran KEPP");
+                createSeries("kepp_selesai", "KEPP Selesai");
+                createSeries("disiplin", "Pelanggaran Disiplin");
+                createSeries("disiplin_selesai", "Disiplin Selesai");
                 // createSeries("selesai", "Selesai");
 
-                var cellSize = 100;
+                var cellSize = 180;
                 chart.events.on("datavalidated", function(ev) {
 
                     // Get objects of interest
@@ -1319,6 +1238,11 @@
 
                 var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
                 valueAxis.renderer.opposite = true;
+                chart.colors.list = [
+                    am4core.color("#0455f7"),
+                    am4core.color("#f1c232"),
+                    am4core.color("#0965bc")
+                ];
 
                 // Create series
                 function createSeries(field, name) {
@@ -1397,6 +1321,15 @@
                 var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
                 valueAxis.renderer.opposite = true;
 
+                chart.colors.list = [
+                    am4core.color("#0455f7"),
+                    am4core.color("#0344c5"),
+                    am4core.color("#f1c232"),
+                    am4core.color("#d8ae2d"),
+                    am4core.color("#0c7feb"),
+                    am4core.color("#0965bc")
+                ];
+
                 // Create series
                 function createSeries(field, name) {
                     var series = chart.series.push(new am4charts.ColumnSeries());
@@ -1423,8 +1356,91 @@
                     categoryLabel.label.truncate = false;
                 }
 
+                createSeries("total", "Total Pelanggaran");
+                createSeries("selesai", "Total Selesai");
+                createSeries("kepp", "Pelanggaran KEPP");
+                createSeries("kepp_selesai", "KEPP Selesai");
+                createSeries("disiplin", "Pelanggaran Disiplin");
+                createSeries("disiplin_selesai", "Disiplin Selesai");
+
+
+
+                var cellSize = 100;
+                chart.events.on("datavalidated", function(ev) {
+
+                    // Get objects of interest
+                    var chart = ev.target;
+                    var categoryAxis = chart.yAxes.getIndex(0);
+
+                    // Calculate how we need to adjust chart height
+                    var adjustHeight = chart.data.length * cellSize - categoryAxis.pixelHeight;
+
+                    // get current chart height
+                    var targetHeight = chart.pixelHeight + adjustHeight;
+
+                    // Set it on chart's container
+                    chart.svgContainer.htmlElement.style.height = targetHeight + "px";
+                });
+            })
+
+            am4core.ready(function() {
+                am4core.useTheme(am4themes_animated);
+                // Themes end
+
+                // Create chart instance
+                var chart = am4core.create("chart_new_polsek_asal", am4charts.XYChart);
+
+                // Add data
+                var dataChart = {!! json_encode($chartPolsekAsal, true) !!}
+                chart.data = dataChart
+                chart.exporting.menu = new am4core.ExportMenu();
+                // Create axes
+                var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+                categoryAxis.dataFields.category = "nama";
+                categoryAxis.numberFormatter.numberFormat = "#";
+                categoryAxis.renderer.inversed = true;
+                categoryAxis.renderer.grid.template.location = 0;
+                categoryAxis.renderer.cellStartLocation = 0.1;
+                categoryAxis.renderer.cellEndLocation = 0.9;
+
+                var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+                valueAxis.renderer.opposite = true;
+
+                // Create series
+                function createSeries(field, name) {
+                    var series = chart.series.push(new am4charts.ColumnSeries());
+                    series.dataFields.valueX = field;
+                    series.dataFields.categoryY = "nama";
+                    series.name = name;
+                    series.columns.template.tooltipText = "{name}: [bold]{valueX}[/]";
+                    series.columns.template.height = am4core.percent(100);
+                    series.sequencedInterpolation = true;
+
+                    var valueLabel = series.bullets.push(new am4charts.LabelBullet());
+                    valueLabel.label.text = "{valueX}";
+                    valueLabel.label.horizontalCenter = "left";
+                    valueLabel.label.dx = 10;
+                    valueLabel.label.hideOversized = false;
+                    valueLabel.label.truncate = false;
+
+                    var categoryLabel = series.bullets.push(new am4charts.LabelBullet());
+                    categoryLabel.label.text = "{name}";
+                    categoryLabel.label.horizontalCenter = "right";
+                    categoryLabel.label.dx = -10;
+                    categoryLabel.label.fill = am4core.color("#fff");
+                    categoryLabel.label.hideOversized = false;
+                    categoryLabel.label.truncate = false;
+                }
+                chart.colors.list = [
+                    am4core.color("#0455f7"),
+                    am4core.color("#f1c232"),
+                    am4core.color("#0965bc")
+                ];
+
                 createSeries("total", "Total");
-                createSeries("selesai", "Selesai");
+                createSeries("disiplin", "Disiplin");
+                createSeries("kepp", "KEPP");
+                // createSeries("selesai", "Selesai");
 
                 var cellSize = 100;
                 chart.events.on("datavalidated", function(ev) {

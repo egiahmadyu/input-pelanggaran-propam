@@ -43,29 +43,29 @@ class DatabaseSeeder extends Seeder
 
 
 
-        $pidanaKepp = array(
-            'Narkoba',
-            'Asusila',
-            'Perzinahan',
-            'Perbuatan Cabul',
-            'Perselingkuhan',
-            'Penganiayaan',
-            'Pemukulan',
-            'Pengeroyookan',
-            'Kekerasan',
-            'Pembunuhan',
-            'Pencurian',
-            'Penipuan',
-            'Penggelapan',
-            'Korupsi'
-        );
+        // $pidanaKepp = array(
+        //     'Narkoba',
+        //     'Asusila',
+        //     'Perzinahan',
+        //     'Perbuatan Cabul',
+        //     'Perselingkuhan',
+        //     'Penganiayaan',
+        //     'Pemukulan',
+        //     'Pengeroyookan',
+        //     'Kekerasan',
+        //     'Pembunuhan',
+        //     'Pencurian',
+        //     'Penipuan',
+        //     'Penggelapan',
+        //     'Korupsi'
+        // );
 
-        for ($i = 0; $i < count($pidanaKepp); $i++) {
-            WujudPerbuatanPidana::create([
-                'name' => $pidanaKepp[$i],
-                'jenis_pelanggaran_id' => 2
-            ]);
-        }
+        // for ($i = 0; $i < count($pidanaKepp); $i++) {
+        //     WujudPerbuatanPidana::create([
+        //         'name' => $pidanaKepp[$i],
+        //         'jenis_pelanggaran_id' => 2
+        //     ]);
+        // }
 
         $pidanadisiplin = array(
             'Narkoba',
@@ -87,7 +87,7 @@ class DatabaseSeeder extends Seeder
         for ($i = 0; $i < count($pidanadisiplin); $i++) {
             WujudPerbuatanPidana::create([
                 'name' => $pidanadisiplin[$i],
-                'jenis_pelanggaran_id' => 1
+                'jenis_pelanggaran_id' => null
             ]);
         }
     }

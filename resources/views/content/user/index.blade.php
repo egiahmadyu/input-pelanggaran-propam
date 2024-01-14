@@ -274,6 +274,10 @@
                 $('.div_mabes').css('display', 'block')
                 $("#polda").prop('required', false);
                 $("#polres").prop('required', false);
+            } else if (val == 21) {
+                $('.div_polda').css('display', 'block')
+                $("#polda").prop('required', 'required')
+                $('.div_mabes').css('display', 'none')
             } else {
                 $('.div_polda').css('display', 'none')
                 $('.div_polres').css('display', 'none')

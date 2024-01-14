@@ -203,7 +203,7 @@
             var table = $('#list-pelanggaran').DataTable({
                 processing: true,
                 serverSide: true,
-                searching: false,
+                searching: true,
                 ajax: {
                     url: "{{ route('refData.wujud_perbuatan_pidana.view') }}",
                     method: "post",

@@ -3994,7 +3994,7 @@ class PolresSeeder extends Seeder
             )
         );
         foreach ($satuan_polres as $key => $value) {
-            if ($value['name'] == 'POLDA') {
+            if ($value['name'] != 'POLDA') {
                 SatuanPolres::insert([
                     "id" => $value['id'],
                     "name" => $value['name'],

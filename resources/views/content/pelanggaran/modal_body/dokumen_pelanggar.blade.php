@@ -1,4 +1,4 @@
-@if ($pelanggar->jenis_pelanggaran == 1)
+{{-- @if ($pelanggar->jenis_pelanggaran == 1)
     @if (count($dokumen) > 0)
         <table class="table">
             <tr>
@@ -65,7 +65,29 @@
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     @endif
-@endif
+@endif --}}
+<table class="table">
+    <tr>
+        <td>Nama Dokumen</td>
+        <td>Tanggal Upload</td>
+        <td>#</td>
+    </tr>
+    @if ($pelanggar->dokumen_lp)
+        <tr>
+            <td>Dokumen LP</td>
+            <td>{{ Helper::tanggal($pelanggar->created_at) }}</td>
+            <td><a href="/{{ $pelanggar->dokumen_lp }}" target="_blank">Download</a></td>
+        </tr>
+    @endif
+
+    @foreach ($dokumen as $value)
+        <tr>
+            <td>{{ $value->title }}</td>
+            <td>{{ Helper::tanggal($value->created_at) }}</td>
+            <td><a href="{{ $value->dokumen_keputusan_sidang }}" target="_blank">Download</a></td>
+        </tr>
+    @endforeach
+</table>
 
 <script>
     $("#upload_dokumen").on("submit", function(event) {

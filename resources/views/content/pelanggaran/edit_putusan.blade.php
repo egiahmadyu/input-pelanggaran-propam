@@ -35,7 +35,24 @@
                                         </div>
                                     @endif
                                 </div>
-                                <form action="/pelanggaran-data/edit/{{ $id }}/save" method="post">
+                                <table class="table">
+                                    <tr>
+                                        <td>Nama Dokumen</td>
+                                        <td>Tanggal Upload</td>
+                                        <td>#</td>
+                                    </tr>
+
+                                    @foreach ($dokumen as $value)
+                                        <tr>
+                                            <td>{{ $value->title }}</td>
+                                            <td>{{ Helper::tanggal($value->created_at) }}</td>
+                                            <td><a href="/{{ $value->dokumen_keputusan_sidang }}"
+                                                    target="_blank">Download</a></td>
+                                        </tr>
+                                    @endforeach
+                                </table>
+                                <form action="/pelanggaran-data/edit/{{ $id }}/save" method="post"
+                                    enctype="multipart/form-data">
                                     @csrf
                                     <input type="text" value="{{ auth()->user()->id }}" name="updated_by" hidden>
                                     <h4>Penyelesaian</h4>
@@ -70,6 +87,15 @@
                                             <input type="date" name="tanggal_dp3d_bp3kkepp" id="tanggal_dp3d_bp3kkepp"
                                                 class="form-control">
                                         </div>
+                                        <div class="form-group">
+                                            <div class="mb-3">
+                                                <label for="formFile" class="form-label" id="dokumen_label_dp3d">
+                                                    {{ $list_petusan['jenis_pelanggaran'] == 1 ? 'Dokumen DP3D' : 'Dokumen BP3KEPP' }}
+                                                </label>
+                                                <input class="form-control" type="file" id="dokumen_label_dp3d_doc"
+                                                    accept=".pdf" name="dokumen_label_dp3d">
+                                            </div>
+                                        </div>
 
                                         <div class="form-group">
                                             <label>{{ $list_petusan['jenis_pelanggaran'] == 1 ? 'No KHD' : 'No PUT' }}</label>
@@ -80,6 +106,15 @@
                                             <label>{{ $list_petusan['jenis_pelanggaran'] == 1 ? 'Tanggal KHD' : 'Tanggal PUT' }}</label>
                                             <input type="date" name="tgl_kep" id="tgl_kep"
                                                 class="form-control datePicker putusan">
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="mb-3">
+                                                <label for="formFile" class="form-label" id="label_kep_dokumen">
+                                                    {{ $list_petusan['jenis_pelanggaran'] == 1 ? 'Dokumen KHD' : 'Dokumen PUT' }}
+                                                </label>
+                                                <input class="form-control" type="file" id="dokumen_kep" accept=".pdf"
+                                                    name="dokumen_kep">
+                                            </div>
                                         </div>
                                         @for ($i = 1; $i < 13; $i++)
                                             <div class="form-group">
@@ -118,6 +153,14 @@
                                         <div class="form-group">
                                             <label>Tanggal Surat Ketetapan Penghentian</label>
                                             <input type="date" name="tglkepsp3" id="tglkepsp3" class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="mb-3">
+                                                <label for="formFile" class="form-label" id="">Dokumen
+                                                    Ketetapan Penghentian </label>
+                                                <input class="form-control" type="file" id="dokumen_penghentian"
+                                                    accept=".pdf" name="dokumen_penghentian">
+                                            </div>
                                         </div>
                                     </div>
 

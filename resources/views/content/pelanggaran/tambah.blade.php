@@ -27,7 +27,8 @@
                                         </button>
                                     </div>
                                 @endif
-                                <form action="{{ route('pelanggaran.save') }}" method="post" class="f1" novalidate>
+                                <form action="{{ route('pelanggaran.save') }}" method="post" class="f1" novalidate
+                                    enctype="multipart/form-data">
                                     @csrf
                                     <div class="f1-steps" style="text-align: center;">
                                         <div class="f1-progress">
@@ -296,6 +297,13 @@
                                                 required=true>
                                         </div>
                                         <div class="form-group">
+                                            <div class="mb-3">
+                                                <label for="formFile" class="form-label">Dokumen LP</label>
+                                                <input class="form-control" type="file" id="dokumen_lp"
+                                                    accept=".pdf" name="dokumen_lp" required=true>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <label>Wujud Perbuatan</label>
                                             <div class="row">
                                                 <div class="col-lg-11">
@@ -436,6 +444,21 @@
                                                     id="tanggal_dp3d_bp3kkepp" class="form-control">
                                             </div>
                                             <div class="form-group">
+                                                <div class="mb-3">
+                                                    <label for="formFile" class="form-label"
+                                                        id="dokumen_label_dp3d">Dokumen </label>
+                                                    <input class="form-control" type="file"
+                                                        id="dokumen_label_dp3d_doc" accept=".pdf"
+                                                        name="dokumen_label_dp3d">
+                                                </div>
+                                            </div>
+                                            {{-- <div class="form-group">
+                                                <label for="exampleInputEmail1" id="dokumen_label_dp3d">Dokumen</label>
+                                                <input type="file" class="form-control-file" id="dokumen_dp3d"
+                                                    name="dokumen_dp3d" required>
+                                            </div> --}}
+
+                                            <div class="form-group">
                                                 <label id="label_kep">Nomor Surat Ketetapan Penghentian</label>
                                                 <input type="text" name="no_kep" id="no_kep"
                                                     oninput="input_no_kep()" class="form-control">
@@ -444,6 +467,14 @@
                                                 <label id="tgl_label_kep">Tanggal Surat Ketetapan Penghentian </label>
                                                 <input type="date" name="tgl_kep" id="tgl_kep"
                                                     class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="mb-3">
+                                                    <label for="formFile" class="form-label"
+                                                        id="label_kep_dokumen">Dokumen </label>
+                                                    <input class="form-control" type="file" id="dokumen_kep"
+                                                        accept=".pdf" name="dokumen_kep">
+                                                </div>
                                             </div>
                                             @for ($i = 1; $i < 7; $i++)
                                                 <?php $putusans = Helper::getPutusan($i); ?>
@@ -504,6 +535,14 @@
                                                 <label>Tanggal Surat Ketetapan Penghentian </label>
                                                 <input type="date" name="tglkepsp3" id="tglkepsp3"
                                                     class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="mb-3">
+                                                    <label for="formFile" class="form-label" id="">Dokumen
+                                                        Ketetapan Penghentian </label>
+                                                    <input class="form-control" type="file" id="dokumen_penghentian"
+                                                        accept=".pdf" name="dokumen_penghentian">
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="f1-buttons">
@@ -719,10 +758,12 @@
                 $('#alasan_dihentikan').removeAttr('required')
                 $('#tglkepsp3').removeAttr('required')
                 $('#nokepsp3').removeAttr('required')
+                $('#dokumen_penghentian').removeAttr('required')
 
 
                 $('#dp3d_bp3kkepp').attr('required', 'true')
                 $('#tanggal_dp3d_bp3kkepp').attr('required', 'true')
+                $('#dokumen_label_dp3d_doc').attr('required', 'true')
 
 
             } else if (val == 'dihentikan') {
@@ -731,9 +772,12 @@
                 $('#alasan_dihentikan').attr('required', 'true')
                 $('#nokepsp3').attr('required', 'true')
                 $('#tglkepsp3').attr('required', 'true')
+                $('#dokumen_penghentian').attr('required', 'true')
+
 
                 $('#dp3d_bp3kkepp').removeAttr('required')
                 $('#tanggal_dp3d_bp3kkepp').removeAttr('required')
+                $('#dokumen_label_dp3d_doc').removeAttr('required')
 
                 $('#no_kep').removeAttr('required')
                 $('#tgl_kep').removeAttr('required')
@@ -763,12 +807,14 @@
                 $('#no_kep').attr('required', 'true')
                 $('#tgl_kep').attr('required', 'true')
                 $('#putusan_1').attr('required', 'true')
+                $('#dokumen_kep').attr('required', 'true')
             } else {
                 $('#tgl_kep').siblings(".date-picker-input").css('border', '')
                 $('#putusan_1').siblings(".select2-container").css('border', '')
                 $('#no_kep').removeAttr('required')
                 $('#tgl_kep').removeAttr('required')
                 $('#putusan_1').removeAttr('required')
+                $('#dokumen_kep').removeAttr('required')
             }
         }
 
@@ -1175,7 +1221,9 @@
             if (jenis_pelanggaran == 1) {
 
                 $('#label_kep').html('Nomor KHD')
+                $('#label_kep_dokumen').html('Dokumen KHD')
                 $('#label_dp3d').html('Nomor DP3D')
+                $('#dokumen_label_dp3d').html('Dokumen DP3D')
                 $('#tgl_label_kep').html('Tanggal KHD')
                 $('#tgl_label_dp3d').html('Tanggal DP3D')
                 html = `<option value="">Pilih </option>
@@ -1184,6 +1232,8 @@
             } else if (jenis_pelanggaran == 2) {
                 $('#label_kep').html('Nomor PUT')
                 $('#label_dp3d').html('Nomor BP3KEPP')
+                $('#label_kep_dokumen').html('Dokumen PUT')
+                $('#dokumen_label_dp3d').html('Dokumen BP3KEPP')
                 $('#tgl_label_kep').html('Tanggal PUT')
                 $('#tgl_label_dp3d').html('Tanggal BP3KEPP')
                 html = `<option value="">Pilih </option>

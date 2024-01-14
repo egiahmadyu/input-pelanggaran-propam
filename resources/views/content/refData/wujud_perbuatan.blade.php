@@ -211,7 +211,7 @@
             var table = $('#list-pelanggaran').DataTable({
                 processing: true,
                 serverSide: true,
-                searching: false,
+                searching: true,
                 ajax: {
                     url: "{{ route('refData.wujud_perbuatan.view') }}",
                     method: "post",
@@ -226,12 +226,13 @@
                         searchable: false
                     },
                     {
-                        data: 'name',
-                        name: 'name'
+                        data: 'nama_wp',
+                        name: 'wujud_perbuatans.name'
                     },
                     {
-                        data: 'jenis_pelanggarans.name',
-                        name: 'jenis_pelanggarans.name'
+                        data: 'jenis_pelanggaran',
+                        name: 'jenis_pelanggarans.name',
+
                     },
                     {
                         data: 'action',

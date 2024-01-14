@@ -76,7 +76,6 @@
                                         <option value="{{ $value->id }}">{{ $value->name }}</option>
                                     @endforeach
                                 @endif
-
                             </select>
                         </div>
                         <div class="form-group">
@@ -106,11 +105,25 @@
                     <form method="post" action="/satuan-polsek/save">
                         @csrf
                         <div class="form-group">
+                            <label for="exampleInputEmail1">Polda / Mabes</label>
+                            <select class="form-control" id="polda_id_polsek" name="polda_id" onchange="ambilPolres()">
+                                <option value="">Pilih</option>
+                                @if (auth()->user()->getRoleNames()[0] !== 'admin')
+                                    <option value="{{ auth()->user()->polda }}">{{ auth()->user()->satuan_poldas->name }}
+                                    </option>
+                                @else
+                                    @foreach ($poldas as $value)
+                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="exampleInputEmail1">Polres</label>
-                            <select class="form-control" id="polres_id" name="polres_id">
-                                @foreach ($polres as $value)
+                            <select class="form-control" id="polres_id_polsek" name="polres_id">
+                                {{-- @foreach ($polres as $value)
                                     <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                @endforeach
+                                @endforeach --}}
                             </select>
                         </div>
                         <div class="form-group">
@@ -328,6 +341,23 @@
                             'error'
                         )
                     }
+                }
+            });
+        }
+
+        function ambilPolres() {
+            var polda = $('#polda_id_polsek').val()
+            $.ajax({
+                url: "/api/polda_terduga/" + polda,
+                success: function(data) {
+                    var polres = data.data
+                    var option = '<option value="">Pilih</option>'
+                    for (let index = 0; index < polres.length; index++) {
+                        option += `<option value="${polres[index].id}">${polres[index].name}</option>`
+
+                    }
+                    $('#polres_id_polsek').html(option)
+                    // getPolsek()
                 }
             });
         }

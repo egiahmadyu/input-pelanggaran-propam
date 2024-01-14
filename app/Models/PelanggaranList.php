@@ -13,7 +13,7 @@ class PelanggaranList extends Model
         'wujud_perbuatan', 'kronologi_singkat', 'pasal_pelanggaran', 'pidana', 'wujud_perbuatan_pidana', 'nolp_pidana', 'tgllp_pidana', 'peran_narkoba',
         'jenis_narkoba', 'no_kep', 'tgl_kep', 'putusan_1', 'putusan_2', 'putusan_3', 'putusan_4', 'putusan_5', 'putusan_6', 'putusan_7', 'putusan_8',
         'putusan_9', 'putusan_10', 'putusan_11', 'putusan_12', 'nokepsp3', 'tglkepsp3', 'penyelesaian', 'pelanggar',
-        'alasan_dihentikan', 'putusan_sidang_pidana', 'pasal_pidana', 'created_by', 'updated_by', 'is_delete', 'edited_by', 'polda_terduga', 'polres_terduga', 'polsek_terduga', 'dp3d_bp3kkepp', 'tanggal_dp3d_bp3kkepp'
+        'alasan_dihentikan', 'putusan_sidang_pidana', 'pasal_pidana', 'created_by', 'updated_by', 'is_delete', 'edited_by', 'polda_terduga', 'polres_terduga', 'polsek_terduga', 'dp3d_bp3kkepp', 'tanggal_dp3d_bp3kkepp', 'dokumen_lp'
     ];
 
     public function sidang_banding()
